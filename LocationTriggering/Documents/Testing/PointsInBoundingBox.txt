@@ -1,0 +1,71 @@
+﻿LocationTrigger Centre(1,1 1,-1 -1,-1 -1,1)
+1.0000001, -1.000001 0.9999999, 1.000001 true 2 Points (1,1 1,-1)
+-0.999999, -1.000001 -1.000001, 1.000001 true 2 Points (-1,1 -1,-1)
+1.0000001, -1.000001, 0.999999, -0.99999 true 1 Point (1,-1)
+-0.999999, 0.9999999 -1.000001, 1.000001 true 1 Point (-1,1)
+1.0000001, -1.000001 -1.000001, 1.000001 true 4 points (1,1 1,-1 -1,-1 -1,1)
+0.9999999, -1.000001 -0.999999, 1.000001 true 0 points
+0.9999999, -0.999999 -0.999999, 0.999999 true 0 points
+1.0000001, -0.999999 -1.000001, 0.999999 true 0 points
+90.000000, -180.00000 -90.0000, -1.00001 false 0 points
+90.000000, 180.000000 -90.0000, 1.000001 false 0 points
+90.000000, -90.000000 1.000001, 90.00000 false 0 points
+-1.000001, -90.000000 -90.0000, 90.00000 false 0 points
+
+LocationTrigger Centre180(1,179 1,-179 -1,-179 -1,179)
+1.0000001, 178.99999 0.9999999, -178.999 true 2 Points (1,-179 1,179)
+-0.999999, 178.99999 -1.000001, -178.999 true 2 Points (-1,-179 -1,179)
+1.0000001, 178.99999, 0.999999, 179.0001 true 1 Point (1,179)
+-0.999999, -179.0000 -1.000001, -178.999 true 1 Point (-1,-179)
+1.0000001, 178.99999 -1.000001, -178.999 true 4 points (1,179 1,-179 -1,-179 -1,179)
+0.9999999, 178.99999 -0.999999, -178.999 true 0 points
+0.9999999, 179.00001 -0.999999, -179.000 true 0 points
+1.0000001, 179.00001 -1.000001, -179.000 true 0 points
+90.000000, 1.0000000 -90.00000, 178.9999 false 0 points
+90.000000, -1.000000 -90.00000, -178.999 false 0 points
+90.000000, 90.000000 1.0000001, -90.0000 false 0 points
+-1.000001, 90.000000 -90.00000, -90.0000 false 0 points
+
+
+Base LocationTrigger Bogside.kml
+OverlapsWith true
+Bogsidemurals.kml all Points
+FreeDerryCorner.kml all Points
+Derry.kml 0 points
+Ireland.kml 0 points
+
+OverlapsWith false
+Guildhall.kml
+TowerMuseum.kml
+HandsAcrossDivde.kml
+
+Base LocationTrigger FreeDerryCorner.kml
+OverlapsWith true
+Bogsidemurals.kml 2 Points
+Europe.kml 0 points
+Bogside.kml 0 points
+
+OverlapsWith false
+PeaceBridge.kml
+RiverFoyle.kml
+Belfast.kml
+
+Base LocationTrigger AppenticeBoysMemorialHall.kml
+OverlapsWith true
+seigemuseum.kml 1 point
+OverlapsWith false
+StColumbsCathedral.kml
+St Augustines.kml
+
+Base LocationTrigger craigavonbridge.kml
+OverlapsWith true
+HandsAcrossDivde.kml 2 Points
+RiverFoyle.kml 0 points
+
+Base LocationTrigger Welligton.kml
+OverlapsWith true
+NewZealand.kml all Pointts
+OverlapsWith false
+Tokyo 
+SouthAmerica
+Moscow

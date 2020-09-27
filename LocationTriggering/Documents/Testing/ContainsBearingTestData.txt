@@ -1,0 +1,63 @@
+﻿30	-	90
+30		True
+90		True
+-270	True
+-330	True
+30.001	True
+450.10	True
+29.999	False
+90.001	False
+0		False
+-269.99	False
+-330.01	False
+NaN		Exception
+
+359	-	1
+359		True
+0		True
+1		True
+-0.999	True
+0.9999	True
+360.5	True
+1.0001	False
+-1.001	False
+389.99	False
+-389.99 False
+540		False
+NaN		Exception
+
+-350 - -10
+10		True
+-10		True
+-350	True
+350		True
+-900	True
+0		False
+350.6	False
+369.8	False
+9.9999	False
+-9.999	False
+NaN		Exception
+
+-10	-	-90
+350		True
+270		True
+-89.999	True
+-10.001	True
+1080	False
+350.001	False
+-9.9999	False
+269.999	False
+-90.001	False
+NaN		Exception		
+
+-0.5 -	0.5
+359.5	True
+-359.5	True
+0		True
+360		True
+360.501	False
+719.499	False
+-0.5001	False
+0.50001	False
+NaN		Exception	
