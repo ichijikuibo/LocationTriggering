@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LocationTriggering.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,10 @@ namespace SampleAndTesting.Tests
         private void LocationTriggerCollection_Tapped(object sender, EventArgs e)
         {
             Navigation.PushAsync(new LocationTriggerCollectionTest());
+        }
+        private void BearingRange_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new BearingRangeTests());
         }
     }
 }

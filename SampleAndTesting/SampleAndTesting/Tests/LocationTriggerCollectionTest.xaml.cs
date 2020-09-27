@@ -23,10 +23,14 @@ namespace SampleAndTesting.Tests
         IReadOnlyList<LocationTrigger> locationsAtPoint;
         TestLocationTriggerData _testData;
         List<Polygon> locationPolygons;
+        List<Circle> locationCentres;
+        List<Circle> locationCentres2;
         Pin currentMapCoordinate;
         public LocationTriggerCollectionTest()
         {
             locationPolygons = new List<Polygon>();
+            locationCentres = new List<Circle>();
+            locationCentres2 = new List<Circle>();
             _testData = new TestLocationTriggerData();
             InitializeComponent();
             locationTriggerCollectionTest = new LocationTriggerCollection();
@@ -94,10 +98,31 @@ namespace SampleAndTesting.Tests
             {
                 if (MapTest.MapElements.Contains(polygon)) MapTest.MapElements.Remove(polygon);
             }
+            foreach (Circle centre in locationCentres)
+            {
+                if (MapTest.MapElements.Contains(centre)) MapTest.MapElements.Remove(centre);
+            }
+            foreach (Circle centre in locationCentres2)
+            {
+                if (MapTest.MapElements.Contains(centre)) MapTest.MapElements.Remove(centre);
+            }
             locationPolygons.Clear();
+            locationCentres2.Clear();
+            locationCentres.Clear();
             foreach (LocationTrigger LT in locationTriggerCollectionTest)
             {
                 Polygon polygon = new Polygon();
+                Circle centreAverage = new Circle();
+                Circle CentreCentoid = new Circle();
+                centreAverage.FillColor = Color.Green;
+                CentreCentoid.FillColor = Color.Blue;
+                centreAverage.StrokeColor = Color.Green;
+                CentreCentoid.StrokeColor = Color.Blue;
+                centreAverage.Center = new Position(LT.Centre.Latitude, LT.Centre.Longitude);
+                CentreCentoid.Center = new Position(LT.Polygon.Centre.Y, LT.Polygon.Centre.X);
+                double radius = LT.BoundingBox.width * 0.02;
+                centreAverage.Radius = Distance.FromKilometers(radius);
+                CentreCentoid.Radius = Distance.FromKilometers(radius);
                 if (locationsAtPoint!=null&&locationsAtPoint.Contains(LT)) polygon.StrokeColor = Color.Green;
                 foreach (MapCoordinate MC in LT.Points)
                 {
@@ -105,6 +130,10 @@ namespace SampleAndTesting.Tests
                 }
                 MapTest.MapElements.Add(polygon);
                 locationPolygons.Add(polygon);
+                MapTest.MapElements.Add(centreAverage);
+                MapTest.MapElements.Add(CentreCentoid);
+                locationCentres2.Add(CentreCentoid);
+                locationCentres.Add(centreAverage);
             }         
 
             

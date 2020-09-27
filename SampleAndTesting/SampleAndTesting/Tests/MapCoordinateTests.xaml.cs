@@ -29,44 +29,110 @@ namespace SampleAndTesting.Tests
         }
         private void ConstructButton_Clicked(object sender, EventArgs e)
         {
-            double longitude = double.Parse(LongitudeEntry.Text);
-            double latitude = double.Parse(LatitudeEntry.Text);
-            mapCoordinate = new MapCoordinate(latitude, longitude);
+            try
+            {
+                double longitude = 0;
+                double latitude = 0;
+                if(LongitudeEntry.Text!="")
+                longitude = double.Parse(LongitudeEntry.Text);
+                if (LatitudeEntry.Text != "")
+                    latitude = double.Parse(LatitudeEntry.Text);
+                if (LongitudeEntry.Text == "")
+                    mapCoordinate = new MapCoordinate(latitude, double.NaN);
+                else if (LatitudeEntry.Text == "")
+                    mapCoordinate = new MapCoordinate(double.NaN, longitude);
+                else
+                    mapCoordinate = new MapCoordinate(latitude, longitude);
+                ConstructResult.Text = mapCoordinate.ToString();
+            }
+            catch(Exception exception)
+            {
+                ConstructResult.Text = exception.Message;
+            }
         }
 
         private void DistanceToButton_Clicked(object sender, EventArgs e)
         {
+            try { 
             double distance = mapCoordinate.DistanceTo(GetTestMapCoordinate());
             DistanceToResult.Text = distance + "m";
+            }
+            catch (Exception exception)
+            {
+                DistanceToResult.Text = exception.Message;
+            }
         }
 
         private void DistanceToFeetButton_Clicked(object sender, EventArgs e)
         {
-
-            double distance = mapCoordinate.DistanceToFeet(GetTestMapCoordinate());
-            DistanceToFeetResult.Text = distance + "ft";
+            try { 
+                double distance = mapCoordinate.DistanceToFeet(GetTestMapCoordinate());
+                DistanceToFeetResult.Text = distance + "ft";
+            }
+            catch (Exception exception)
+            {
+                DistanceToFeetResult.Text = exception.Message;
+            }
         }
         private void BearingToButton_Clicked(object sender, EventArgs e)
         {
-
-            double bearing = mapCoordinate.BearingTo(GetTestMapCoordinate());
-            BearingToResult.Text = bearing + " Degrees";
+            try
+            {
+                double bearing = mapCoordinate.BearingTo(GetTestMapCoordinate());
+                BearingToResult.Text = bearing + " Degrees";
+            }
+            catch (Exception exception)
+            {
+                BearingToResult.Text = exception.Message;
+            }
         }
         private void BearingFromButton_Clicked(object sender, EventArgs e)
         {
-
-            double bearing = mapCoordinate.BearingFrom(GetTestMapCoordinate());
-            BearingFromResult.Text = bearing + " Degrees";
+            try
+            {
+                double bearing = mapCoordinate.BearingFrom(GetTestMapCoordinate());
+                BearingFromResult.Text = bearing + " Degrees";
+            }
+            catch (Exception exception)
+            {
+                BearingToResult.Text = exception.Message;
+            }
+        }
+        private void PointAtDistanceAndBearingButton_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                double distance = double.Parse(PointAtDistanceAndBearingDistanceEntry.Text);
+                double bearing = double.Parse(PointAtDistanceAndBearingBearingEntry.Text);
+                MapCoordinate point = mapCoordinate.PointAtDistanceAndBearing(distance, bearing);
+                PointAtDistanceAndBearingResult.Text = point.ToString();
+            }
+            catch (Exception exception)
+            {
+                PointAtDistanceAndBearingResult.Text = exception.Message;
+            }
         }
         private void ToStringButton_Clicked(object sender, EventArgs e)
         {
-
-            ToStringResult.Text = mapCoordinate.ToString();
+            try
+            {
+                ToStringResult.Text = mapCoordinate.ToString();
+            }
+            catch (Exception exception)
+            {
+                ToStringResult.Text = exception.Message;
+            }
         }
         private void EqualsButton_Clicked(object sender, EventArgs e)
         {
-
-            EqualsResult.Text = mapCoordinate.Equals(GetTestMapCoordinate()).ToString();
+            try
+            {
+                EqualsResult.Text = mapCoordinate.Equals(GetTestMapCoordinate()).ToString();
+            }
+            catch (Exception exception)
+            {
+                EqualsResult.Text = exception.Message;
+            }
         }
     }
 }

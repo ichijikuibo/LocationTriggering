@@ -14,6 +14,12 @@
                     </Frame>
                     <Frame MinimumHeightRequest="200" CornerRadius="10" BorderColor="Black">
                         <Frame.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="BearingRange_Tapped" />
+                        </Frame.GestureRecognizers>
+                        <Label Text="BearingRange" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
+                    </Frame>
+                    <Frame MinimumHeightRequest="200" CornerRadius="10" BorderColor="Black">
+                        <Frame.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="LocationTrigger_Tapped" />
                         </Frame.GestureRecognizers>
                         <Label Text="LocationTrigger" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
@@ -24,6 +30,7 @@
                         </Frame.GestureRecognizers>
                         <Label Text="LocationTriggerCollection" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
                     </Frame>
+
                 </StackLayout>
             </ScrollView>
         </Grid>

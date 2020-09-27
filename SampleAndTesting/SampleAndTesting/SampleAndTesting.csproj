@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -25,6 +25,7 @@
     <None Remove="TestLocations\Galway.kml" />
     <None Remove="TestLocations\Guildhall.kml" />
     <None Remove="TestLocations\HandsAcrossDivde.kml" />
+    <None Remove="TestLocations\Hawaii.kml" />
     <None Remove="TestLocations\Iceland.kml" />
     <None Remove="TestLocations\Ireland.kml" />
     <None Remove="TestLocations\Johannesburg.kml" />
@@ -61,6 +62,7 @@
     <EmbeddedResource Include="TestLocations\Galway.kml" />
     <EmbeddedResource Include="TestLocations\Guildhall.kml" />
     <EmbeddedResource Include="TestLocations\HandsAcrossDivde.kml" />
+    <EmbeddedResource Include="TestLocations\Hawaii.kml" />
     <EmbeddedResource Include="TestLocations\Iceland.kml" />
     <EmbeddedResource Include="TestLocations\Ireland.kml" />
     <EmbeddedResource Include="TestLocations\Johannesburg.kml" />
@@ -89,14 +91,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GPSLocationAssitant\LocationTriggering.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Samples\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\LocationTriggering\LocationTriggering.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Tests\BearingRangeTests.xaml.cs">
+      <DependentUpon>BearingRangeTests.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Tests\LocationTriggerCollectionTest.xaml.cs">
       <DependentUpon>LocationTriggerCollectionTest.xaml</DependentUpon>
     </Compile>

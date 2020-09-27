@@ -125,6 +125,8 @@ namespace SampleAndTesting.Data
 
             _testLocation = (BasicLocationTrigger)OpenKMLFile("StColumbsCathedral.kml");
             if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = (BasicLocationTrigger)OpenKMLFile("Hawaii.kml");
+            if (_testLocation != null) _testData.Add(_testLocation);
 
         }
         public LocationTrigger OpenKMLFile(string fileName)
