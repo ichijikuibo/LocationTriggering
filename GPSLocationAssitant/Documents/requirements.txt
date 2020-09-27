@@ -1,0 +1,9 @@
+1. Allow to create a list of locations each containing abritary list of GPS coordinates.
+1.1 Create a class to hold the gps coordinate and methods required to make calculations(Distance, Bearing, Equality)
+1.2 Create abstract class containing the GPS coordinates and methods required to make calculations(Point within polygon, Distance, Bearing range, Closest distance)
+1.3 Create a class to store a collection of locations and the methods to sort and make iterate through the locations 
+2. Determine which location/s if any a specifed GPS corrdinate is within
+3. Create a list of locations sorted by distance from a specifed location
+4. Create a list of locations within a specifed distance from a specified point
+5. Create a list of locations that are located in a specified bearing sorted by distance
+6. Monitor GPS activity and send events when gps location is within a location

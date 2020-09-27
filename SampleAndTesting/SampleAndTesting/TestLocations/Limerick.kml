@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Limerick.kml</name>
+	<Style id="s_ylw-pushpin">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<Style id="s_ylw-pushpin_hl">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<StyleMap id="m_ylw-pushpin">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#s_ylw-pushpin</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#s_ylw-pushpin_hl</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark>
+		<name>Limerick</name>
+		<styleUrl>#m_ylw-pushpin</styleUrl>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						-8.64867579518744,52.68999433628893,0 -8.656551522456686,52.68556015312419,0 -8.662325484698956,52.67606081916341,0 -8.664182441633447,52.66678366682419,0 -8.670341886383229,52.6640401117041,0 -8.677418412446,52.65446410219764,0 -8.670567737700036,52.6484744869666,0 -8.658379611059003,52.64199165715329,0 -8.643953340285972,52.63802822483257,0 -8.629835201528243,52.6360397150758,0 -8.62237509558836,52.63885555463911,0 -8.603227078458682,52.63834529490656,0 -8.593038875439447,52.64051572289966,0 -8.582040442213806,52.65030482777305,0 -8.577088271203012,52.66094765042224,0 -8.579599012094585,52.66877865217371,0 -8.583476183303253,52.67693144732322,0 -8.604516748909495,52.68969921523841,0 -8.633660870937396,52.69084464711134,0 -8.64867579518744,52.68999433628893,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+</Document>
+</kml>

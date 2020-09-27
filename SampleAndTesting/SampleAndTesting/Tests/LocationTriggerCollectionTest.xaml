@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             x:Class="SampleAndTesting.Tests.LocationTriggerCollectionTest"
+             SizeChanged="ContentPage_SizeChanged">
+    <ContentPage.Content>
+        <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" RowSpacing="2" ColumnSpacing="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="TestColumn" Width="500"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <StackLayout x:Name="MapStack" Grid.Column="1" Grid.RowSpan="2" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical" Margin="0" Padding="0" Spacing="0">
+                <StackLayout Orientation="Horizontal" Spacing="2">
+                    <Label Text="Latitude: " FontSize="12"/>
+                    <Entry x:Name="MapLatitudeEntry" MaxLength="20" WidthRequest="80" Keyboard="Numeric" FontSize="12"/>
+                    <Label Text="Logitude: " FontSize="12"/>
+                    <Entry x:Name="MapLogitudeEntry" WidthRequest="80" MaxLength="20" Keyboard="Numeric" FontSize="12"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Spacing="2">
+                    <Button x:Name="SetAsCurrentButton" Text="Set As Current Test Coordinate" Clicked="SetAsCurrentButton_Clicked" FontSize="12"/>
+                    <Button x:Name="CopyButton" Text="Copy" Clicked="CopyButton_Clicked"/>
+                </StackLayout>
+                <maps:Map x:Name="MapTest" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"></maps:Map>
+            </StackLayout>
+            <ScrollView x:Name="TestScroll" VerticalOptions="Center" HorizontalOptions="Center" Padding="5,5,5,10" Grid.RowSpan="2">
+                <StackLayout WidthRequest="500">
+                    <!--AddLocationTrigger-->
+                    <Frame MinimumHeightRequest="200" CornerRadius="5" BorderColor="DarkGray" Padding="5">
+                        <Grid Padding="0" Margin="0" ColumnSpacing="2" RowSpacing="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/><!--Title-->
+                                <RowDefinition Height="25"/><!--Summary-->
+                                <RowDefinition Height="40"/><!--ID-->
+                                <RowDefinition Height="30"/><!--Coordinate Label-->
+                                <RowDefinition Height="80"/><!--Coordinate Entry-->
+                                <RowDefinition Height="30"/><!--Button-->
+                                <RowDefinition Height="35"/> <!--Result-->
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="Items.Add(LocationTrigger)" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Grid.ColumnSpan="2" />
+                            <Label Text="Adds a new location trigger to the collection" FontSize="12" HorizontalTextAlignment="Center" Grid.ColumnSpan="2" Grid.Row="1"/>
+                            <Label x:Name="IDLabel" Text="ID" Grid.Row="2" VerticalTextAlignment="Center" VerticalOptions="Center" FontSize="12"/>
+                            <Entry x:Name="IDEntry" Text="TestLocationTrigger" MaxLength="20" Grid.Row="2" Grid.Column="1" FontSize="12"/>
+                            <Label x:Name="CoordinatesLabel" Text="Coordinates" Grid.Row="3" VerticalTextAlignment="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" Grid.ColumnSpan="2" FontSize="12"/>
+                            <Editor x:Name="CoordinateEntry" Grid.Row="4" Grid.ColumnSpan="2" FontSize="12"/>
+                            <Button x:Name="AddLocationButton" Text="Run Method" Clicked="AddLocationButton_Clicked" Grid.Row="5" Grid.ColumnSpan="2" Padding="0" Margin="0" FontSize="12"/>
+                            <Label Text="Result:" Grid.Row="6" VerticalTextAlignment="Center" VerticalOptions="Center" FontSize="12"/>
+                            <Label x:Name="AddLocationResult" Grid.Row="6" Grid.Column="1" LineBreakMode="WordWrap" FontSize="12"/>
+                        </Grid>
+                    </Frame>
+                    <!--RemoveLocationTrigger-->
+                    <Frame MinimumHeightRequest="200" CornerRadius="5" BorderColor="DarkGray" Padding="5">
+                        <Grid Padding="0" Margin="0" ColumnSpacing="2" RowSpacing="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Text="RemovePoint(MapCoordinate),RemovePoint(int)" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Grid.ColumnSpan="2" />
+                            <Label Text="Removes a Location from the collection" FontSize="12" HorizontalTextAlignment="Center" Grid.ColumnSpan="2" Grid.Row="1"/>
+                            <Label Text="Location" Grid.Row="2" VerticalTextAlignment="Center" VerticalOptions="Center" FontSize="12"/>
+                            <Picker x:Name="RemoveLocationPicker" Grid.Row="2" Grid.Column="1" SelectedIndex="0" FontSize="12"/>
+                            <Button x:Name="RemoveLocationButton" Text="Run Method" Clicked="RemoveLocationButton_Clicked" Grid.Row="3" Grid.ColumnSpan="2" Padding="0" Margin="0" FontSize="12"/>
+                            <Label Text="Result:" Grid.Row="5" VerticalTextAlignment="Center" VerticalOptions="Center" FontSize="12"/>
+                            <Label x:Name="RemoveLocationResult" Grid.Row="5" Grid.Column="1" LineBreakMode="WordWrap" FontSize="12"/>
+                        </Grid>
+                    </Frame>
+                    <!--Map Coordinate for Testing-->
+                    <Frame MinimumHeightRequest="200" CornerRadius="5" BorderColor="DarkGray" Padding="5">
+                        <Grid Padding="0" Margin="0" ColumnSpacing="2" RowSpacing="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Text="Test MapCoordinate" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Grid.ColumnSpan="2" />
+                            <Label Text="Latitude" Grid.Row="1" VerticalTextAlignment="Center" VerticalOptions="Center" FontSize="12"/>
+                            <Entry x:Name="DistanceToLatitudeEntry" Text="54.997874" MaxLength="20" Keyboard="Numeric" Grid.Row="1" Grid.Column="1" FontSize="12"/>
+                            <Label Text="Longitude" Grid.Row="2" VerticalTextAlignment="Center" VerticalOptions="Center" FontSize="12"/>
+                            <Entry x:Name="DistanceToLongitudeEntry" Text="-7.315823" MaxLength="20" Keyboard="Numeric" Grid.Row="2" Grid.Column="1" FontSize="12"/>
+                            <Button x:Name="CurrentLocationButton" Text="Current Location" Grid.Row="3" Grid.ColumnSpan="2" Clicked="CurrentLocationButton_Clicked" Padding="0" Margin="0" FontSize="12"/>
+                        </Grid>
+                    </Frame>
+                    <!--LocationsAtPoint-->
+                    <Frame MinimumHeightRequest="200" CornerRadius="5" BorderColor="DarkGray" Padding="5">
+                        <Grid Padding="0" Margin="0" ColumnSpacing="2" RowSpacing="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Text="LocationsAtPoint(Essentials.Location)" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Grid.ColumnSpan="2" />
+                            <Label Text="Returns the locations at the specified point" FontSize="12" HorizontalTextAlignment="Center" Grid.ColumnSpan="2" Grid.Row="1" />
+                            <Button x:Name="LocationsAtPointButton" Text="Run Method" Clicked="LocationsAtPoint_Clicked" Grid.Row="2" Grid.ColumnSpan="2" Padding="0" Margin="0" FontSize="12"/>
+                            <Label Text="Result:" Grid.Row="3" VerticalTextAlignment="Center" VerticalOptions="Center" FontSize="12"/>
+                            <Label x:Name="LocationsAtPointResult" Grid.Row="3" Grid.Column="1" FontSize="12"/>
+                        </Grid>
+                    </Frame>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

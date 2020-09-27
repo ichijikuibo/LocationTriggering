@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SampleAndTesting.Tests.TestsMenu">
+    <ContentPage.Content>
+        <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <ScrollView VerticalOptions="Center" HorizontalOptions="Center">
+                <StackLayout WidthRequest="300" >
+                    <Frame MinimumHeightRequest="200" CornerRadius="10" BorderColor="Black">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="MapCoordinate_Tapped" />
+                        </Frame.GestureRecognizers>
+                        <Label Text="MapCoordinate" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
+                    </Frame>
+                    <Frame MinimumHeightRequest="200" CornerRadius="10" BorderColor="Black">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="LocationTrigger_Tapped" />
+                        </Frame.GestureRecognizers>
+                        <Label Text="LocationTrigger" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
+                    </Frame>
+                    <Frame MinimumHeightRequest="200" CornerRadius="10" BorderColor="Black">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="LocationTriggerCollection_Tapped" />
+                        </Frame.GestureRecognizers>
+                        <Label Text="LocationTriggerCollection" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
+                    </Frame>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

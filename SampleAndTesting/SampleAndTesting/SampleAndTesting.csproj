@@ -1,0 +1,116 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="TestLocations\AppenticeBoysMemorialHall.kml" />
+    <None Remove="TestLocations\Belfast.kml" />
+    <None Remove="TestLocations\Bogside.kml" />
+    <None Remove="TestLocations\Bogsidemurals.kml" />
+    <None Remove="TestLocations\Cork.kml" />
+    <None Remove="TestLocations\craigavonbridge.kml" />
+    <None Remove="TestLocations\Derry.kml" />
+    <None Remove="TestLocations\DistrictOfColumbia.kml" />
+    <None Remove="TestLocations\Dublin.kml" />
+    <None Remove="TestLocations\Europe.kml" />
+    <None Remove="TestLocations\FreeDerryCorner.kml" />
+    <None Remove="TestLocations\Galway.kml" />
+    <None Remove="TestLocations\Guildhall.kml" />
+    <None Remove="TestLocations\HandsAcrossDivde.kml" />
+    <None Remove="TestLocations\Iceland.kml" />
+    <None Remove="TestLocations\Ireland.kml" />
+    <None Remove="TestLocations\Johannesburg.kml" />
+    <None Remove="TestLocations\Limerick.kml" />
+    <None Remove="TestLocations\London.kml" />
+    <None Remove="TestLocations\Moscow.kml" />
+    <None Remove="TestLocations\NewZealand.kml" />
+    <None Remove="TestLocations\Paris.kml" />
+    <None Remove="TestLocations\PeaceBridge.kml" />
+    <None Remove="TestLocations\RiverFoyle.kml" />
+    <None Remove="TestLocations\SaoPaulo.kml" />
+    <None Remove="TestLocations\seigemuseum.kml" />
+    <None Remove="TestLocations\SouthAmerica.kml" />
+    <None Remove="TestLocations\St Augustines.kml" />
+    <None Remove="TestLocations\StColumbsCathedral.kml" />
+    <None Remove="TestLocations\Tokyo.kml" />
+    <None Remove="TestLocations\TowerMuseum.kml" />
+    <None Remove="TestLocations\Waterford.kml" />
+    <None Remove="TestLocations\Wellington.kml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestLocations\AppenticeBoysMemorialHall.kml" />
+    <EmbeddedResource Include="TestLocations\Belfast.kml" />
+    <EmbeddedResource Include="TestLocations\Bogside.kml" />
+    <EmbeddedResource Include="TestLocations\Bogsidemurals.kml" />
+    <EmbeddedResource Include="TestLocations\Cork.kml" />
+    <EmbeddedResource Include="TestLocations\craigavonbridge.kml" />
+    <EmbeddedResource Include="TestLocations\Derry.kml" />
+    <EmbeddedResource Include="TestLocations\DistrictOfColumbia.kml" />
+    <EmbeddedResource Include="TestLocations\Dublin.kml" />
+    <EmbeddedResource Include="TestLocations\Europe.kml" />
+    <EmbeddedResource Include="TestLocations\FreeDerryCorner.kml" />
+    <EmbeddedResource Include="TestLocations\Galway.kml" />
+    <EmbeddedResource Include="TestLocations\Guildhall.kml" />
+    <EmbeddedResource Include="TestLocations\HandsAcrossDivde.kml" />
+    <EmbeddedResource Include="TestLocations\Iceland.kml" />
+    <EmbeddedResource Include="TestLocations\Ireland.kml" />
+    <EmbeddedResource Include="TestLocations\Johannesburg.kml" />
+    <EmbeddedResource Include="TestLocations\Limerick.kml" />
+    <EmbeddedResource Include="TestLocations\London.kml" />
+    <EmbeddedResource Include="TestLocations\Moscow.kml" />
+    <EmbeddedResource Include="TestLocations\NewZealand.kml" />
+    <EmbeddedResource Include="TestLocations\Paris.kml" />
+    <EmbeddedResource Include="TestLocations\PeaceBridge.kml" />
+    <EmbeddedResource Include="TestLocations\RiverFoyle.kml" />
+    <EmbeddedResource Include="TestLocations\SaoPaulo.kml" />
+    <EmbeddedResource Include="TestLocations\seigemuseum.kml" />
+    <EmbeddedResource Include="TestLocations\SouthAmerica.kml" />
+    <EmbeddedResource Include="TestLocations\St Augustines.kml" />
+    <EmbeddedResource Include="TestLocations\StColumbsCathedral.kml" />
+    <EmbeddedResource Include="TestLocations\Tokyo.kml" />
+    <EmbeddedResource Include="TestLocations\TowerMuseum.kml" />
+    <EmbeddedResource Include="TestLocations\Waterford.kml" />
+    <EmbeddedResource Include="TestLocations\Wellington.kml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+    <PackageReference Include="Xamarin.Forms.Maps" Version="4.8.0.1451" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GPSLocationAssitant\LocationTriggering.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Samples\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Tests\LocationTriggerCollectionTest.xaml.cs">
+      <DependentUpon>LocationTriggerCollectionTest.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Tests\LocationTriggerTest.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Tests\MapCoordinateTests.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Tests\TestsMenu.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

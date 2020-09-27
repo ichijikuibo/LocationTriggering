@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>NewZealand.kml</name>
+	<StyleMap id="m_ylw-pushpin">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#s_ylw-pushpin</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#s_ylw-pushpin_hl</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="s_ylw-pushpin">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<Style id="s_ylw-pushpin_hl">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<Placemark>
+		<name>NewZealand</name>
+		<styleUrl>#m_ylw-pushpin</styleUrl>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						168.4324719785261,-48.35664696882697,0 173.2432084976497,-44.62337397304513,0 174.138227456758,-43.51056049212026,0 175.140895167209,-42.37482867127294,0 177.6366617693372,-40.78491113302231,0 179.0989948340008,-38.68364965716732,0 179.0136371530234,-37.16334296265111,0 177.6041710581476,-36.91470693527101,0 176.7342833646281,-36.29822833494663,0 175.7050280985682,-35.13792484511418,0 173.847331128468,-33.98194750003591,0 172.4190488472526,-33.88762940541707,0 172.0941225097782,-35.30075465758206,0 172.8238155640063,-36.7832811349203,0 174.1023387674584,-38.08645353172846,0 173.5249034049188,-38.64541804388944,0 172.9609324368289,-39.6709315479408,0 172.0470513096757,-39.8825883927867,0 171.2254088610367,-41.09686704747994,0 170.6943837442734,-42.75213167144439,0 168.8969778899833,-43.2074079355373,0 166.4365172404071,-44.35878052372065,0 166.015860893148,-45.82944969781035,0 168.4324719785261,-48.35664696882697,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+</Document>
+</kml>
