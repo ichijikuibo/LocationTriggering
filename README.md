@@ -21,11 +21,11 @@ private void BasicLocationTriggerSample()
     listener.LocationTriggers.Add(london);
 
     //Add more locations
-    MapCoordinate[] parisPoints = new MapCoordinate[] {new MapCoordinate(2.161709809090213,48.77722216746136), new MapCoordinate(2.235814063969268,48.73084876120987),
-    new MapCoordinate(2.410007684154414,48.6975904208622),new MapCoordinate(2.620424692765133,48.6912584687781),
-    new MapCoordinate(2.642334415022416,48.79625850828037),new MapCoordinate(2.641387951030956,48.88409247254472),
-    new MapCoordinate(2.565568311307791,48.99664375620552),new MapCoordinate(2.347396843066536,49.01179869658374),
-    new MapCoordinate(2.177910117161548,48.94537589150431),new MapCoordinate(2.101415147749033, 48.84534555641764)};
+    MapCoordinate[] parisPoints = new MapCoordinate[] {new MapCoordinate(48.77722216746136,2.161709809090213), new MapCoordinate(48.73084876120987,2.235814063969268),
+    new MapCoordinate(48.6975904208622,2.410007684154414),new MapCoordinate(48.6912584687781,2.620424692765133),
+    new MapCoordinate(48.79625850828037,2.642334415022416),new MapCoordinate(48.88409247254472,2.641387951030956),
+    new MapCoordinate(48.99664375620552,2.565568311307791),new MapCoordinate(49.01179869658374,2.347396843066536),
+    anew MapCoordinate(48.94537589150431,2.177910117161548),new MapCoordinate(48.84534555641764,2.101415147749033)};
     BasicLocationTrigger paris = new BasicLocationTrigger("Paris", parisPoints, "Paris", "Capital city of France");
     listener.LocationTriggers.Add(paris);
 }
