@@ -137,7 +137,7 @@ namespace SampleAndTesting.Data
             XmlNodeList coordinatesNode = xmlDoc.GetElementsByTagName("coordinates");
             if (coordinatesNode.Count > 0)
             {
-                return new BasicLocationTrigger(fileName, coordinatesNode.Item(0).InnerText.Replace("\n","").Replace("\t",""), ',', ' ',true);
+                return new BasicLocationTrigger(fileName, coordinatesNode.Item(0).InnerText.Replace("\n","").Replace("\r", "").Replace("\t",""), ',', ' ',true);
             }
             else
             {

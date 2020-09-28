@@ -359,8 +359,8 @@ namespace LocationTriggering
         public virtual BearingRange BearingRangeFrom(MapCoordinate point)
         {
             double centreBearing = point.BearingTo(Centre);
-            double guideDistance = BoundingBox.width;
-            if (BoundingBox.height > guideDistance) guideDistance = BoundingBox.height;
+            double guideDistance = BoundingBox.Width;
+            if (BoundingBox.Height > guideDistance) guideDistance = BoundingBox.Height;
             double targetBearing1 = CoordinateHelpers.NormaliseBearing(centreBearing + 90);
             double targetBearing2 = CoordinateHelpers.NormaliseBearing(centreBearing - 90);
             MapCoordinate Point1 = ClosestPointTo(new MapCoordinate(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre.ToPointD(),guideDistance, targetBearing1)));//{54.9964314712174, -7.32574279029166}

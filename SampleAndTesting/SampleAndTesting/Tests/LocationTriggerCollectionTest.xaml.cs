@@ -120,7 +120,7 @@ namespace SampleAndTesting.Tests
                 CentreCentoid.StrokeColor = Color.Blue;
                 centreAverage.Center = new Position(LT.Centre.Latitude, LT.Centre.Longitude);
                 CentreCentoid.Center = new Position(LT.Polygon.Centre.Y, LT.Polygon.Centre.X);
-                double radius = LT.BoundingBox.width * 0.02;
+                double radius = LT.BoundingBox.Width * 0.02;
                 centreAverage.Radius = Distance.FromKilometers(radius);
                 CentreCentoid.Radius = Distance.FromKilometers(radius);
                 if (locationsAtPoint!=null&&locationsAtPoint.Contains(LT)) polygon.StrokeColor = Color.Green;

@@ -34,5 +34,9 @@ namespace SampleAndTesting.Tests
         {
             Navigation.PushAsync(new BearingRangeTests());
         }
+        private void MapBoundingBox_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new BoundingBoxTest());
+        }
     }
 }

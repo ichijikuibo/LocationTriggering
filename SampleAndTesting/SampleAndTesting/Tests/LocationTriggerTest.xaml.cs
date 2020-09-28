@@ -128,14 +128,14 @@ namespace SampleAndTesting.Tests
             if (MapTest.MapElements.Contains(boundingBox)) MapTest.MapElements.Remove(boundingBox);
             boundingBox = new Polygon();
             boundingBox.StrokeColor = Color.Blue;
-            boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.northwest.Latitude, testLocationTrigger.BoundingBox.northwest.Longitude));
-            boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.northwest.Latitude, testLocationTrigger.BoundingBox.southeast.Longitude));
-            boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.southeast.Latitude, testLocationTrigger.BoundingBox.southeast.Longitude));
-            boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.southeast.Latitude, testLocationTrigger.BoundingBox.northwest.Longitude));
+            boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.Northwest.Latitude, testLocationTrigger.BoundingBox.Northwest.Longitude));
+            boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.Northwest.Latitude, testLocationTrigger.BoundingBox.Southeast.Longitude));
+            boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.Southeast.Latitude, testLocationTrigger.BoundingBox.Southeast.Longitude));
+            boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.Southeast.Latitude, testLocationTrigger.BoundingBox.Northwest.Longitude));
 
 
             MapTest.MapElements.Add(boundingBox);
-            MapTest.MoveToRegion(new MapSpan(new Position(testLocationTrigger.Centre.Latitude,testLocationTrigger.Centre.Longitude), testLocationTrigger.BoundingBox.HeightDegress, testLocationTrigger.BoundingBox.WidthDegrees));
+            MapTest.MoveToRegion(new MapSpan(new Position(testLocationTrigger.Centre.Latitude,testLocationTrigger.Centre.Longitude), testLocationTrigger.BoundingBox.HeightDegrees, testLocationTrigger.BoundingBox.WidthDegrees));
 
 
         }
@@ -229,8 +229,8 @@ namespace SampleAndTesting.Tests
                 BearingRangeFromResult.Text = result.ToString() + "\nRange: " + result.Range + ", Centre: " + testCoordinate.BearingTo(testLocationTrigger.Centre);
 
                 double centreBearing = testCoordinate.BearingTo(testLocationTrigger.Centre);
-                double guideDistance = testLocationTrigger.BoundingBox.width;
-                if (testLocationTrigger.BoundingBox.height > guideDistance) guideDistance = testLocationTrigger.BoundingBox.height;
+                double guideDistance = testLocationTrigger.BoundingBox.Width;
+                if (testLocationTrigger.BoundingBox.Height > guideDistance) guideDistance = testLocationTrigger.BoundingBox.Height;
                 double targetBearing1 = CoordinateHelpers.NormaliseBearing(centreBearing + 90);
                 double targetBearing2 = CoordinateHelpers.NormaliseBearing(centreBearing - 90);
                 MapCoordinate Point1 = testLocationTrigger.ClosestPointTo(testLocationTrigger.Centre.PointAtDistanceAndBearing(guideDistance, targetBearing1));
@@ -349,10 +349,10 @@ namespace SampleAndTesting.Tests
                     if (MapTest.MapElements.Contains(pointsInBoundingBox)) MapTest.MapElements.Remove(pointsInBoundingBox);
                     pointsInBoundingBox = new Polygon();
                     pointsInBoundingBox.StrokeColor = Color.DarkGreen;
-                    pointsInBoundingBox.Geopath.Add(new Position(MBB.northwest.Latitude, MBB.northwest.Longitude));
-                    pointsInBoundingBox.Geopath.Add(new Position(MBB.northwest.Latitude, MBB.southeast.Longitude));
-                    pointsInBoundingBox.Geopath.Add(new Position(MBB.southeast.Latitude, MBB.southeast.Longitude));
-                    pointsInBoundingBox.Geopath.Add(new Position(MBB.southeast.Latitude, MBB.northwest.Longitude));
+                    pointsInBoundingBox.Geopath.Add(new Position(MBB.Northwest.Latitude, MBB.Northwest.Longitude));
+                    pointsInBoundingBox.Geopath.Add(new Position(MBB.Northwest.Latitude, MBB.Southeast.Longitude));
+                    pointsInBoundingBox.Geopath.Add(new Position(MBB.Southeast.Latitude, MBB.Southeast.Longitude));
+                    pointsInBoundingBox.Geopath.Add(new Position(MBB.Southeast.Latitude, MBB.Northwest.Longitude));
                     MapTest.MapElements.Add(pointsInBoundingBox);
                 }
             }

@@ -95,6 +95,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Tests\BoundingBoxTest.xaml.cs">
+      <DependentUpon>BoundingBoxTest.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Samples\SamplesMenu.xaml.cs">
       <DependentUpon>SamplesMenu.xaml</DependentUpon>
     </Compile>

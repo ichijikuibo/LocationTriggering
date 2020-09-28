@@ -36,9 +36,6 @@ namespace LocationTriggering.Utilities
             _centre = new MapCoordinate( (_northwest.Latitude + southeast.Latitude) / 2, CoordinateHelpers.NormaliseLongitude((_northwest.Longitude + _southeast.Longitude) / 2));
             _widthDegrees = CoordinateHelpers.NormaliseLongitude(_northwest.Longitude - _southeast.Longitude);
             _heightDegress = _northwest.Latitude - southeast.Latitude;
-
-
-
         }
         /// <summary>
         /// Construct a bounding box from four double representing the northwest and southeast map coordinates
@@ -51,13 +48,13 @@ namespace LocationTriggering.Utilities
 
             _northwest = new MapCoordinate(lat1, lng1);
             _southeast = new MapCoordinate(lat2, lng2);
-            if (southeast.Longitude - northwest.Longitude > 180)//determine if the bounding box crosses between -180 and 180
+            if (_southeast.Longitude - _northwest.Longitude > 180)//determine if the bounding box crosses between -180 and 180
             {
                 _crossesInternationalDateLine = true;
             }
-            _centre = new MapCoordinate(CoordinateHelpers.NormaliseLongitude((_northwest.Longitude + _southeast.Longitude) / 2), (_northwest.Latitude + southeast.Latitude) / 2);
+            _centre = new MapCoordinate(CoordinateHelpers.NormaliseLongitude((_northwest.Longitude + _southeast.Longitude) / 2), (_northwest.Latitude + _southeast.Latitude) / 2);
             _widthDegrees = CoordinateHelpers.NormaliseBearing(_northwest.Longitude - _southeast.Longitude);
-            _heightDegress = _northwest.Latitude - southeast.Latitude;
+            _heightDegress = _northwest.Latitude - _southeast.Latitude;
 
         }
         /// <summary>
@@ -141,7 +138,7 @@ namespace LocationTriggering.Utilities
         /// <returns>String that represnts the bounding box</returns>
         public override string ToString()
         {
-            return northwest.ToString() + " - " + _southeast.ToString();
+            return _northwest.ToString() + " - " + _southeast.ToString();
         }
         /// <summary>
         /// Determines if the bounding box refers to the same area
@@ -151,7 +148,7 @@ namespace LocationTriggering.Utilities
         public override bool Equals(object obj)
         {
             MapBoundingBox MC = obj as MapBoundingBox;
-            return MC.northwest.Equals(northwest) && MC.southeast.Equals(southeast);
+            return MC.Northwest.Equals(Northwest) && MC.Southeast.Equals(Southeast);
         }
         public override int GetHashCode()
         {
@@ -160,20 +157,20 @@ namespace LocationTriggering.Utilities
         /// <summary>
         /// The southeast point of the box
         /// </summary>
-        public MapCoordinate southeast { get => _southeast; }
+        public MapCoordinate Southeast { get => _southeast; }
         /// <summary>
         /// The northwest point of the box
         /// </summary>
 
-        public MapCoordinate northwest { get => _northwest; }
+        public MapCoordinate Northwest { get => _northwest; }
         /// <summary>
         /// The width of the box in kilometers
         /// </summary>
-        public double width { get => calculateWidth();  }
+        public double Width { get => calculateWidth();  }
         /// <summary>
         /// The height of the box in kilometers
         /// </summary>
-        public double height { get => calculateHeight(); }
+        public double Height { get => calculateHeight(); }
         /// <summary>
         /// The width of the box in deegrees
         /// </summary>
@@ -181,6 +178,7 @@ namespace LocationTriggering.Utilities
         /// <summary>
         /// The height of the box in degrees
         /// </summary>
-        public double HeightDegress { get => _heightDegress;  }
+        public double HeightDegrees { get => _heightDegress;  }
+        public MapCoordinate Centre { get => _centre; }
     }
 }
