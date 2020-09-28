@@ -32,7 +32,7 @@ private void BasicLocationTriggerSample()
     listener.LocationTriggers.Add(paris);
     
     //Start the listener and have it update every 1 second and 5 meters moved
-    listener.StartListening(1,5)
+    listener.StartListening(new TimeSpan(0,0,1),5)
 }
 
 private void Listener_LocationsChanged(object sender, LocationTriggering.Utilities.LocationTriggeredEventArgs e)
@@ -52,8 +52,8 @@ private void Listener_LocationsChanged(object sender, LocationTriggering.Utiliti
 }
 ```
 ## Limitations
--Triggers can not cross poles
--Triggers can not be larger than 180 longitude
+- Triggers can not cross poles
+- Triggers can not be larger than 180 longitude
 
 ## Plans
 1. Add radial and polyline based locations
