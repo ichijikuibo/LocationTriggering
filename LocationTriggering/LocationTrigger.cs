@@ -107,7 +107,7 @@ namespace LocationTriggering
             }
             CalculateProperties();
         }
-        protected LocationTrigger(string id,string coordinates,char latLngSplit=',', char pointSplit=' ')
+        protected LocationTrigger(string id,string coordinates,char latLngSplit=',', char pointSplit=' ',bool longitudeFirst = false)
         {
             _locationID = id;
             if (pointSplit == '\n')
@@ -124,8 +124,12 @@ namespace LocationTriggering
                 string latLng = s;
                 if (latLngSplit != ' ') latLng = s.Replace(" ", "");
                 string[] splitCoordinate = latLng.Split(latLngSplit);
-                MapCoordinate newCoordinate = new MapCoordinate(double.Parse(splitCoordinate[1]), double.Parse(splitCoordinate[0]));
-                if(!Contains(newCoordinate))_points.Add(newCoordinate);
+
+                MapCoordinate newCoordinate;
+                if(longitudeFirst)
+                    newCoordinate = new MapCoordinate(double.Parse(splitCoordinate[1]), double.Parse(splitCoordinate[0]));
+                else newCoordinate = new MapCoordinate(double.Parse(splitCoordinate[0]), double.Parse(splitCoordinate[1]));
+                if (!Contains(newCoordinate))_points.Add(newCoordinate);
             }
             CalculateProperties();
         }

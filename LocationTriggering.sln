@@ -13,6 +13,31 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleAndTesting", "SampleA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationTriggering", "LocationTriggering\LocationTriggering.csproj", "{28DB435A-63B1-4723-A16E-65D953B8B4D4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{53B0AB0B-12C8-4DDF-A0E1-6CA02D1B1040}"
+	ProjectSection(SolutionItems) = preProject
+		Documents\requirements.txt = Documents\requirements.txt
+		Documents\TestPlan.xlsx = Documents\TestPlan.xlsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestData", "TestData", "{B5231140-32C2-422E-9EA8-75EE06CD833E}"
+	ProjectSection(SolutionItems) = preProject
+		Documents\Testing\2PointTestData.txt = Documents\Testing\2PointTestData.txt
+		Documents\Testing\AddPointTestData.xlsx = Documents\Testing\AddPointTestData.xlsx
+		Documents\Testing\BearingRangeAndClosestPointTestData.txt = Documents\Testing\BearingRangeAndClosestPointTestData.txt
+		Documents\Testing\BearingRangeConstructorTestData.txt = Documents\Testing\BearingRangeConstructorTestData.txt
+		Documents\Testing\BearingRangeEqualsTestData.txt = Documents\Testing\BearingRangeEqualsTestData.txt
+		Documents\Testing\BearingRangeOverlapsTestData.txt = Documents\Testing\BearingRangeOverlapsTestData.txt
+		Documents\Testing\ContainsBearingTestData.txt = Documents\Testing\ContainsBearingTestData.txt
+		Documents\Testing\ContainsPointTestData.txt = Documents\Testing\ContainsPointTestData.txt
+		Documents\Testing\CoordinateTestData.txt = Documents\Testing\CoordinateTestData.txt
+		Documents\Testing\EqualityCoordinates.txt = Documents\Testing\EqualityCoordinates.txt
+		Documents\Testing\LocationTriggerTestData.xlsx = Documents\Testing\LocationTriggerTestData.xlsx
+		Documents\Testing\OverlapsTestData.txt = Documents\Testing\OverlapsTestData.txt
+		Documents\Testing\PointAtDistanceAndBearingTestData.xlsx = Documents\Testing\PointAtDistanceAndBearingTestData.xlsx
+		Documents\Testing\PointsInBoundingBox.txt = Documents\Testing\PointsInBoundingBox.txt
+		Documents\Testing\RemovePointTestData.xlsx = Documents\Testing\RemovePointTestData.xlsx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -156,6 +181,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B5231140-32C2-422E-9EA8-75EE06CD833E} = {53B0AB0B-12C8-4DDF-A0E1-6CA02D1B1040}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B01D4D17-2DCF-4880-95D6-11783617CB94}

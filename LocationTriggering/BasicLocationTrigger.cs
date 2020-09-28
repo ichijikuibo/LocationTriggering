@@ -20,7 +20,7 @@ namespace LocationTriggering
             _title = title;
             _description = description;
         }
-        public BasicLocationTrigger(string id, string points , char latLngSplit=',',char pointSplit=' ') : base(id, points, latLngSplit, pointSplit)
+        public BasicLocationTrigger(string id, string points , char latLngSplit=',',char pointSplit=' ',bool longitudeFirst=false) : base(id, points, latLngSplit, pointSplit, longitudeFirst)
         {
 
             _title = id;
