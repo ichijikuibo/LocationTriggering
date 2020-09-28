@@ -30,6 +30,9 @@ private void BasicLocationTriggerSample()
     anew MapCoordinate(48.94537589150431,2.177910117161548),new MapCoordinate(48.84534555641764,2.101415147749033)};
     BasicLocationTrigger paris = new BasicLocationTrigger("Paris", parisPoints, "Paris", "Capital city of France");
     listener.LocationTriggers.Add(paris);
+    
+    //Start the listener and have it update every 1 second and 5 meters moved
+    listener.StartListening(1,5)
 }
 
 private void Listener_LocationsChanged(object sender, LocationTriggering.Utilities.LocationTriggeredEventArgs e)
