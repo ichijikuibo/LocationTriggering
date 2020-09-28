@@ -53,7 +53,7 @@ private void Listener_LocationsChanged(object sender, LocationTriggering.Utiliti
 ```
 ## Limitations
 - Triggers can not cross poles
-- Triggers can not be larger than 180 longitude
+- Triggers can not have a width greater than 180 degrees
 
 ## Plans
 1. Add radial and polyline based locations
