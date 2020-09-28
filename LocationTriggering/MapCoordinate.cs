@@ -1,7 +1,6 @@
 ﻿using LocationTriggering.Utilities;
+using Plugin.Geolocator.Abstractions;
 using System;
-using Xamarin.Essentials;
-
 namespace LocationTriggering
 {
     /// <summary>
@@ -35,7 +34,7 @@ namespace LocationTriggering
             _longitude = CoordinateHelpers.NormaliseLongitude(newLogitude);
         }
 
-        public MapCoordinate(Location location)
+        public MapCoordinate(Position location)
         {
             if (location.Latitude < -90 || location.Latitude > 90) throw new InvalidCoordinateException("Invalid Coordinate latitude must be greater or equal to -90 or less then or equal to 90");
             if (double.IsNaN(location.Latitude) || double.IsNaN(location.Longitude)) throw new InvalidCoordinateException("Invalid Coordinate both latitude and longitude must have a value");
@@ -121,12 +120,12 @@ namespace LocationTriggering
             return new PointD(Longitude, Latitude);
         }
         /// <summary>
-        /// Converts the MapCoordinate to Xamarin.Essential.Location 
+        /// Converts the MapCoordinate to Geolocator Position
         /// </summary>
         /// <returns>A location with the same latitude and longitude</returns>
-        public Location ToEssentialsLocation()
+        public Position ToPosition()
         {
-            return new Location(Latitude, Longitude);
+            return new Position(Latitude, Longitude);
         }
         /// <summary>
         /// Coverts MapCoorddinate to a string format "Latitude, Longitude"

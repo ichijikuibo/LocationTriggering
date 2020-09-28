@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Plugin.Geolocator.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Xamarin.Essentials;
 
 namespace LocationTriggering.Utilities
 {
@@ -11,7 +11,7 @@ namespace LocationTriggering.Utilities
     public class LocationTriggeredEventArgs :EventArgs
     {
         public DateTime TimeTriggered { get; set; }
-        public Location Position { get; set; }
+        public Position GPSPosition { get; set; }
         public IReadOnlyList<LocationTrigger> LocationsEntered { get; set; }
         public IReadOnlyList<LocationTrigger> LocationsExited { get; set; }
         public IReadOnlyList<LocationTrigger> CurrentLocations { get; set; }
@@ -27,7 +27,7 @@ namespace LocationTriggering.Utilities
     public class LocationUpdatedEventArgs : EventArgs
     {
         public DateTime TimeTriggered { get; set; }
-        public Location Position { get; set; }
+        public Position GPSPosition { get; set; }
         public LocationTrigger Location { get; set; }
     }
     /// <summary>
@@ -50,7 +50,7 @@ namespace LocationTriggering.Utilities
     public class  PositionUpdatedEventArgs : EventArgs
     {
         public DateTime TimeTriggered { get; set; }
-        public Location Position { get; set; }
+        public Position GPSPosition { get; set; }
     }
     /// <summary>
     /// The event that is triggered whenever there is a gps update

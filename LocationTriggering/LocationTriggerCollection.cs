@@ -1,11 +1,11 @@
 ﻿using LocationTriggering.Utilities;
+using Plugin.Geolocator.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Xamarin.Essentials;
 
 namespace LocationTriggering
 {
@@ -57,7 +57,7 @@ namespace LocationTriggering
         /// </summary>
         /// <param name="point">The point to check for locations</param>
         /// <returns>List of locations at the point(can be empty) </returns>
-        public IReadOnlyList<LocationTrigger> LocationsAtPoint(Location point)
+        public IReadOnlyList<LocationTrigger> LocationsAtPoint(Position point)
         {
             return LocationsAtPoint(new MapCoordinate(point.Latitude, point.Longitude));
         }
@@ -87,7 +87,7 @@ namespace LocationTriggering
         /// <param name="position">The position to measure distances from</param>
         /// <param name="distance">The highest distance to check</param>
         /// <returns>List of LocationTriggers</returns>
-        public IReadOnlyList<LocationTrigger> LocationsNear(Location position, double distance)
+        public IReadOnlyList<LocationTrigger> LocationsNear(Position position, double distance)
         {
             return LocationsNear(new MapCoordinate(position), distance);
         }
@@ -114,7 +114,7 @@ namespace LocationTriggering
         /// <param name="position">The position to measure distances from</param>
         /// <param name="distance">The number of locations to return</param>
         /// <returns>List of LocationTriggers</returns>
-        public IReadOnlyList<LocationTrigger> ClosestLocations(Location position, int number)
+        public IReadOnlyList<LocationTrigger> ClosestLocations(Position position, int number)
         {
             return ClosestLocations(new MapCoordinate(position), number);
         }
@@ -149,7 +149,7 @@ namespace LocationTriggering
         /// Update the distancesfrom the specified location for all the Locations in the collection
         /// </summary>
         /// <param name="position">The position to measure from</param>
-        public void UpdateDistances(Location position)
+        public void UpdateDistances(Position position)
         {
             UpdateDistances(new MapCoordinate(position));
         }
@@ -168,7 +168,7 @@ namespace LocationTriggering
         /// Update the bearings from the specified location for all the Locations in the collection
         /// </summary>
         /// <param name="position">The position to measure from</param>
-        public void UpdateBearings(Location position)
+        public void UpdateBearings(Position position)
         {
             UpdateBearings(new MapCoordinate(position));
         }

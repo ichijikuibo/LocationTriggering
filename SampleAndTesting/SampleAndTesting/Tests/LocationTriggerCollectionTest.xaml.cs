@@ -191,7 +191,7 @@ namespace SampleAndTesting.Tests
             try
             {
                 MapCoordinate MC = GetTestMapCoordinate();
-                locationsAtPoint = locationTriggerCollectionTest.LocationsAtPoint(new Location(MC.Latitude,MC.Longitude));
+                locationsAtPoint = locationTriggerCollectionTest.LocationsAtPoint(MC);
                 LocationsAtPointResult.Text = "";
                 if (locationsAtPoint.Count > 0)
                 {

@@ -95,6 +95,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Samples\SamplesMenu.xaml.cs">
+      <DependentUpon>SamplesMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Tests\BearingRangeTests.xaml.cs">
       <DependentUpon>BearingRangeTests.xaml</DependentUpon>
     </Compile>

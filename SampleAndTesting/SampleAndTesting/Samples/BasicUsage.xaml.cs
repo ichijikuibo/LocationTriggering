@@ -17,6 +17,10 @@ namespace SampleAndTesting.Samples
         {
             InitializeComponent();
 
+            
+        }
+        protected override void OnAppearing()
+        {
             BasicLocationTriggerSample();
         }
         private void BasicLocationTriggerSample()
@@ -48,6 +52,7 @@ namespace SampleAndTesting.Samples
             //Start the listener and have it update every 1 second and 5 meters moved
             listener.StartListening(new TimeSpan(0, 0, 1), 5);
         }
+
 
         private void Listener_LocationsChanged(object sender, LocationTriggering.Utilities.LocationTriggeredEventArgs e)
         {

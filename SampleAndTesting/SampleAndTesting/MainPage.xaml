@@ -12,6 +12,12 @@
                     </Frame.GestureRecognizers>
                     <Label Text="Testing" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
                 </Frame>
+                <Frame MinimumHeightRequest="200" CornerRadius="10" BorderColor="Black">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="Samples_Tapped" />
+                    </Frame.GestureRecognizers>
+                    <Label Text="Samples" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
+                </Frame>
             </StackLayout>
         </ScrollView>
     </Grid>
