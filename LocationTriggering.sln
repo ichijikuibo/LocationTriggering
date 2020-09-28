@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationTriggering", "Locat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{53B0AB0B-12C8-4DDF-A0E1-6CA02D1B1040}"
 	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
 		Documents\requirements.txt = Documents\requirements.txt
 		Documents\TestPlan.xlsx = Documents\TestPlan.xlsx
 	EndProjectSection

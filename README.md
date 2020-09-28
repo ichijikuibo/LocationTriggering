@@ -2,7 +2,6 @@
 LocationTriggering is a class library for Xamarin.Forms that is designed to make it easy to create a location based application that displays data to the user dependant on where they are.
 
 
-
 ## Basic Usage
 ```
 private void BasicLocationTriggerSample()
@@ -52,7 +51,7 @@ private void Listener_LocationsChanged(object sender, LocationTriggering.Utiliti
 }
 ```
 ## Limitations
-- Triggers can not cross poles
+- Triggers can not cross the north or south pole
 - Triggers can not have a width greater than 180 degrees
 
 ## Plans
