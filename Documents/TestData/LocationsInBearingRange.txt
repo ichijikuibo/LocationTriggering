@@ -1,0 +1,16 @@
+0.000000	0.000000 0.00-0.00 Everywhere
+0.000000	0.000000 230.00-250.00 SouthAmerica,SaoPaolo
+0.000000	0.000000 120.00-140.00 Johanasburg
+0.000000	0.000000 350.00-25.00 Europe,Paris,Moscow
+0.000000	0.000000 309.50-249.50 DistrictOfColumbia,Iceland,Europe
+0.000000	180.000000 0.00-0.00 Everywhere
+0.000000	180.000000 40.00-50.00 Hawaii
+0.000000	180.000000 180.00-185.00 NewZealand, Wellington
+55.018884	 -4.536370	208-270.5 Derry,Dublin,Galway,Waterford,Cork,Limrick,SouthAmerica,SaoPaolo,Ireland
+55.018884	 -4.536370	150-150 London,Paris, Europe,Johannasburg
+55.018884	 -4.536370	26-30 Tokyo
+55.018884	 -4.536370	0-20 Nowhere
+37.906840	140.524730	355-80 Nowhere
+37.906840	140.524730	230-300 Nowhere
+90.000000	140.524730	200-260	Nowhere
+90.000000	140.524730	330-80	Nowhere

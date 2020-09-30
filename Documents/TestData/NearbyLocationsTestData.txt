@@ -1,0 +1,18 @@
+ 53.143002	 -8.122611	68.75	Limerick, Galway
+ 53.143002	 -8.122611	131.50	Limerick, Galway, Dublin,Waterford
+ 53.143002	 -8.122611	131.50	Limerick, Galway, Dublin,Waterford,Cork
+ 0.0000000	 0.0000000	21000	Everything
+10.618752	159.757860	3600	Tokyo
+10.618752	159.757860	5100	Tokyo, Hawaii
+10.618752	159.757860	7300	Tokyo, Hawaii,NewZealand,Wellington
+49.011572	  1.888751	54		Paris
+49.011572	  1.888751	320		Paris,London
+-26.477504	 78.522305	5050	Johannaburg
+ 21.597755	-72.043575	1990	DistrictOfColumbia
+ 21.597755	-72.043575	5650	DistrictOfColumbia, SouthAmerica
+ 21.597755	-72.043575	5820	DistrictOfColumbia, SaoPaolo, SouthAmerica
+-26.477504	 78.522305	4900	Nowhere
+49.011572	  1.888751	160		Nowhere
+10.618752	159.757860	3000    Nowhere
+-26.477504	 78.522305	4900	Nowhere
+ 21.597755	-72.043575	1900	Nowhere

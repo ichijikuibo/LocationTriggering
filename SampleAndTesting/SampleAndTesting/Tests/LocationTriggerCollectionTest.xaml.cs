@@ -162,7 +162,7 @@ namespace SampleAndTesting.Tests
                 locationTriggerCollectionTest.Add(newLT);
                 UpdateMap();
                 FillLocationPicker();
-                AddLocationResult.Text = "Point added see map for result";
+                AddLocationResult.Text = "Location added see map for result";
 
             }
             catch (Exception exception)
@@ -178,7 +178,7 @@ namespace SampleAndTesting.Tests
                 locationTriggerCollectionTest.Remove(LT);
                 UpdateMap();
                 FillLocationPicker();
-                RemoveLocationResult.Text = "Point removed see map for result";
+                RemoveLocationResult.Text = "Location removed see map for result";
 
             }
             catch (Exception exception)
