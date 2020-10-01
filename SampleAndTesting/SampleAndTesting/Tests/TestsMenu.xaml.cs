@@ -38,5 +38,9 @@ namespace SampleAndTesting.Tests
         {
             Navigation.PushAsync(new BoundingBoxTest());
         }
+        private void LocationListener_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new LocationListenerTest());
+        }
     }
 }

@@ -55,10 +55,10 @@ namespace LocationTriggering
         /// Uses a haversine function to get the distance between this point and another in meters
         /// </summary>
         /// <param name="destinationPoint">The point calcualte the distance to</param>
-        /// <returns>Distance in meters</returns>        
+        /// <returns>Distance in kilometers</returns>        
         public double DistanceTo(MapCoordinate destinationPoint)
         {
-            return CoordinateHelpers.Haversine(_latitude, _longitude, destinationPoint.Latitude, destinationPoint.Longitude) * 1000;
+            return CoordinateHelpers.Haversine(_latitude, _longitude, destinationPoint.Latitude, destinationPoint.Longitude);
         }
         /// <summary>
         /// uses a haversine function to get the distance between this point and another in feet
@@ -68,6 +68,15 @@ namespace LocationTriggering
         public double DistanceToFeet(MapCoordinate destinationPoint)
         {
             return CoordinateHelpers.Haversine(_latitude, _longitude, destinationPoint.Latitude, destinationPoint.Longitude) * 1000 * 3.280839895;
+        }
+        /// <summary>
+        /// uses a haversine function to get the distance between this point and another in miles
+        /// </summary>
+        /// <param name="destinationPoint">The point calcualte the distance to</param>
+        /// <returns>Distance in miles</returns>
+        public double DistanceToMiles(MapCoordinate destinationPoint)
+        {
+            return CoordinateHelpers.Haversine(_latitude, _longitude, destinationPoint.Latitude, destinationPoint.Longitude) * 0.62137119;
         }
         /// <summary>
         /// Returns the bearing in degrees from the current point to a destination point

@@ -15,18 +15,18 @@ namespace SampleAndTesting.Samples
     {
         public BasicUsage()
         {
-            InitializeComponent();
-
-            
+            InitializeComponent();            
         }
+        LocationListener<BasicLocationTrigger> listener;
         protected override void OnAppearing()
         {
             BasicLocationTriggerSample();
         }
         private void BasicLocationTriggerSample()
         {
+            base.OnAppearing();
             //Create an instance of the location listener class
-            LocationListener listener = new LocationListener();
+            listener = new LocationListener<BasicLocationTrigger>();
             listener.LocationsChanged += Listener_LocationsChanged;
             //Create some map coordinates to form a polygon that makes up the location
             MapCoordinate[] londonPoints = new MapCoordinate[] {new MapCoordinate(51.71182591666487, -0.1264198857978871),
@@ -52,22 +52,26 @@ namespace SampleAndTesting.Samples
             //Start the listener and have it update every 1 second and 5 meters moved
             listener.StartListening(new TimeSpan(0, 0, 1), 5);
         }
-
-
-        private void Listener_LocationsChanged(object sender, LocationTriggering.Utilities.LocationTriggeredEventArgs e)
+        private void Listener_LocationsChanged(object sender, LocationTriggering.Utilities.LocationTriggeredEventArgs<BasicLocationTrigger> e)
         {
             if (e.CurrentLocations.Count > 0)//Check if there is at least 1 location at the current position 
             {
                 //Convert the LocationTrigger to a BasicLocationTrigger or any class inherited from LocationTrigger
-                BasicLocationTrigger BLT = e.CurrentLocations[0] as BasicLocationTrigger;
+                BasicLocationTrigger BLT = e.CurrentLocations[0];
                 locationLabel.Text = "You are in " + BLT.Title;
                 detailsLabel.Text = BLT.Description;
             }
             else //There is no locations at the current position
             {
-                locationLabel.Text = "The centre of the universe";
+                locationLabel.Text = "You are at the centre of the universe";
                 detailsLabel.Text = "because everywhere is the centre of the universe";
             }
+        }
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            //This needs ot be called before start listening is called again even on a difference instance of the class
+            listener.StopListening();
         }
     }
 }

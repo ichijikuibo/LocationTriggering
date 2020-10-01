@@ -25,8 +25,6 @@ namespace SampleAndTesting.Tests
         TestLocationTriggerData _testData;
         Polygon polygon;
         Polygon boundingBox;
-        Polygon pointsInBoundingBox;
-        Polygon overlapsWithPolygon;
         Polyline bearingRangeLine;
         Polyline bearingRangeLine2;
         Pin currentMapCoordinate;
@@ -155,7 +153,7 @@ namespace SampleAndTesting.Tests
                 BearingRangeFromResult.Text = result.ToString() + "\nRange: " + result.Range + ", Centre: " + testCoordinate.BearingTo(testBoundingBox.Centre);
                 double size = testBoundingBox.Width;
                 if(testBoundingBox.Height>size) size = testBoundingBox.Height;
-                double lineLength = testCoordinate.DistanceTo(testBoundingBox.Centre)/1000 + size;
+                double lineLength = testCoordinate.DistanceTo(testBoundingBox.Centre) + size;
 
                 MapCoordinate Point1 = testCoordinate.PointAtDistanceAndBearing(lineLength, result.Start);
                 MapCoordinate Point2 = testCoordinate.PointAtDistanceAndBearing(lineLength, result.End);

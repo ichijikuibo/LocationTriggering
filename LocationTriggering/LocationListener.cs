@@ -2,28 +2,34 @@
 using Plugin.Geolocator.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace LocationTriggering
 {
-    public class LocationListener
+    /// <summary>
+    /// A Class for listening to gps triggers and sending events whenever a new loccation is reached or exited
+    /// </summary>
+    /// <typeparam name="T">A type derived from a LocationTrigger</typeparam>
+    public class LocationListener<T> where T : LocationTrigger
     {
         /// <summary>
         /// Event sent when ever there is a change to the CurrentLocationTriggers
         /// </summary>
-        public event LocationTriggerEventHandler LocationsChanged;
-        public event LocationEnteredEventHandler LocationEntered;
-        public event LocationExitedEventHandler LocationExited;
+        public event LocationTriggerEventHandler<T> LocationsChanged;
+        public event LocationEnteredEventHandler<T> LocationEntered;
+        public event LocationExitedEventHandler<T> LocationExited;
         public event PositionUpdatedEventHandler PositionUpdated;
-
-        private LocationTriggerCollection _LocationTriggers;
-        private LocationTriggerCollection _currentLocationTriggers;
-        private LocationTriggerCollection _closestLocations;
+        private LocationTriggerCollection<T> _LocationTriggers;
+        private LocationTriggerCollection<T> _currentLocationTriggers;
+        private LocationTriggerCollection<T> _closestLocations;
         private bool _listening;
         private Position _lastPosition;
-        private IReadOnlyList<LocationTrigger> _lastlocationTriggers;
+        private IReadOnlyList<T> _lastlocationTriggers;
         private TimeSpan _gpsInterval;
         private double _gpsDistance;
         private int _numberOfClosestLocations = 10;
@@ -31,7 +37,7 @@ namespace LocationTriggering
         /// <summary>
         /// List of the location triggers to be checked against the gps location
         /// </summary>
-        public LocationTriggerCollection LocationTriggers { get => _LocationTriggers; }
+        public LocationTriggerCollection<T> LocationTriggers { get => _LocationTriggers; }
         /// <summary>
         /// True if the LocationListener is active
         /// </summary>
@@ -43,7 +49,7 @@ namespace LocationTriggering
         /// <summary>
         /// The triggers that were returned in the last gps update
         /// </summary>
-        public LocationTriggerCollection CurrentLocationTriggers { get => _currentLocationTriggers; }
+        public LocationTriggerCollection<T> CurrentLocationTriggers { get => _currentLocationTriggers; }
         /// <summary>
         /// The number of location to store in ClosestLocations at once. 0 to disable -1 for all locations default:10
         /// </summary>
@@ -51,24 +57,25 @@ namespace LocationTriggering
         /// <summary>
         /// A list of the closest locations to the last checked GPS point. Default 10, number change changed with NumberOfClosestLocations
         /// </summary>
-        public LocationTriggerCollection ClosestLocations { get => _closestLocations; }
+        public LocationTriggerCollection<T> ClosestLocations { get => _closestLocations; }
 
         /// <summary>
         ///  Default constructor
         /// </summary>       
         public LocationListener()
         {
-            _LocationTriggers = new LocationTriggerCollection();
-            _closestLocations = new LocationTriggerCollection();
-            _currentLocationTriggers = new LocationTriggerCollection();
+            _LocationTriggers = new LocationTriggerCollection<T>();
+            _closestLocations = new LocationTriggerCollection<T>();
+            _currentLocationTriggers = new LocationTriggerCollection<T>();
             _listening = false;
         }
         /// <summary>
         /// Starts the listener and sets it to check for GPS the specified interval and fire events if it detects a change greater then the specified distance
+        /// Stop llistening needs to be called when its no longer required or leaving the page
         /// </summary>
         /// <param name="interval">A System.TimeSpan that determines how ofter to check for changes</param>
         /// <param name="distanceMetres">The minimum distance between that needs to be moved for the location to be updated</param>
-        public async void StartListening(TimeSpan interval,double distanceMetres)
+        public async void StartListening(TimeSpan interval, double distanceMetres)
         {
             //check if GPS Location permission has been granted
             //if (await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>() != PermissionStatus.Granted) throw new PermissionException("Location permission not granted, Location permission is required for this feature");
@@ -103,12 +110,18 @@ namespace LocationTriggering
                 //If distance is too close to previous end the method
 
             }
-            //Process the new position
-            ProcessLocation(newPosition);
-            //send a PositionUpdated event
-            PositionUpdated?.Invoke(this, new PositionUpdatedEventArgs() { GPSPosition = newPosition, TimeTriggered = System.DateTime.Now });
 
-            _lastPosition = newPosition;//Store the current position
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                //Process the new position
+                ProcessLocation(newPosition);
+
+                ProcessClosestLocations(newPosition);
+                //send a PositionUpdated event
+                PositionUpdated?.Invoke(this, new PositionUpdatedEventArgs() { GPSPosition = newPosition, TimeTriggered = System.DateTime.Now });
+
+                _lastPosition = newPosition;//Store the current position
+            });
         }
         /// <summary>
         /// Stops the GPS Listener
@@ -126,7 +139,7 @@ namespace LocationTriggering
         /// Changes the interval between GPS updates
         /// </summary>
         /// <param name="interval">A System.TimeSpan that determines how ofter to check for changes</param>
-        public async void  ChangeGpsPollInterval(TimeSpan interval)
+        public async void ChangeGpsPollInterval(TimeSpan interval)
         {
             _gpsInterval = interval;
             await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
@@ -142,69 +155,37 @@ namespace LocationTriggering
             await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
             await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(_gpsInterval, _gpsDistance);
         }
-        //private async void _GPSTimer_Elapsed(Object stateInfo)
-        ////private async void _GPSTimer_Elapsed(object sender, ElapsedEventArgs e)
-        //{
-
-        //    double distance = 0;
-        //    //Get the current GPS Location            
-        //    Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(async () =>
-        //    {
-        //        Location newPosition = await Geolocation.GetLocationAsync();
-
-        //        //if position is the same as last position end the method
-        //        if (_lastPosition != null)
-        //        {
-        //            if (newPosition.Latitude == _lastPosition.Latitude || newPosition.Longitude == _lastPosition.Longitude)
-        //            {
-        //                return;
-        //            }
-        //            //Check distance between current location and previous location
-        //            distance = newPosition.CalculateDistance(_lastPosition, DistanceUnits.Kilometers) * 1000;
-        //            //If distance is too close to previous end the method
-        //            if (distance < _gpsDistance)
-        //            {
-        //                return;
-        //            }
-        //        }
-        //        //Process the new position
-        //        ProcessLocation(newPosition);
-        //        //send a PositionUpdated event
-        //        PositionUpdated?.Invoke(this, new PositionUpdatedEventArgs() { Position = newPosition, TimeTriggered = System.DateTime.Now });
-
-        //        _lastPosition = newPosition;//Store the current position
-        //    });
-        //}
         /// <summary>
         /// Checks the for triggers at the specifed Location and invokes events 
         /// </summary>
         /// <param name="gpsLocation">The gps location to be checked</param>
         public virtual void ProcessLocation(Position gpsLocation)
-        { 
+        {
             //Get the locations at the current point
-            IReadOnlyList<LocationTrigger> locationsAtPoint = _LocationTriggers.LocationsAtPoint(gpsLocation);
+            IReadOnlyList<T> locationsAtPoint = _LocationTriggers.LocationsAtPoint(gpsLocation);
             //Lists to store the changes
-            List<LocationTrigger> locationsEntered = new List<LocationTrigger>();
-            List<LocationTrigger> locationsExited = new List<LocationTrigger>();
+            List<T> locationsEntered = new List<T>();
+            List<T> locationsExited = new List<T>();
+            //check for locations that were in the previous updated but not in the current update and add to a list
+            foreach (T LT in CurrentLocationTriggers)
+            {
+                if (!locationsAtPoint.Contains(LT))
+                    locationsExited.Add(LT);
+            }
             //check for locations at the current point that weren't in the previous update and add to a List
             if (locationsAtPoint.Count > 0)
             {
-                foreach (LocationTrigger LT in locationsAtPoint)
+                foreach (T LT in locationsAtPoint)
                 {
                     if (!CurrentLocationTriggers.Contains(LT))
                         locationsEntered.Add(LT);
                 }
             }
-            //check for locations that were in the previous updated but not in the current update and add to a list
-            foreach (LocationTrigger LT in CurrentLocationTriggers)
-            {
-                if (!locationsAtPoint.Contains(LT)) 
-                    locationsExited.Add(LT);
-            }
+
             //The CurrentLocationTriggers List has been changed send a LocationsChanged change event
             if (locationsEntered.Count > 0 || locationsExited.Count > 0)
             {
-                LocationTriggeredEventArgs e = new LocationTriggeredEventArgs();
+                LocationTriggeredEventArgs<T> e = new LocationTriggeredEventArgs<T>();
                 e.CurrentLocations = locationsAtPoint;
                 e.LocationsEntered = locationsEntered.AsReadOnly();
                 e.LocationsExited = locationsExited.AsReadOnly();
@@ -214,18 +195,25 @@ namespace LocationTriggering
                 LocationsChanged?.Invoke(this, e);
 
                 //Send a LocationEntered entered event for each of the newly entered locations
-                foreach (LocationTrigger enteredLocation in locationsEntered)
+                foreach (T enteredLocation in locationsEntered)
                 {
-                    if(!_currentLocationTriggers.Contains(enteredLocation))_currentLocationTriggers.Add(enteredLocation);
-                    LocationEntered?.Invoke(this, new LocationUpdatedEventArgs() { TimeTriggered = System.DateTime.Now, GPSPosition = gpsLocation, Location = enteredLocation });
+                    if (!_currentLocationTriggers.Contains(enteredLocation))
+                    {
+                        _currentLocationTriggers.Add(enteredLocation);
+
+
+                    }
+                    LocationEntered?.Invoke(this, new LocationUpdatedEventArgs<T>() { TimeTriggered = System.DateTime.Now, GPSPosition = gpsLocation, Location = enteredLocation });
                 }
                 //Send a LocationExited entered event for each of the newly exited locations
-                foreach (LocationTrigger exitedLocation in locationsExited)
+                foreach (T exitedLocation in locationsExited)
                 {
-                    if (_currentLocationTriggers.Contains(exitedLocation)) _currentLocationTriggers.Add(exitedLocation);
-                    LocationExited?.Invoke(this, new LocationUpdatedEventArgs() { TimeTriggered = System.DateTime.Now, GPSPosition = gpsLocation, Location = exitedLocation });
+                    if (_currentLocationTriggers.Contains(exitedLocation)) _currentLocationTriggers.Remove(exitedLocation);
+                    LocationExited?.Invoke(this, new LocationUpdatedEventArgs<T>() { TimeTriggered = System.DateTime.Now, GPSPosition = gpsLocation, Location = exitedLocation });
                 }
+
             }
+
         }
         /// <summary>
         /// Update the list of closest locations
@@ -235,15 +223,51 @@ namespace LocationTriggering
         {
             if (_numberOfClosestLocations == 0) return;
             var ClosestLocations = LocationTriggers.ClosestLocations(gpsLocation, _numberOfClosestLocations);
-            foreach (LocationTrigger LT in _closestLocations)
+
+            List<T> locationsAdded = new List<T>();
+            List<T> locationsRemoved = new List<T>();
+            //check for locations that were in the previous updated but not in the current update and add to a list
+            foreach (T LT in _closestLocations)
             {
-                if (!ClosestLocations.Contains(LT)) _closestLocations.Remove(LT);
+                if (!ClosestLocations.Contains(LT))
+                    locationsRemoved.Add(LT);
             }
-            foreach(LocationTrigger LT in ClosestLocations)
+            //check for locations at the current point that weren't in the previous update and add to a List
+            if (ClosestLocations.Count > 0)
             {
-                if (!_closestLocations.Contains(LT)) _closestLocations.Add(LT);
+                foreach (T LT in ClosestLocations)
+                {
+                    if (!_closestLocations.Contains(LT))
+                        locationsAdded.Add(LT);
+                }
             }
-            _closestLocations.Sort(delegate (LocationTrigger lt1, LocationTrigger lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); });
+
+
+            if (locationsAdded.Count > 0 || locationsRemoved.Count > 0)
+            {
+
+                //Send a LocationEntered entered event for each of the newly entered locations
+                foreach (T enteredLocation in locationsAdded)
+                {
+                    if (!_closestLocations.Contains(enteredLocation))
+                    {
+                        _closestLocations.Add(enteredLocation);
+                    }
+                }
+                //Send a LocationExited entered event for each of the newly exited locations
+                foreach (T exitedLocation in locationsRemoved)
+                {
+                    if (_closestLocations.Contains(exitedLocation)) _closestLocations.Remove(exitedLocation);
+                }
+
+            }
+            _closestLocations.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt2.LastDistance); });
+        }
+        public virtual void ManualUpdate(Position gpsLocation)
+        {
+            ProcessLocation(gpsLocation);
+            ProcessClosestLocations(gpsLocation);
         }
     }
+
 }

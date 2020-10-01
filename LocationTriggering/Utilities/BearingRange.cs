@@ -49,7 +49,7 @@ namespace LocationTriggering.Utilities
         public bool ContainsBearing(double Bearing)
         {
             Bearing = CoordinateHelpers.NormaliseBearing(Bearing);
-            if (_range!= _end-_start)//if the range passes 0 then a different method to determine if the bearing is within the range is required
+            if (Math.Round(_range,3)!= Math.Round(_end-_start,3))//if the range passes 0 then a different method to determine if the bearing is within the range is required
             {
                 if (Bearing >= Start || Bearing <= End) return true;
             }

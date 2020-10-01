@@ -55,7 +55,7 @@ namespace SampleAndTesting.Tests
         {
             try { 
             double distance = mapCoordinate.DistanceTo(GetTestMapCoordinate());
-            DistanceToResult.Text = distance + "m";
+            DistanceToResult.Text = distance + "km";
             }
             catch (Exception exception)
             {

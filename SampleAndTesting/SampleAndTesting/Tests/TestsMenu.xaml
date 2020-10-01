@@ -36,6 +36,12 @@
                         </Frame.GestureRecognizers>
                         <Label Text="LocationTriggerCollection" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
                     </Frame>
+                    <Frame MinimumHeightRequest="200" CornerRadius="10" BorderColor="Black">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="LocationListener_Tapped" />
+                        </Frame.GestureRecognizers>
+                        <Label Text="LocationListener" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" />
+                    </Frame>
 
                 </StackLayout>
             </ScrollView>

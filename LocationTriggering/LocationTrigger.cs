@@ -301,7 +301,7 @@ namespace LocationTriggering
         /// override if you want to chang this to ClosestDistanceTo
         /// </summary>
         /// <param name="point">Point to measure distance from</param>
-        /// <returns>Distance in meters</returns>
+        /// <returns>Distance in kilometres</returns>
         public virtual double DistanceTo(MapCoordinate point)
         {
             if (_distanceCalcualtedFrom==null||!point.Equals(_distanceCalcualtedFrom))
@@ -324,7 +324,7 @@ namespace LocationTriggering
         /// Returns the closest distance to the boundary of this location to the specified point
         /// </summary>
         /// <param name="point">Location to measure distance from</param>
-        /// <returns>Distance in meters</returns>
+        /// <returns>Distance in kilometres</returns>
         public double ClosestDistanceTo(MapCoordinate point)
         {
             return (point.DistanceTo(ClosestPointTo(point)));
@@ -333,7 +333,7 @@ namespace LocationTriggering
         /// Returns the closest distance to the boundary of this location to the boundary of the specified location
         /// </summary>
         /// <param name="point">Location to measure distance from</param>
-        /// <returns>Distance in meters</returns>
+        /// <returns>Distance in kilometres</returns>
         public double ClosestDistanceTo(LocationTrigger location)
         {
             MapCoordinate ClosestPoint1 = ClosestPointTo(location.Centre);
@@ -367,9 +367,12 @@ namespace LocationTriggering
             MapCoordinate Point2 = ClosestPointTo(new MapCoordinate(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre.ToPointD(), guideDistance, targetBearing2)));//{54.9953895258887, -7.32721765393637}
             double start = point.BearingTo(Point2);
             double end = point.BearingTo(Point1);
-            BearingRange BoundingBoxRange = BoundingBox.BearingRangeFrom(point);
+            //BearingRange BoundingBoxRange = BoundingBox.BearingRangeFrom(point);
             BearingRange BR = new BearingRange(start, end);
-            if(BR.Range> BoundingBoxRange.Range) BR = new BearingRange(end, start);
+            double differenceFromCentre = CoordinateHelpers.AngleDifference(BR.Centre, centreBearing);
+            if (differenceFromCentre > 60|| differenceFromCentre<-60)
+                BR = new BearingRange(end, start);
+            //if(BR.Range> BoundingBoxRange.Range) BR = new BearingRange(end, start);
             return BR;
         }
         public virtual double BearingFrom(MapCoordinate point)

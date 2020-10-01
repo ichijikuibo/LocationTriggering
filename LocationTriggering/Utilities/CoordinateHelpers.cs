@@ -12,13 +12,13 @@ namespace LocationTriggering.Utilities
         
         const double RADIUS_EARTH = 6371;//the mean radius of the earth in KM used for distance calculations
         /// <summary>
-        /// Method for calculating the distance between 2 gps points onyl accurate to 4 S.f. 
+        /// Method for calculating the distance between 2 gps points only accurate to 4 S.f. 
         /// </summary>
         /// <param name="lat1">Latitude of point 1</param>
         /// <param name="lon1">Longitude of Point 1</param>
         /// <param name="lat2">Latitude of point 2</param>
         /// <param name="lon2">Longitude of point 2</param>
-        /// <returns></returns>
+        /// <returns>Distance in Kilometres</returns>
         public static double Haversine(double lat1, double lon1, double lat2, double lon2)
         {
 

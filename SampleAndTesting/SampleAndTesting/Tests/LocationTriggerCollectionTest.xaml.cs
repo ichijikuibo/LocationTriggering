@@ -19,22 +19,22 @@ namespace SampleAndTesting.Tests
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LocationTriggerCollectionTest : ContentPage
     {
-        LocationTriggerCollection locationTriggerCollectionTest;
+        LocationTriggerCollection<BasicLocationTrigger> locationTriggerCollectionTest;
         IReadOnlyList<LocationTrigger> locationsAtPoint;
+        IReadOnlyList<LocationTrigger> locationsInDirection;
+        IReadOnlyList<LocationTrigger> locationsNear;
         TestLocationTriggerData _testData;
         List<Polygon> locationPolygons;
         List<Circle> locationCentres;
-        List<Circle> locationCentres2;
         Pin currentMapCoordinate;
         public LocationTriggerCollectionTest()
         {
             locationPolygons = new List<Polygon>();
             locationCentres = new List<Circle>();
-            locationCentres2 = new List<Circle>();
             _testData = new TestLocationTriggerData();
             InitializeComponent();
-            locationTriggerCollectionTest = new LocationTriggerCollection();
-            foreach (LocationTrigger LT in _testData.TestData)
+            locationTriggerCollectionTest = new LocationTriggerCollection<BasicLocationTrigger>();
+            foreach (BasicLocationTrigger LT in _testData.TestData)
             {
                 locationTriggerCollectionTest.Add(LT);
             }
@@ -44,6 +44,10 @@ namespace SampleAndTesting.Tests
                                    "54.99847891799941,-7.318895451500169";
             UpdateMap();
             FillLocationPicker();
+            SortOnChangeList.ItemsSource = locationTriggerCollectionTest;
+            SortOnChangePicker.SelectedIndex = 0;
+            locationTriggerCollectionTest.UpdateDistances(GetTestMapCoordinate());
+            SortOnChangePicker_SelectedIndexChanged(this, null);
             MapTest.MapClicked += MapTest_MapClicked;
 
         }
@@ -102,38 +106,30 @@ namespace SampleAndTesting.Tests
             {
                 if (MapTest.MapElements.Contains(centre)) MapTest.MapElements.Remove(centre);
             }
-            foreach (Circle centre in locationCentres2)
-            {
-                if (MapTest.MapElements.Contains(centre)) MapTest.MapElements.Remove(centre);
-            }
+
             locationPolygons.Clear();
-            locationCentres2.Clear();
+
             locationCentres.Clear();
             foreach (LocationTrigger LT in locationTriggerCollectionTest)
             {
                 Polygon polygon = new Polygon();
-                Circle centreAverage = new Circle();
                 Circle CentreCentoid = new Circle();
-                centreAverage.FillColor = Color.Green;
                 CentreCentoid.FillColor = Color.Blue;
-                centreAverage.StrokeColor = Color.Green;
                 CentreCentoid.StrokeColor = Color.Blue;
-                centreAverage.Center = new Position(LT.Centre.Latitude, LT.Centre.Longitude);
                 CentreCentoid.Center = new Position(LT.Polygon.Centre.Y, LT.Polygon.Centre.X);
                 double radius = LT.BoundingBox.Width * 0.02;
-                centreAverage.Radius = Distance.FromKilometers(radius);
                 CentreCentoid.Radius = Distance.FromKilometers(radius);
                 if (locationsAtPoint!=null&&locationsAtPoint.Contains(LT)) polygon.StrokeColor = Color.Green;
+                if (locationsInDirection != null && locationsInDirection.Contains(LT)) polygon.StrokeColor = Color.Blue;
+                if (locationsNear != null && locationsNear.Contains(LT)) polygon.StrokeColor = Color.Red;
                 foreach (MapCoordinate MC in LT.Points)
                 {
                     polygon.Geopath.Add(new Position(MC.Latitude, MC.Longitude));
                 }
                 MapTest.MapElements.Add(polygon);
                 locationPolygons.Add(polygon);
-                MapTest.MapElements.Add(centreAverage);
                 MapTest.MapElements.Add(CentreCentoid);
-                locationCentres2.Add(CentreCentoid);
-                locationCentres.Add(centreAverage);
+                locationCentres.Add(CentreCentoid);
             }         
 
             
@@ -158,7 +154,7 @@ namespace SampleAndTesting.Tests
         {
             try
             {
-                LocationTrigger newLT = new BasicLocationTrigger(IDEntry.Text, TextToPoint(CoordinateEntry.Text), IDEntry.Text, "Test Data");
+                BasicLocationTrigger newLT = new BasicLocationTrigger(IDEntry.Text, TextToPoint(CoordinateEntry.Text), IDEntry.Text, "Test Data");
                 locationTriggerCollectionTest.Add(newLT);
                 UpdateMap();
                 FillLocationPicker();
@@ -174,7 +170,7 @@ namespace SampleAndTesting.Tests
         {
             try
             {
-                LocationTrigger LT = locationTriggerCollectionTest[RemoveLocationPicker.SelectedIndex];
+                BasicLocationTrigger LT = locationTriggerCollectionTest[RemoveLocationPicker.SelectedIndex];
                 locationTriggerCollectionTest.Remove(LT);
                 UpdateMap();
                 FillLocationPicker();
@@ -212,6 +208,101 @@ namespace SampleAndTesting.Tests
                LocationsAtPointResult.Text = exception.Message;
             }
         }
+
+        private void LocationsInDirectionButton_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                MapCoordinate MC = GetTestMapCoordinate();
+                locationsInDirection = locationTriggerCollectionTest.LocationsInDirection(MC,double.Parse(LocationsInDirectionBearingEntry.Text),double.Parse(LocationsInDirectionDistanceEntry.Text));
+                LocationsInDirectionResult.Text = "";
+                if (locationsInDirection.Count > 0)
+                {
+                    foreach (LocationTrigger LT in locationsInDirection)
+                    {
+                        LocationsInDirectionResult.Text += LT.LocationID + ", ";
+                    }
+                    LocationsInDirectionResult.Text.TrimEnd(' ').TrimEnd(',');
+                }
+                else
+                {
+                    LocationsInDirectionResult.Text = "No Results";
+                }
+                UpdateMap();
+            }
+            catch (Exception exception)
+            {
+                LocationsAtPointResult.Text = exception.Message;
+            }
+        }
+        private void LocationsInBearingRangeButton_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                MapCoordinate MC = GetTestMapCoordinate();
+                BearingRange BR = new BearingRange(double.Parse(LocationsInBearingRangeStartEntry.Text), double.Parse(LocationsInBearingRangeEndEntry.Text));
+                locationsInDirection = locationTriggerCollectionTest.LocationsInBearingRange(MC, BR, double.Parse(LocationsInBearingRangeDistanceEntry.Text));
+                LocationsInBearingRangeResult.Text = "";
+                if (locationsInDirection.Count > 0)
+                {
+                    foreach (LocationTrigger LT in locationsInDirection)
+                    {
+                        LocationsInBearingRangeResult.Text += LT.LocationID + ", ";
+                    }
+                    LocationsInBearingRangeResult.Text.TrimEnd(' ').TrimEnd(',');
+                }
+                else
+                {
+                    LocationsInBearingRangeResult.Text = "No Results";
+                }
+                UpdateMap();
+            }
+            catch (Exception exception)
+            {
+                LocationsInBearingRangeResult.Text = exception.Message;
+            }
+        }
+        private void LocationsNearButton_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                MapCoordinate MC = GetTestMapCoordinate();
+                locationsNear = locationTriggerCollectionTest.LocationsNear(MC, double.Parse(LocationsNearEntry.Text));
+                LocationsNearResult.Text = "";
+                if (locationsNear.Count > 0)
+                {
+                    foreach (LocationTrigger LT in locationsNear)
+                    {
+                        LocationsNearResult.Text += LT.LocationID + ", ";
+                    }
+                    LocationsNearResult.Text.TrimEnd(' ').TrimEnd(',');
+                }
+                else
+                {
+                    LocationsNearResult.Text = "No Results";
+                }
+                UpdateMap();
+            }
+            catch (Exception exception)
+            {
+                LocationsNearResult.Text = exception.Message;
+            }
+        }
+        private void ClosestLocationsButton_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                MapCoordinate MC = GetTestMapCoordinate();
+                var closestLocations = locationTriggerCollectionTest.ClosestLocations(MC, int.Parse(ClosestLocationsEntry.Text));
+                LocationsNearResult.Text = "";
+                ClosestLocationsList.ItemsSource = closestLocations;
+                ClosestLocationsResult.Text = "Success see list";
+            }
+            catch (Exception exception)
+            {
+                ClosestLocationsResult.Text = exception.Message;
+            }
+        }
         private void ContentPage_SizeChanged(object sender, EventArgs e)
         {
             if (this.Width < 500) TestColumn.Width = this.Width - 15;
@@ -241,6 +332,30 @@ namespace SampleAndTesting.Tests
             }
         }
 
+        private void SortOnChangePicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch(SortOnChangePicker.SelectedItem.ToString())
+            {
+                case "Distance Ascending": 
+                    locationTriggerCollectionTest.SortOnChange(delegate (BasicLocationTrigger lt1, BasicLocationTrigger lt2) { return lt1.LastDistance.CompareTo(lt2.LastDistance); });
+                    break;
+                case "Distance Descending":
+                    locationTriggerCollectionTest.SortOnChange(delegate (BasicLocationTrigger lt1, BasicLocationTrigger lt2) { return lt2.LastDistance.CompareTo(lt1.LastDistance); });
+                    break;
+                case "ID Ascending":
+                    locationTriggerCollectionTest.SortOnChange(delegate (BasicLocationTrigger lt1, BasicLocationTrigger lt2) { return lt1.LocationID.CompareTo(lt2.LocationID); });
+                    break;
+                case "ID Descending":
+                    locationTriggerCollectionTest.SortOnChange(delegate (BasicLocationTrigger lt1, BasicLocationTrigger lt2) { return lt2.LocationID.CompareTo(lt1.LocationID); });
+                    break;
+                case "Title Ascending":
+                    locationTriggerCollectionTest.SortOnChange(delegate (BasicLocationTrigger lt1, BasicLocationTrigger lt2) { return (lt1.Title.CompareTo(lt2.Title)); });
+                    break;
+                case "Title Descending":
+                    locationTriggerCollectionTest.SortOnChange(delegate (BasicLocationTrigger lt1, BasicLocationTrigger lt2) { return (lt2.Title.CompareTo(lt1.Title)); });
+                    break;
+            }
 
+        }
     }
 }
