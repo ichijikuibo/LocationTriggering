@@ -74,11 +74,11 @@
                             
                             <Label x:Name="DistanceLabel" Text="Distance(Metres) " Grid.Row="1" VerticalTextAlignment="Center" VerticalOptions="Center" FontSize="12"/>
                             <Entry x:Name="DistanceEntry" Text="5" MaxLength="20" Grid.Row="1" Grid.Column="1" FontSize="12"/>
-                            <Button x:Name="UpdateDistance" Text="Update" HorizontalOptions="Center" VerticalOptions="Center" FontSize="12" Grid.Row="1" Grid.Column="2" />
+                            <Button x:Name="UpdateDistance" Text="Update" HorizontalOptions="Center" VerticalOptions="Center" FontSize="12" Grid.Row="1" Grid.Column="2" Clicked="UpdateDistance_Clicked" />
 
                             <Label x:Name="IntervalLabel" Text="Interval(Seconds) " Grid.Row="2" VerticalTextAlignment="Center" VerticalOptions="Center" FontSize="12"/>
                             <Entry x:Name="IntervalEntry" Text="5" MaxLength="20" Grid.Row="2" Grid.Column="1" FontSize="12"/>
-                            <Button x:Name="UpdateInterval" Text="Update" HorizontalOptions="Center" VerticalOptions="Center" FontSize="12" Grid.Row="2" Grid.Column="2" />
+                            <Button x:Name="UpdateInterval" Text="Update" HorizontalOptions="Center" VerticalOptions="Center" FontSize="12" Grid.Row="2" Grid.Column="2" Clicked="UpdateInterval_Clicked" />
 
                             <Button x:Name="StartListeningButton" Text="StartListening" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" FontSize="12" Grid.Row="3" Grid.ColumnSpan="3" Clicked="StartListeningButton_Clicked" />
                             

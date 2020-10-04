@@ -116,7 +116,7 @@ namespace SampleAndTesting.Tests
                 Circle CentreCentoid = new Circle();
                 CentreCentoid.FillColor = Color.Blue;
                 CentreCentoid.StrokeColor = Color.Blue;
-                CentreCentoid.Center = new Position(LT.Polygon.Centre.Y, LT.Polygon.Centre.X);
+                CentreCentoid.Center = new Position(LT.Centre.Latitude, LT.Centre.Longitude);
                 double radius = LT.BoundingBox.Width * 0.02;
                 CentreCentoid.Radius = Distance.FromKilometers(radius);
                 if (locationsAtPoint!=null&&locationsAtPoint.Contains(LT)) polygon.StrokeColor = Color.Green;

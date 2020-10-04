@@ -1,4 +1,5 @@
 ﻿using LocationTriggering;
+using LocationTriggering.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

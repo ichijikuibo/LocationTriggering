@@ -105,7 +105,7 @@ namespace SampleAndTesting.Tests
                 RemovePointPicker.Items.Add(MC.ToString());
             }
             RemovePointPicker.SelectedIndex = 0;
-            UpdateMap();
+            //UpdateMap();
 
 
 

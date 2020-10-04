@@ -91,6 +91,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\LocationListenerExtention\LocationTriggeringXamarinExtentions.csproj" />
     <ProjectReference Include="..\..\LocationTriggering\LocationTriggering.csproj" />
   </ItemGroup>
 

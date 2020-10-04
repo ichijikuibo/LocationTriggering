@@ -37,22 +37,22 @@ namespace LocationTriggering.Utilities
             if (RightPoint.X - LeftPoint.X > 180)
             {
                 _crossesInternationalDateLine = true;
-                for(int i=0;i<Points.Length;i++)
-                {
-                    PointD P = Points[i];
-                    if (P.X < 0) Points[i] = new PointD(360+P.X, P.Y);
-                }
+                //for (int i = 0; i < Points.Length; i++)
+                //{
+                //    PointD P = Points[i];
+                //    if (P.X < 0) Points[i] = new PointD(360 + P.X, P.Y);
+                //}
             }
 
-            PointD Centroid = FindCentroid();
-            if (_crossesInternationalDateLine&& Centroid.X>180)
-            {
-                _centre = new PointD((360 - Centroid.X), Centroid.Y);
-            }
-            else
-            {
+            PointD Centroid = CentralPoint();
+            //if (_crossesInternationalDateLine&& Centroid.X>180)
+            //{
+            //    _centre = new PointD((360 - Centroid.X), Centroid.Y);
+            //}
+            //else
+            //{
                 _centre = new PointD(Centroid.X, Centroid.Y);
-            }
+            //}
         }
 
         protected PointD[] Points;
@@ -81,8 +81,86 @@ namespace LocationTriggering.Utilities
             end += centreBearing;
             return new BearingRange(start, end);
         }
+        public static double AngleSubtract(double angle1, double angle2)
+        {
+            double diff = (angle1 - angle2 + 180) % 360 - 180;
+            return diff < -180 ? diff + 360 : diff;
+        }
+        public static double AngleAddition(double angle1, double angle2)
+        {
+            double diff = (angle1 + angle2 + 180) % 360 - 180;
+            return diff < -180 ? diff + 360 : diff;
+        }
+        public PointD CentralPoint()
+        {
+            if (Points.Length == 1)
+            {
+                return Points.Single();
+            }
+
+            double x = 0;
+            double y = 0;
+            double z = 0;
+
+            foreach (var geoCoordinate in Points)
+            {
+                var latitude = geoCoordinate.Y * Math.PI / 180;
+                var longitude = geoCoordinate.X * Math.PI / 180;
+
+                x += Math.Cos(latitude) * Math.Cos(longitude);
+                y += Math.Cos(latitude) * Math.Sin(longitude);
+                z += Math.Sin(latitude);
+            }
+
+            var total = Points.Length;
+
+            x = x / total;
+            y = y / total;
+            z = z / total;
+
+            var centralLongitude = Math.Atan2(y, x);
+            var centralSquareRoot = Math.Sqrt(x * x + y * y);
+            var centralLatitude = Math.Atan2(z, centralSquareRoot);
+
+            return new PointD(centralLongitude * 180 / Math.PI, centralLatitude * 180 / Math.PI);
+        }
         // Find the polygon's centroid.
         public PointD FindCentroid()
+        {
+            // Add the first point at the end of the array.
+            int num_points = Points.Length;
+            PointD[] pts = new PointD[num_points + 1];
+            Points.CopyTo(pts, 0);
+            pts[num_points] = Points[0];
+
+            // Find the centroid.
+            double X = 0;
+            double Y = 0;
+            double second_factor;
+            for (int i = 0; i < num_points; i++)
+            {
+                second_factor =pts[i].X * pts[i + 1].Y - pts[i + 1].X * pts[i].Y;
+                second_factor = AngleSubtract(pts[i].X * pts[i + 1].Y, pts[i + 1].X * pts[i].Y);
+                X += AngleAddition(pts[i].X , pts[i + 1].X) * second_factor;
+                Y += AngleAddition(pts[i].Y , pts[i + 1].Y) * second_factor;
+            }
+
+            // Divide by 6 times the polygon's area.
+            double polygon_area = PolygonArea();
+            X /= (6 * polygon_area);
+            Y /= (6 * polygon_area);
+
+            //// If the values are negative, the polygon is
+            //// oriented counterclockwise so reverse the signs.
+            //if (X < 0)
+            //{
+            //    X = -X;
+            //    Y = -Y;
+            //}
+
+            return new PointD(X, Y);
+        }
+        public PointD FindCentroidOld()
         {
             // Add the first point at the end of the array.
             int num_points = Points.Length;
@@ -122,23 +200,26 @@ namespace LocationTriggering.Utilities
         // Return true if the point is in the polygon.
         public bool PointInPolygon(double X, double Y)
         {
-            if (_crossesInternationalDateLine && X < 0) X = 360 + X;
+           // if (_crossesInternationalDateLine && X < 0) X = 360 + X;
             // Get the angle between the point and the
             // first and last vertices.
             int max_point = Points.Length - 1;
-            double total_angle = GetAngle(
-                Points[max_point].X, Points[max_point].Y,
-                X, Y,
-                Points[0].X, Points[0].Y);
-
+            double total_angle = CoordinateHelpers.GetAngle(
+                Points[max_point].Y, Points[max_point].X,
+                Y, X,
+                Points[0].Y, Points[0].X);
+            double total_angle2 = GetAngle(
+    Points[max_point].X, Points[max_point].Y,
+    X, Y,
+    Points[0].X, Points[0].Y);
             // Add the angles from the point
             // to each other pair of vertices.
             for (int i = 0; i < max_point; i++)
             {
-                total_angle += GetAngle(
-                    Points[i].X, Points[i].Y,
-                    X, Y,
-                    Points[i + 1].X, Points[i + 1].Y);
+                double angle1 = CoordinateHelpers.GetAngle(Points[i].Y, Points[i].X, Y, X, Points[i + 1].Y, Points[i + 1].X);
+                double angle2 = GetAngle(Points[i].X, Points[i].Y, X, Y, Points[i + 1].X, Points[i + 1].Y);
+                total_angle += angle1;
+                total_angle2 += angle2;
             }
 
             // The total angle should be 2 * PI or -2 * PI if
@@ -148,10 +229,10 @@ namespace LocationTriggering.Utilities
         }
         public PointD ClosestPointTo(PointD point)
         {
-            if (CrossesInternationalDateLine && point.X < 0)
-            {
-                point = new PointD(point.X + 360, point.Y);
-            }
+            //if (CrossesInternationalDateLine && point.X < 0)
+            //{
+            //    point = new PointD(point.X + 360, point.Y);
+            //}
             PointD ClosestPoint = new PointD();
             double ClosestDistance = 999999999;
             for (int i = 0; i < Points.Length; i++)
@@ -180,8 +261,8 @@ namespace LocationTriggering.Utilities
                     ClosestDistance = CurrentDistance;
                 }
             }
-            if (CrossesInternationalDateLine && ClosestPoint.X > 180)
-                return new PointD(ClosestPoint.X-360, ClosestPoint.Y);
+            //if (CrossesInternationalDateLine && ClosestPoint.X > 180)
+            //    return new PointD(ClosestPoint.X-360, ClosestPoint.Y);
             return ClosestPoint;
         }
 
@@ -229,7 +310,7 @@ namespace LocationTriggering.Utilities
         //
         // The value will be negative if the polygon is
         // oriented clockwise.
-        private double SignedPolygonArea()
+        private double SignedPolygonAreaOld()
         {
             // Add the first point to the end.
             int num_points = Points.Length;
@@ -249,6 +330,27 @@ namespace LocationTriggering.Utilities
             // Return the result.
             return area;
         }
+        private double SignedPolygonArea()
+        {
+            // Add the first point to the end.
+            int num_points = Points.Length;
+            PointD[] pts = new PointD[num_points + 1];
+            Points.CopyTo(pts, 0);
+            pts[num_points] = Points[0];
+
+            // Get the areas.
+            double area = 0;
+            for (int i = 0; i < num_points; i++)
+            {
+                area +=
+                    AngleSubtract(pts[i + 1].X , pts[i].X) *
+                    AngleAddition(pts[i + 1].Y , pts[i].Y) / 2;
+            }
+
+            // Return the result.
+            return area;
+        }
+
         #endregion // Area Routines
 
         // Return true if the polygon is convex.
@@ -309,6 +411,18 @@ namespace LocationTriggering.Utilities
             // Calculate the Z coordinate of the cross product.
             return (BAx * BCy - BAy * BCx);
         }
+        public static double CrossProductLengthCoordinate(double Ax, double Ay,
+    double Bx, double By, double Cx, double Cy)
+        {
+            // Get the vectors' coordinates.
+            double BAx = CoordinateHelpers.AngleDifference(Bx, Ax );
+            double BAy = CoordinateHelpers.AngleDifference(By,Ay );
+            double BCx = CoordinateHelpers.AngleDifference(Bx,Cx );
+            double BCy = CoordinateHelpers.AngleDifference(By,Cy );
+
+            // Calculate the Z coordinate of the cross product.
+            return (BAx * BCy - BAy * BCx);
+        }
 
         // Return the dot product AB · BC.
         // Note that AB · BC = |AB| * |BC| * Cos(theta).
@@ -324,6 +438,18 @@ namespace LocationTriggering.Utilities
             // Calculate the dot product.
             return (BAx * BCx + BAy * BCy);
         }
+        private static double DotProductCoordinate(double Ax, double Ay,
+    double Bx, double By, double Cx, double Cy)
+        {
+            // Get the vectors' coordinates.
+            double BAx = CoordinateHelpers.AngleDifference(Bx, Ax );
+            double BAy = CoordinateHelpers.AngleDifference(By,Ay );
+            double BCx = CoordinateHelpers.AngleDifference(Bx,Cx );
+            double BCy = CoordinateHelpers.AngleDifference(By,Cy );
+
+            // Calculate the dot product.
+            return (BAx * BCx + BAy * BCy);
+        }
         #endregion // Cross and Dot Products
 
         // Return the angle ABC.
@@ -333,10 +459,12 @@ namespace LocationTriggering.Utilities
         public static double GetAngle(double Ax, double Ay, double Bx, double By, double Cx, double Cy)
         {
             // Get the dot product.
-            double dot_product = DotProduct(Ax, Ay, Bx, By, Cx, Cy);
+            double dot_product2 = DotProduct(Ax, Ay, Bx, By, Cx, Cy);
+            double dot_product = DotProductCoordinate(Ax, Ay, Bx, By, Cx, Cy);
 
             // Get the cross product.
-            double cross_product = CrossProductLength(Ax, Ay, Bx, By, Cx, Cy);
+            double cross_product2 = CrossProductLength(Ax, Ay, Bx, By, Cx, Cy);
+            double cross_product = CrossProductLengthCoordinate(Ax, Ay, Bx, By, Cx, Cy);
 
             // Calculate the angle.
             return Math.Atan2(cross_product, dot_product);

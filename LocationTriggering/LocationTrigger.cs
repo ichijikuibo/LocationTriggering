@@ -15,7 +15,6 @@ namespace LocationTriggering
     public abstract class LocationTrigger : INotifyPropertyChanged
     {
         
-        private Polygon _polygon;
         private MapBoundingBox _boundingBox;
         private List<MapCoordinate> _points = new List<MapCoordinate>();
         private MapCoordinate _centre;  //Calculated centre property that is assigned a value when _points is updated
@@ -38,10 +37,6 @@ namespace LocationTriggering
         /// A bounding box that contains all the points
         /// </summary>
         public MapBoundingBox BoundingBox { get => _boundingBox;}
-        /// <summary>
-        /// A polygon used to calculate if a point is contianed within the list of points
-        /// </summary>
-        public Polygon Polygon { get => _polygon; }
         /// <summary>
         /// Returns the current number of points in the location
         /// </summary>
@@ -89,7 +84,6 @@ namespace LocationTriggering
                 }
                 if (XN.Name.ToLower() == "polygon")
                 {
-                    PointD[] Points = new PointD[XN.ChildNodes.Count];
                     for (int i = 0; i < XN.ChildNodes.Count; i++)
                     {
                         double lat = 0;
@@ -133,14 +127,8 @@ namespace LocationTriggering
             }
             CalculateProperties();
         }
-        private bool Contains(MapCoordinate point)
-        {
-            foreach(MapCoordinate MC in _points)
-            {
-                if (MC.Equals(point)) return true;
-            }
-            return false;
-        }
+
+
         /// <summary>
         /// Creates a new location with an id and a list of MapCoordinates
         /// </summary>
@@ -164,6 +152,14 @@ namespace LocationTriggering
                 return _points[index];
             else return null;
         }
+        private bool Contains(MapCoordinate point)
+        {
+            foreach (MapCoordinate MC in _points)
+            {
+                if (MC.Equals(point)) return true;
+            }
+            return false;
+        }
         /// <summary>
         /// Gets all the points of this location that are within boundingBox
         /// </summary>
@@ -174,7 +170,7 @@ namespace LocationTriggering
             List<MapCoordinate> result = new List<MapCoordinate>();
             foreach(MapCoordinate MC in _points)
             {
-                if (boundingBox.containsPoint(MC)) result.Add(MC);
+                if (boundingBox.ContainsPoint(MC)) result.Add(MC);
             }
             if(result.Count>0)
                 return result.ToArray();
@@ -185,17 +181,17 @@ namespace LocationTriggering
         /// </summary>
         /// <param name="polygon">The polygo to check for points in</param>
         /// <returns></returns>
-        public MapCoordinate[] GetPointsInPolygon(Polygon polygon)
-        {
-            List<MapCoordinate> result = new List<MapCoordinate>();
-            foreach (MapCoordinate MC in _points)
-            {
-                if (polygon.PointInPolygon(MC.Longitude, MC.Latitude)) result.Add(MC);
-            }
-            if (result.Count > 0)
-                return result.ToArray();
-            return null;
-        }
+        //public MapCoordinate[] GetPointsInPolygon(Polygon polygon)
+        //{
+        //    List<MapCoordinate> result = new List<MapCoordinate>();
+        //    foreach (MapCoordinate MC in _points)
+        //    {
+        //        if (polygon.PointInPolygon(MC.Longitude, MC.Latitude)) result.Add(MC);
+        //    }
+        //    if (result.Count > 0)
+        //        return result.ToArray();
+        //    return null;
+        //}
         /// <summary>
         /// Returns true if any of the poitns of the 2 locations are within the polygon for the other
         /// </summary>
@@ -203,21 +199,33 @@ namespace LocationTriggering
         /// <returns></returns>
         public bool OverlapsWith(LocationTrigger location)
         {
-            return OverlapsWith(location.Polygon);
+            if (HasAPointIn(location.Points)) return true;
+            if (location.HasAPointIn(Points)) return true;
+            MapCoordinate MC = this.ClosestPointTo(new MapCoordinate(Centre.Latitude,Centre.Longitude));
+            if (ContainsPoint(MC)) return true;
+            return false;
+        }
+        public bool HasAPointIn(IEnumerable<MapCoordinate> polygon)
+        {
+            foreach (MapCoordinate point in Points)
+            {
+                if (ContainsPoint(point)) return true;
+            }
+            return false;
         }
         /// <summary>
         /// Returns true if any of the poitns of the 2 locations are within the polygon for the other
         /// </summary>
         /// <param name="polygon">Polygon to check for overlaps with</param>
         /// <returns></returns>
-        public bool OverlapsWith(Polygon polygon)
-        {
-            if (polygon.HasAPointIn(_polygon)) return true;
-            if (_polygon.HasAPointIn(polygon)) return true;
-            MapCoordinate MC = this.ClosestPointTo(new MapCoordinate(polygon.Centre.Y, polygon.Centre.X));
-            if (polygon.PointInPolygon(MC.Longitude, MC.Latitude))return true;
-            return false;
-        }
+        //public bool OverlapsWith(Polygon polygon)
+        //{
+        //    if (polygon.HasAPointIn(_polygon)) return true;
+        //    if (_polygon.HasAPointIn(polygon)) return true;
+        //    MapCoordinate MC = this.ClosestPointTo(new MapCoordinate(polygon.Centre.Y, polygon.Centre.X));
+        //    if (polygon.PointInPolygon(MC.Longitude, MC.Latitude))return true;
+        //    return false;
+        //}
         /// <summary>
         /// Creates a new MapCoordinate and adds it to the location
         /// </summary>
@@ -278,11 +286,9 @@ namespace LocationTriggering
         /// </summary>
         public void ClearPoints()
         {
-            _polygon = null;
             _boundingBox = null;
             _points.Clear();
         }
-
         /// <summary>
         /// First checks if the point is within the bounding box of the location if true it then tests if it is within the polygon
         /// </summary>
@@ -290,23 +296,41 @@ namespace LocationTriggering
         /// <returns></returns>
         public virtual bool ContainsPoint(MapCoordinate point)
         {
-            if(_boundingBox.containsPoint(point))
+            // if (_crossesInternationalDateLine && X < 0) X = 360 + X;
+            // Get the angle between the point and the
+            // first and last vertices.
+            int max_point = Points.Count - 1;
+            double total_angle = CoordinateHelpers.GetAngle(
+                Points[max_point].Latitude, Points[max_point].Longitude,
+                point.Latitude, point.Longitude,
+                Points[0].Latitude, Points[0].Longitude);
+            // Add the angles from the point
+            // to each other pair of vertices.
+            for (int i = 0; i < max_point; i++)
             {
-                if (_polygon.PointInPolygon(point.Longitude, point.Latitude)) return true;
+                double angle1 = CoordinateHelpers.GetAngle(Points[i].Latitude, Points[i].Longitude, point.Latitude, point.Longitude, Points[i + 1].Latitude, Points[i + 1].Longitude);
+                total_angle += angle1;
             }
-            return false;
+
+            // The total angle should be 2 * PI or -2 * PI if 6.2831853071795862 -6.2831853071795853
+            // the point is in the polygon and close to zero
+            // if the point is outside the polygon.
+            //return (total_angle < -0.000001);
+           
+            return (Math.Abs(total_angle) > 0.000001);
         }
+
         /// <summary>
         /// Returns the distance from the centre of this location to the specified point
         /// override if you want to chang this to ClosestDistanceTo
         /// </summary>
         /// <param name="point">Point to measure distance from</param>
         /// <returns>Distance in kilometres</returns>
-        public virtual double DistanceTo(MapCoordinate point)
+        public virtual double DistanceTo(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres)
         {
             if (_distanceCalcualtedFrom==null||!point.Equals(_distanceCalcualtedFrom))
             {
-                LastDistance = _centre.DistanceTo(point);
+                LastDistance = _centre.DistanceTo(point, unit);
                 _distanceCalcualtedFrom = point;
             }
             return LastDistance;
@@ -316,39 +340,63 @@ namespace LocationTriggering
         /// </summary>
         /// <param name="point">Location to measure distance from</param>
         /// <returns>Distance in meters</returns>
-        public virtual double DistanceTo(LocationTrigger point)
+        public virtual double DistanceTo(LocationTrigger point, DistanceUnit unit = DistanceUnit.Kilometres)
         {
-            return DistanceTo(point.Centre);
+            return DistanceTo(point.Centre, unit);
         }
         /// <summary>
         /// Returns the closest distance to the boundary of this location to the specified point
         /// </summary>
         /// <param name="point">Location to measure distance from</param>
         /// <returns>Distance in kilometres</returns>
-        public double ClosestDistanceTo(MapCoordinate point)
+        public double ClosestDistanceTo(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres)
         {
-            return (point.DistanceTo(ClosestPointTo(point)));
+            return (point.DistanceTo(ClosestPointTo(point), unit));
         }
         /// <summary>
         /// Returns the closest distance to the boundary of this location to the boundary of the specified location
         /// </summary>
         /// <param name="point">Location to measure distance from</param>
         /// <returns>Distance in kilometres</returns>
-        public double ClosestDistanceTo(LocationTrigger location)
+        public double ClosestDistanceTo(LocationTrigger location, DistanceUnit unit = DistanceUnit.Kilometres)
         {
             MapCoordinate ClosestPoint1 = ClosestPointTo(location.Centre);
             MapCoordinate ClosestPoint2 = location.ClosestPointTo(ClosestPoint1);
-            return ClosestPoint1.DistanceTo(ClosestPoint2);
+            return ClosestPoint1.DistanceTo(ClosestPoint2, unit);
         }
         /// <summary>
         /// Returns the point closest tot the specified point on the location's boundary
         /// </summary>
         /// <param name="point">Point to measure distance from</param>
         /// <returns>Position of the closest point in decimal degrees</returns>
+        //public MapCoordinate ClosestPointTo(MapCoordinate point)
+        //{
+        //    PointD closestPoint = Polygon.ClosestPointTo(new PointD(point.Longitude, point.Latitude));
+        //    return new MapCoordinate(closestPoint.Y, closestPoint.X);
+        //}
         public MapCoordinate ClosestPointTo(MapCoordinate point)
         {
-            PointD closestPoint = Polygon.ClosestPointTo(new PointD(point.Longitude, point.Latitude));
-            return new MapCoordinate(closestPoint.Y, closestPoint.X);
+            MapCoordinate ClosestPoint = new MapCoordinate(0,0);
+            double ClosestDistance = 999999999;
+            for (int i = 0; i < Points.Count; i++)
+            {
+                MapCoordinate P1 = _points[i];
+                MapCoordinate P2;
+                MapCoordinate CurrentPoint;
+                double CurrentDistance;
+
+                if (i == Points.Count - 1)
+                    P2 = Points[0];
+                else
+                    P2 = Points[i + 1];
+                CurrentDistance = CoordinateHelpers.FindDistanceToSegment(point, P1, P2, out CurrentPoint);
+                if (CurrentDistance < ClosestDistance)
+                {
+                    ClosestPoint = CurrentPoint;
+                    ClosestDistance = CurrentDistance;
+                }
+            }
+            return ClosestPoint;
         }
         /// <summary>
         /// Gets a ranges of bearings that the location is visible from a point (cannot exceed 180 degrees)
@@ -363,8 +411,8 @@ namespace LocationTriggering
             if (BoundingBox.Height > guideDistance) guideDistance = BoundingBox.Height;
             double targetBearing1 = CoordinateHelpers.NormaliseBearing(centreBearing + 90);
             double targetBearing2 = CoordinateHelpers.NormaliseBearing(centreBearing - 90);
-            MapCoordinate Point1 = ClosestPointTo(new MapCoordinate(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre.ToPointD(),guideDistance, targetBearing1)));//{54.9964314712174, -7.32574279029166}
-            MapCoordinate Point2 = ClosestPointTo(new MapCoordinate(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre.ToPointD(), guideDistance, targetBearing2)));//{54.9953895258887, -7.32721765393637}
+            MapCoordinate Point1 = ClosestPointTo(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre,guideDistance, targetBearing1));//{54.9964314712174, -7.32574279029166}
+            MapCoordinate Point2 = ClosestPointTo(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre, guideDistance, targetBearing2));//{54.9953895258887, -7.32721765393637}
             double start = point.BearingTo(Point2);
             double end = point.BearingTo(Point1);
             //BearingRange BoundingBoxRange = BoundingBox.BearingRangeFrom(point);
@@ -386,24 +434,10 @@ namespace LocationTriggering
             return LastBearing;
         }
         /// <summary>
-        /// Creates the polygon when the points are changed
-        /// </summary>
-        private void RecreatePolygon()
-        {
-            PointD[] pointsArray = new PointD[_points.Count];
-            for (int i = 0; i < _points.Count; i++)
-            {
-                pointsArray[i] = new PointD(_points[i].Longitude, _points[i].Latitude);
-            }
-            _polygon = new Polygon(pointsArray);
-        }
-        /// <summary>
         /// Calculate the centre point, and bounding box when the points list is updated
         /// </summary>
         private void CalculateProperties()
         {
-            //recreate the polygon class for determining if a point if within the location
-            RecreatePolygon();
             if (_points.Count < 3) return; //At least 3 points are required to calcualte the properties
             //Varibles to help calcualte the properties 
             double MinLon = double.MaxValue, MaxLon = -double.MaxValue, MinLat = double.MaxValue, MaxLat = -double.MaxValue;
@@ -411,37 +445,15 @@ namespace LocationTriggering
             {
 
                 //Iterate through the points and obtain the extremes of the polygon
-                if (Polygon.CrossesInternationalDateLine)
+                if (P.Longitude < MinLon)
                 {
-
-                    if (P.Longitude > 0)
-                    {
-                        if (P.Longitude < MinLon)
-                        {
-                            MinLon = P.Longitude;
-                        }
-
-                    }
-                    else
-                    {
-                        if (P.Longitude > MaxLon)
-                        {
-                            MaxLon = P.Longitude;
-                        }
-                    }
-
+                    MinLon = P.Longitude;
                 }
-                else
+                if (P.Longitude > MaxLon)
                 {
-                    if (P.Longitude < MinLon)
-                    {
-                        MinLon = P.Longitude;
-                    }
-                    if (P.Longitude > MaxLon)
-                    {
-                        MaxLon = P.Longitude;
-                    }
+                    MaxLon = P.Longitude;
                 }
+
                 if (P.Latitude < MinLat)
                 {
                     MinLat = P.Latitude;
@@ -451,18 +463,42 @@ namespace LocationTriggering
                     MaxLat = P.Latitude;
                 }
             }
-            _centre = new MapCoordinate(_polygon.Centre.Y,_polygon.Centre.X);//find the average of the latitudes and longitudes to determine the centre
-            if (Polygon.CrossesInternationalDateLine)
+            _centre = CentralPoint();
+            _boundingBox = new MapBoundingBox(new MapCoordinate(MaxLat, MinLon), new MapCoordinate(MinLat, MaxLon));//create a bounding box from the northeast point and the southwest point
+            OnPropertyChanged("Centre");
+        }
+        private MapCoordinate CentralPoint()
+        {
+            if (Points.Count == 1)
             {
-                _boundingBox = new MapBoundingBox(new MapCoordinate(MaxLat, MaxLon), new MapCoordinate(MinLat, MinLon));//create a bounding box from the northeast point and the southwest point
-            }
-            else
-            {
-                _boundingBox = new MapBoundingBox(new MapCoordinate(MaxLat, MinLon), new MapCoordinate(MinLat, MaxLon));//create a bounding box from the northeast point and the southwest point
+                return Points[0];
             }
 
+            double x = 0;
+            double y = 0;
+            double z = 0;
 
-            OnPropertyChanged("centre");
+            foreach (var point in Points)
+            {
+                var latitude = point.Latitude * Math.PI / 180;
+                var longitude = point.Longitude * Math.PI / 180;
+
+                x += Math.Cos(latitude) * Math.Cos(longitude);
+                y += Math.Cos(latitude) * Math.Sin(longitude);
+                z += Math.Sin(latitude);
+            }
+
+            var total = Points.Count;
+
+            x = x / total;
+            y = y / total;
+            z = z / total;
+
+            var centralLongitude = Math.Atan2(y, x);
+            var centralSquareRoot = Math.Sqrt(x * x + y * y);
+            var centralLatitude = Math.Atan2(z, centralSquareRoot);
+
+            return new MapCoordinate( centralLatitude * 180 / Math.PI, centralLongitude * 180 / Math.PI);
         }
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

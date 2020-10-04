@@ -15,6 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationTriggering", "Locat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{53B0AB0B-12C8-4DDF-A0E1-6CA02D1B1040}"
 	ProjectSection(SolutionItems) = preProject
+		Design Description.txt = Design Description.txt
 		LICENSE = LICENSE
 		README.md = README.md
 		Documents\requirements.txt = Documents\requirements.txt
@@ -48,6 +49,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestData", "TestData", "{B5
 		Documents\TestData\PointsInBoundingBox.txt = Documents\TestData\PointsInBoundingBox.txt
 		Documents\TestData\RemovePointTestData.xlsx = Documents\TestData\RemovePointTestData.xlsx
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationTriggeringXamarinExtentions", "LocationListenerExtention\LocationTriggeringXamarinExtentions.csproj", "{740B3D48-949E-4149-9920-1AF6F84FA07D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -189,6 +192,30 @@ Global
 		{28DB435A-63B1-4723-A16E-65D953B8B4D4}.Release|x64.Build.0 = Release|Any CPU
 		{28DB435A-63B1-4723-A16E-65D953B8B4D4}.Release|x86.ActiveCfg = Release|Any CPU
 		{28DB435A-63B1-4723-A16E-65D953B8B4D4}.Release|x86.Build.0 = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|ARM.Build.0 = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|x64.Build.0 = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Debug|x86.Build.0 = Debug|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|ARM.ActiveCfg = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|ARM.Build.0 = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|iPhone.Build.0 = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|x64.ActiveCfg = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|x64.Build.0 = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|x86.ActiveCfg = Release|Any CPU
+		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

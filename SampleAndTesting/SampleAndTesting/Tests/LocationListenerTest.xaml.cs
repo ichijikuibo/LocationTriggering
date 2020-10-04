@@ -13,6 +13,7 @@ using Xamarin.Forms.Maps;
 using LocationTriggering.Utilities;
 using Polygon = Xamarin.Forms.Maps.Polygon;
 using Xamarin.Essentials;
+using LocationTriggering.Extentions;
 
 namespace SampleAndTesting.Tests
 {
@@ -115,7 +116,7 @@ namespace SampleAndTesting.Tests
                 Circle CentreCentoid = new Circle();
                 CentreCentoid.FillColor = Color.Blue;
                 CentreCentoid.StrokeColor = Color.Blue;
-                CentreCentoid.Center = new Position(LT.Polygon.Centre.Y, LT.Polygon.Centre.X);
+                CentreCentoid.Center = new Position(LT.Centre.Latitude, LT.Centre.Longitude);
                 double radius = LT.BoundingBox.Width * 0.02;
                 CentreCentoid.Radius = Distance.FromKilometers(radius);
                 if (locationsAtPoint!=null&&locationsAtPoint.Contains(LT)) polygon.StrokeColor = Color.Green;
@@ -177,38 +178,58 @@ namespace SampleAndTesting.Tests
 
         private void StartListeningButton_Clicked(object sender, EventArgs e)
         {
-            if (!testLocationListener.IsListening)
+            try
             {
-                try
-                {
-                    testLocationListener.StartListening(new TimeSpan(0, 0, int.Parse(IntervalEntry.Text)), double.Parse(DistanceEntry.Text));
-                }
-                catch (Exception exception)
-                {
-                    CurentPositionLabel.Text = exception.Message;
-                }
+                testLocationListener.StartListening(new TimeSpan(0, 0, int.Parse(IntervalEntry.Text)), double.Parse(DistanceEntry.Text));
             }
+            catch (Exception exception)
+            {
+                CurentPositionLabel.Text = exception.Message;
+            }
+
         }
 
         private void StopListeningButton_Clicked(object sender, EventArgs e)
         {
-            if (testLocationListener.IsListening)
+            try
             {
-                try
-                {
-                    testLocationListener.StopListening();
-                }
-                catch (Exception exception)
-                {
-                    CurentPositionLabel.Text = exception.Message;
-                }
+                testLocationListener.StopListening();
+            }
+            catch (Exception exception)
+            {
+                CurentPositionLabel.Text = exception.Message;
             }
         }
 
         private void ManualButton_Clicked(object sender, EventArgs e)
         {
             MapCoordinate MC = GetTestMapCoordinate();
-            testLocationListener.ProcessLocation(new Plugin.Geolocator.Abstractions.Position(MC.Latitude, MC.Longitude));
+            testLocationListener.ProcessLocation(new MapCoordinate(MC.Latitude, MC.Longitude));
         }
-    }
+
+        private void UpdateInterval_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                testLocationListener.ChangeGpsPollInterval(new TimeSpan(0, 0, int.Parse(IntervalEntry.Text)));
+            }
+            catch(Exception exception)
+            {
+                CurentPositionLabel.Text = exception.Message;
+            }
+        }
+
+        private void UpdateDistance_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                testLocationListener.ChangeGpsDistance<BasicLocationTrigger>(double.Parse(DistanceEntry.Text));
+                testLocationListener.ChangeGpsDistance(double.Parse(DistanceEntry.Text));
+            }
+            catch (Exception exception)
+            {
+                CurentPositionLabel.Text = exception.Message;
+            }
+        }
+    }    
 }

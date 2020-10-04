@@ -1,5 +1,4 @@
 ﻿using LocationTriggering.Utilities;
-using Plugin.Geolocator.Abstractions;
 using System;
 namespace LocationTriggering
 {
@@ -27,56 +26,20 @@ namespace LocationTriggering
         /// <param name="newLatitude">Latitude in deciaml degrees</param>
         public MapCoordinate(double newLatitude, double newLogitude)
         {
-            if (newLatitude < -90 || newLatitude > 90) throw new InvalidCoordinateException("Invalid Coordinate latitude must be greater or equal to -90 or less then or equal to 90");
             if (double.IsNaN(newLatitude)|| double.IsNaN(newLogitude)) throw new InvalidCoordinateException("Invalid Coordinate both latitude and longitude must have a value");
             if (double.IsInfinity(newLatitude) || double.IsInfinity(newLogitude)) throw new InvalidCoordinateException("Invalid Coordinate both latitude and longitude must have a value");
             _latitude = newLatitude;
-            _longitude = CoordinateHelpers.NormaliseLongitude(newLogitude);
-        }
-
-        public MapCoordinate(Position location)
-        {
-            if (location.Latitude < -90 || location.Latitude > 90) throw new InvalidCoordinateException("Invalid Coordinate latitude must be greater or equal to -90 or less then or equal to 90");
-            if (double.IsNaN(location.Latitude) || double.IsNaN(location.Longitude)) throw new InvalidCoordinateException("Invalid Coordinate both latitude and longitude must have a value");
-            if (double.IsInfinity(location.Latitude) || double.IsInfinity(location.Longitude)) throw new InvalidCoordinateException("Invalid Coordinate both latitude and longitude must have a value");
-            _latitude = location.Latitude;
-            _longitude = CoordinateHelpers.NormaliseLongitude(location.Longitude);
-        }
-        public MapCoordinate(PointD point)
-        {
-            if (point.Y < -90 || point.Y > 90) throw new InvalidCoordinateException("Invalid Coordinate latitude must be greater or equal to -90 or less then or equal to 90");
-            if (double.IsNaN(point.X) || double.IsNaN(point.Y)) throw new InvalidCoordinateException("Invalid Coordinate both latitude and longitude must have a value");
-            if (double.IsInfinity(point.Y) || double.IsInfinity(point.X)) throw new InvalidCoordinateException("Invalid Coordinate both latitude and longitude must have a value");
-            _latitude = point.Y;
-            _longitude = CoordinateHelpers.NormaliseLongitude(point.X);
-        }
-
-        /// <summary>
-        /// Uses a haversine function to get the distance between this point and another in meters
-        /// </summary>
-        /// <param name="destinationPoint">The point calcualte the distance to</param>
-        /// <returns>Distance in kilometers</returns>        
-        public double DistanceTo(MapCoordinate destinationPoint)
-        {
-            return CoordinateHelpers.Haversine(_latitude, _longitude, destinationPoint.Latitude, destinationPoint.Longitude);
+            _longitude = newLogitude;
+            if(newLatitude>90|| newLatitude<-90|| newLogitude<-180|| newLogitude>180)NormaliseCoordinate();
         }
         /// <summary>
-        /// uses a haversine function to get the distance between this point and another in feet
+        /// Uses a haversine function to get the distance between this point and returns in the specified DistanceUnit
         /// </summary>
         /// <param name="destinationPoint">The point calcualte the distance to</param>
-        /// <returns>Distance in feet</returns>
-        public double DistanceToFeet(MapCoordinate destinationPoint)
+        /// <returns>Distance in specified DistanceUnit default kilometres</returns>        
+        public double DistanceTo(MapCoordinate destinationPoint, DistanceUnit unit = DistanceUnit.Kilometres)
         {
-            return CoordinateHelpers.Haversine(_latitude, _longitude, destinationPoint.Latitude, destinationPoint.Longitude) * 1000 * 3.280839895;
-        }
-        /// <summary>
-        /// uses a haversine function to get the distance between this point and another in miles
-        /// </summary>
-        /// <param name="destinationPoint">The point calcualte the distance to</param>
-        /// <returns>Distance in miles</returns>
-        public double DistanceToMiles(MapCoordinate destinationPoint)
-        {
-            return CoordinateHelpers.Haversine(_latitude, _longitude, destinationPoint.Latitude, destinationPoint.Longitude) * 0.62137119;
+            return DistanceUnitConversion.FromKilometres(CoordinateHelpers.Haversine(_latitude, _longitude, destinationPoint.Latitude, destinationPoint.Longitude), unit);
         }
         /// <summary>
         /// Returns the bearing in degrees from the current point to a destination point
@@ -100,13 +63,14 @@ namespace LocationTriggering
         /// <summary>
         /// Find a point that is a specified distance away from the current point in a specifed bearing
         /// </summary>
-        /// <param name="distance">Distance to measure in kilonetres</param>
+        /// <param name="distance">Distance to measure in the specifed DistanceUnit</param>
         /// <param name="bearing">Direction in degrees(0-360)</param>
+        /// <param name="unit">The distance unit that the distance is in default: kilometres</param>
         /// <returns>Point that is "distance" away in the direction of "bearing" </returns>
-        public MapCoordinate PointAtDistanceAndBearing(double distance,double bearing)
+        public MapCoordinate PointAtDistanceAndBearing(double distance,double bearing, DistanceUnit unit=DistanceUnit.Kilometres)
         {
-            PointD result = CoordinateHelpers.DestinationPointFromBearingAndDistance(new PointD(Longitude,Latitude), distance, bearing);
-            return new MapCoordinate(result.Y, result.X);
+            MapCoordinate result = CoordinateHelpers.DestinationPointFromBearingAndDistance(this, DistanceUnitConversion.ToKilometres(distance, unit), bearing);
+            return result;
         }
         /// <summary>
         /// Check if the current point refers to the same location as other MapCoorddinate 
@@ -119,23 +83,6 @@ namespace LocationTriggering
             if ((_latitude == 90 && otherMapCoordinate.Latitude == 90) || (_latitude == -90 && otherMapCoordinate.Latitude == -90)) return true;
             return _latitude == otherMapCoordinate.Latitude && CoordinateHelpers.NormaliseLongitude(_longitude) == CoordinateHelpers.NormaliseLongitude(otherMapCoordinate.Longitude);
         }
-
-        /// <summary>
-        /// Converts the MapCoordinate to PointD with X being the Longitude and Y being the latitude
-        /// </summary>
-        /// <returns>PointD with the same latitude and longitude</returns>
-        public PointD ToPointD()
-        {
-            return new PointD(Longitude, Latitude);
-        }
-        /// <summary>
-        /// Converts the MapCoordinate to Geolocator Position
-        /// </summary>
-        /// <returns>A location with the same latitude and longitude</returns>
-        public Position ToPosition()
-        {
-            return new Position(Latitude, Longitude);
-        }
         /// <summary>
         /// Coverts MapCoorddinate to a string format "Latitude, Longitude"
         /// </summary>
@@ -143,6 +90,27 @@ namespace LocationTriggering
         public override string ToString()
         {
             return _latitude + ", " + _longitude;
+        }
+        private void NormaliseCoordinate()
+        {
+            _latitude = CoordinateHelpers.NormaliseLongitude(_latitude);
+            bool flip = false;
+            if (_latitude > 90.0)
+            {
+                _latitude = 180.0 - _latitude;
+                flip = true;
+            }
+            else if (_latitude < -90.0)
+            {
+                _latitude = -180.0 - _latitude;
+                flip = true;
+            }
+            if (flip)
+            {
+                _longitude += _longitude > 0 ? -180.0 : 180.0;
+            }
+            _longitude = CoordinateHelpers.NormaliseLongitude(_longitude);
+
         }
     }
 }

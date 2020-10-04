@@ -182,7 +182,7 @@ namespace SampleAndTesting.Tests
             try
             {
 
-                ContainsPointResult.Text = testBoundingBox.containsPoint(GetTestMapCoordinate()).ToString();
+                ContainsPointResult.Text = testBoundingBox.ContainsPoint(GetTestMapCoordinate()).ToString();
             }
             catch (Exception exception)
             {

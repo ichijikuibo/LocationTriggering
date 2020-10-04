@@ -1,4 +1,4 @@
-﻿using Plugin.Geolocator.Abstractions;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +11,7 @@ namespace LocationTriggering.Utilities
     public class LocationTriggeredEventArgs<T> : EventArgs where T:LocationTrigger 
     {
         public DateTime TimeTriggered { get; set; }
-        public Position GPSPosition { get; set; }
+        public MapCoordinate GPSPosition { get; set; }
         public IReadOnlyList<T> LocationsEntered { get; set; }
         public IReadOnlyList<T> LocationsExited { get; set; }
         public IReadOnlyList<T> CurrentLocations { get; set; }
@@ -27,7 +27,7 @@ namespace LocationTriggering.Utilities
     public class LocationUpdatedEventArgs<T> : EventArgs where T : LocationTrigger
     {
         public DateTime TimeTriggered { get; set; }
-        public Position GPSPosition { get; set; }
+        public MapCoordinate GPSPosition { get; set; }
         public T Location { get; set; }
     }
     /// <summary>
@@ -50,7 +50,7 @@ namespace LocationTriggering.Utilities
     public class  PositionUpdatedEventArgs: EventArgs
     {
         public DateTime TimeTriggered { get; set; }
-        public Position GPSPosition { get; set; }
+        public MapCoordinate GPSPosition { get; set; }
     }
     /// <summary>
     /// The event that is triggered whenever there is a gps update

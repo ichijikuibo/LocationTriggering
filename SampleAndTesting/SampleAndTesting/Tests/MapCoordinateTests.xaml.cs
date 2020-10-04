@@ -65,8 +65,8 @@ namespace SampleAndTesting.Tests
 
         private void DistanceToFeetButton_Clicked(object sender, EventArgs e)
         {
-            try { 
-                double distance = mapCoordinate.DistanceToFeet(GetTestMapCoordinate());
+            try {                
+                double distance = mapCoordinate.DistanceTo(GetTestMapCoordinate(),LocationTriggering.Utilities.DistanceUnit.Feet);
                 DistanceToFeetResult.Text = distance + "ft";
             }
             catch (Exception exception)

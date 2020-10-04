@@ -1,3 +1,12 @@
+Create a class library that implements geofencing to allow users to quickly and easily create local tour app such as Derry Smart Tour arround the world using Xamarin forms
+
+1. Store Coordinates in a way that a programmer can use the class library along with their own data 
+2. Determine which location a coordinate is contained in
+3. Create a list of locations sorted by their distance frrom a point
+4. Create a list of location at a specifed bearing
+5. Update a list of current locations and closest locations that are user interface bindable and auto updated as a new coordinate is recieved
+6. Provide additional functionality as required that gives more options to the user that extend the protability of the class library
+
 1. Allow to create a list of locations each containing abritary list of GPS coordinates.
 1.1 Create a class to hold the gps coordinate and methods required to make calculations(Distance, Bearing, Equality)
 1.2 Create a class to hold a range of bearings and determine if a another bearing is within 
@@ -6,9 +15,12 @@
 1.5 Create a class to store a collection of locations and the methods to sort and make iterate through the locations 
 2. Determine which location/s if any a specifed GPS corrdinate is within
 3. Create a list of locations sorted by distance from a specifed location
-4. Create a list of locations within a specifed distance from a specified point
-5. Create a list of locations that are located in a specified bearing sorted by distance
-6. Monitor GPS activity and send events when gps location is within a location
+4. Create a list of locations that are located in a specified bearing sorted by distance
+5. Monitor GPS activity and send events when gps location is within a location
+
+
+
+
 
 
 Deferred to future version
@@ -18,3 +30,4 @@ Deferred to future version
 4. Implement Vincenty solutions of geodesics on the ellipsoid for more accurate distance calculations https://www.movable-type.co.uk/scripts/latlong-vincenty.html
 5. Add monitoring of orientation sensor and send events when phone is facing a LocationTrigger
 6. Add navigation feature for directions to a location
+7. Remove dependancy on Xamarin Essentials and Geolocator

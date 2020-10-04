@@ -1,5 +1,4 @@
 ﻿using LocationTriggering.Utilities;
-using Plugin.Geolocator.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -68,15 +67,6 @@ namespace LocationTriggering
             }
             return locations.AsReadOnly();
         }
-        /// <summary>
-        /// Gets a list of the LocationTriggers that contain the specified point
-        /// </summary>
-        /// <param name="point">The point to check for locations</param>
-        /// <returns>List of locations at the point(can be empty) </returns>
-        public IReadOnlyList<T> LocationsAtPoint(Position point)
-        {
-            return LocationsAtPoint(new MapCoordinate(point.Latitude, point.Longitude));
-        }
         public IReadOnlyList<T> LocationsInDirection(MapCoordinate position,double bearing,double maxDistance=0)
         {
             List<T> locations = new List<T>();
@@ -109,16 +99,6 @@ namespace LocationTriggering
         /// <param name="position">The position to measure distances from</param>
         /// <param name="distance">The highest distance to check</param>
         /// <returns>List of LocationTriggers</returns>
-        public IReadOnlyList<T> LocationsNear(Position position, double distance)
-        {
-            return LocationsNear(new MapCoordinate(position), distance);
-        }
-        /// <summary>
-        /// Gets a list of locations near the specified position and with the specifed distance
-        /// </summary>
-        /// <param name="position">The position to measure distances from</param>
-        /// <param name="distance">The highest distance to check</param>
-        /// <returns>List of LocationTriggers</returns>
         public IReadOnlyList<T> LocationsNear(MapCoordinate position, double distance)
         {
             List<T> locationsNear = new List<T>();
@@ -129,16 +109,6 @@ namespace LocationTriggering
             }
             locationsNear.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); });
             return locationsNear.AsReadOnly();
-        }
-        /// <summary>
-        /// Gets the specified number of locations nearest the specifed position. 0 for all locations sorted by distance
-        /// </summary>
-        /// <param name="position">The position to measure distances from</param>
-        /// <param name="distance">The number of locations to return</param>
-        /// <returns>List of LocationTriggers</returns>
-        public IReadOnlyList<T> ClosestLocations(Position position, int number)
-        {
-            return ClosestLocations(new MapCoordinate(position), number);
         }
         /// <summary>
         /// Gets the specified number of locations nearest the specifed position. 0 for all locations sorted by distance
@@ -167,14 +137,7 @@ namespace LocationTriggering
                 LT.DistanceTo(position);
             }
         }
-        /// <summary>
-        /// Update the distancesfrom the specified location for all the Locations in the collection
-        /// </summary>
-        /// <param name="position">The position to measure from</param>
-        public void UpdateDistances(Position position)
-        {
-            UpdateDistances(new MapCoordinate(position));
-        }
+
         /// <summary>
         /// Update the bearings from the specified location for all the Locations in the collection
         /// </summary>
@@ -186,14 +149,7 @@ namespace LocationTriggering
                 LT.BearingFrom(position);
             }
         }
-        /// <summary>
-        /// Update the bearings from the specified location for all the Locations in the collection
-        /// </summary>
-        /// <param name="position">The position to measure from</param>
-        public void UpdateBearings(Position position)
-        {
-            UpdateBearings(new MapCoordinate(position));
-        }
+
         /// <summary>
         /// Set the collection to auto sort the location using the specifed comparison.  <code>delegate (LocationTrigger lt1, LocationTrigger lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); }</code>
         /// </summary>
