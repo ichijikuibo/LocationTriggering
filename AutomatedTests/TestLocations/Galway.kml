@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Galway.kml</name>
+	<Style id="s_ylw-pushpin">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<Style id="s_ylw-pushpin_hl">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<StyleMap id="m_ylw-pushpin">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#s_ylw-pushpin</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#s_ylw-pushpin_hl</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark>
+		<name>Galway</name>
+		<styleUrl>#m_ylw-pushpin</styleUrl>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						-9.075342198018681,53.23905287851687,0 -8.978698898399598,53.24772583466655,0 -8.934808050968762,53.25909376672266,0 -8.936029060314853,53.27659638725455,0 -8.940176069806519,53.29197479997549,0 -8.958116411681297,53.30166402358561,0 -8.974317942646968,53.30071332931058,0 -8.980770239826946,53.31009848163995,0 -8.987704785356559,53.32238471110458,0 -9.029360713952466,53.32676526595923,0 -9.056932079748609,53.3251325527023,0 -9.082723694147065,53.32262260890341,0 -9.100731448606727,53.3127566224582,0 -9.119219927595413,53.29601865978573,0 -9.140140057002601,53.29378507204837,0 -9.163326708748551,53.28554752687631,0 -9.150008075878917,53.25508126950305,0 -9.13121007881514,53.24058102340395,0 -9.075342198018681,53.23905287851687,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+</Document>
+</kml>

@@ -15,42 +15,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationTriggering", "Locat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{53B0AB0B-12C8-4DDF-A0E1-6CA02D1B1040}"
 	ProjectSection(SolutionItems) = preProject
-		Design Description.txt = Design Description.txt
+		Documents\Iteration 1 Test Plan.xlsx = Documents\Iteration 1 Test Plan.xlsx
+		Documents\Iteration 1.docx = Documents\Iteration 1.docx
+		Documents\Iteration 2 Test Plan.xlsx = Documents\Iteration 2 Test Plan.xlsx
+		Documents\Iteration 2.docx = Documents\Iteration 2.docx
 		LICENSE = LICENSE
 		README.md = README.md
-		Documents\requirements.txt = Documents\requirements.txt
-		Documents\TestPlan.xlsx = Documents\TestPlan.xlsx
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestData", "TestData", "{B5231140-32C2-422E-9EA8-75EE06CD833E}"
-	ProjectSection(SolutionItems) = preProject
-		Documents\TestData\2PointTestData.txt = Documents\TestData\2PointTestData.txt
-		Documents\TestData\AddPointTestData.xlsx = Documents\TestData\AddPointTestData.xlsx
-		Documents\TestData\BearingRangeAndClosestPointTestData.txt = Documents\TestData\BearingRangeAndClosestPointTestData.txt
-		Documents\TestData\BearingRangeConstructorTestData.txt = Documents\TestData\BearingRangeConstructorTestData.txt
-		Documents\TestData\BearingRangeEqualsTestData.txt = Documents\TestData\BearingRangeEqualsTestData.txt
-		Documents\TestData\BearingRangeOverlapsTestData.txt = Documents\TestData\BearingRangeOverlapsTestData.txt
-		Documents\TestData\BoundingBoxBearingRangeTestData.txt = Documents\TestData\BoundingBoxBearingRangeTestData.txt
-		Documents\TestData\BoundingBoxConstructorTestData.txt = Documents\TestData\BoundingBoxConstructorTestData.txt
-		Documents\TestData\BoundingBoxContainsPointTestData.txt = Documents\TestData\BoundingBoxContainsPointTestData.txt
-		Documents\TestData\BoundingBoxEquals.txt = Documents\TestData\BoundingBoxEquals.txt
-		Documents\TestData\ClosestLocationsTestData.txt = Documents\TestData\ClosestLocationsTestData.txt
-		Documents\TestData\ContainsBearingTestData.txt = Documents\TestData\ContainsBearingTestData.txt
-		Documents\TestData\ContainsPointTestData.txt = Documents\TestData\ContainsPointTestData.txt
-		Documents\TestData\CoordinateTestData.txt = Documents\TestData\CoordinateTestData.txt
-		Documents\TestData\EqualityCoordinates.txt = Documents\TestData\EqualityCoordinates.txt
-		Documents\TestData\LocationInDirectionTestData.txt = Documents\TestData\LocationInDirectionTestData.txt
-		Documents\TestData\LocationsAtPointTestData.txt = Documents\TestData\LocationsAtPointTestData.txt
-		Documents\TestData\LocationsInBearingRange.txt = Documents\TestData\LocationsInBearingRange.txt
-		Documents\TestData\LocationTriggerTestData.xlsx = Documents\TestData\LocationTriggerTestData.xlsx
-		Documents\TestData\NearbyLocationsTestData.txt = Documents\TestData\NearbyLocationsTestData.txt
-		Documents\TestData\OverlapsTestData.txt = Documents\TestData\OverlapsTestData.txt
-		Documents\TestData\PointAtDistanceAndBearingTestData.xlsx = Documents\TestData\PointAtDistanceAndBearingTestData.xlsx
-		Documents\TestData\PointsInBoundingBox.txt = Documents\TestData\PointsInBoundingBox.txt
-		Documents\TestData\RemovePointTestData.xlsx = Documents\TestData\RemovePointTestData.xlsx
+		Documents\Requirement Specification.docx = Documents\Requirement Specification.docx
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationTriggeringXamarinExtentions", "LocationListenerExtention\LocationTriggeringXamarinExtentions.csproj", "{740B3D48-949E-4149-9920-1AF6F84FA07D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomatedTests", "AutomatedTests\AutomatedTests.csproj", "{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -216,12 +192,33 @@ Global
 		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|x64.Build.0 = Release|Any CPU
 		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|x86.ActiveCfg = Release|Any CPU
 		{740B3D48-949E-4149-9920-1AF6F84FA07D}.Release|x86.Build.0 = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|ARM.Build.0 = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|x64.Build.0 = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Debug|x86.Build.0 = Debug|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|ARM.ActiveCfg = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|ARM.Build.0 = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|iPhone.Build.0 = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|x64.ActiveCfg = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|x64.Build.0 = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|x86.ActiveCfg = Release|Any CPU
+		{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{B5231140-32C2-422E-9EA8-75EE06CD833E} = {53B0AB0B-12C8-4DDF-A0E1-6CA02D1B1040}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B01D4D17-2DCF-4880-95D6-11783617CB94}

@@ -83,7 +83,7 @@ namespace SampleAndTesting.Tests
         private void UpdateProperties()
         {
             ConstructorResults.Text = testBoundingBox.ToString() + " HeightM: " + testBoundingBox.Height + " WidthM: " + testBoundingBox.Width
-                + " HeightD: " + testBoundingBox.HeightDegrees + " WidthD: " + testBoundingBox.Width;
+                + " HeightD: " + testBoundingBox.HeightDegrees + " WidthD: " + testBoundingBox.WidthDegrees;
 
             UpdateMap();
 
@@ -118,7 +118,10 @@ namespace SampleAndTesting.Tests
 
 
             MapTest.MapElements.Add(boundingBox);
-            MapTest.MoveToRegion(new MapSpan(new Position(testBoundingBox.Centre.Latitude, testBoundingBox.Centre.Longitude), testBoundingBox.HeightDegrees, testBoundingBox.WidthDegrees));
+            double height = 10;
+            if (testBoundingBox.Centre.Latitude + 10 > 90) height = 90 - testBoundingBox.Centre.Latitude;
+            if (testBoundingBox.Centre.Latitude - 10 < -90) height = Math.Abs(-90 - testBoundingBox.Centre.Latitude);
+            MapTest.MoveToRegion(new MapSpan(new Position(testBoundingBox.Centre.Latitude, testBoundingBox.Centre.Longitude), height, 10));
 
 
         }

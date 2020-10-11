@@ -5,27 +5,15 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml;
-using Xamarin.Essentials;
 
-namespace SampleAndTesting.Data
+namespace AutomatedTests.Data
 {
     public class TestLocationTriggerData
     {
         private List<LocationTrigger> _testData;
-        Assembly resources;
-        string resourcePrefix;
         public TestLocationTriggerData()
         {
             _testData = new List<LocationTrigger>();
-            resourcePrefix = "SampleAndTesting.";
-#if __IOS__
-            resourcePrefix = "SampleAndTesting.IOS.";
-#endif
-#if __ANDROID__
-            resourcePrefix = "SampleAndTesting.Droid.";
-#endif
-
-            resources = typeof(TestLocationTriggerData).GetTypeInfo().Assembly;
 
             BasicLocationTrigger _testLocation = (BasicLocationTrigger)OpenKMLFile("Belfast.kml");
             if (_testLocation != null) _testData.Add(_testLocation);
@@ -146,13 +134,11 @@ namespace SampleAndTesting.Data
             _testLocation = new BasicLocationTrigger("Centre180", new List<MapCoordinate> { new MapCoordinate(1, 179), new MapCoordinate(1, -179), new MapCoordinate(-1, -179), new MapCoordinate(-1, 179) });
             if (_testLocation != null) _testData.Add(_testLocation);
 
-
         }
         public LocationTrigger OpenKMLFile(string fileName)
         {
             XmlDocument xmlDoc = new XmlDocument();
-            Stream stream = resources.GetManifestResourceStream(resourcePrefix + "TestLocations." + fileName);
-            xmlDoc.Load(stream);
+            xmlDoc.Load("TestLocations\\" + fileName);
             XmlNodeList coordinatesNode = xmlDoc.GetElementsByTagName("coordinates");
             if (coordinatesNode.Count > 0)
             {

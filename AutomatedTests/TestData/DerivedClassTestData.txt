@@ -1,0 +1,7 @@
+﻿Antartica.kml	Antartica
+Bogside.kml	Bogside
+Waterford.kml	Waterford
+Johannesburg.kml	Johannesburg
+PacificOcean.kml	Pacific
+SaoPaulo.kml	SaoPaulo
+DistrictOfColumbia.kml	DC

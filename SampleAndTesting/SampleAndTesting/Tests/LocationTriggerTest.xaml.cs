@@ -105,7 +105,7 @@ namespace SampleAndTesting.Tests
                 RemovePointPicker.Items.Add(MC.ToString());
             }
             RemovePointPicker.SelectedIndex = 0;
-            //UpdateMap();
+            UpdateMap();
 
 
 
@@ -132,10 +132,11 @@ namespace SampleAndTesting.Tests
             boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.Northwest.Latitude, testLocationTrigger.BoundingBox.Southeast.Longitude));
             boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.Southeast.Latitude, testLocationTrigger.BoundingBox.Southeast.Longitude));
             boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.Southeast.Latitude, testLocationTrigger.BoundingBox.Northwest.Longitude));
-
-
             MapTest.MapElements.Add(boundingBox);
-            MapTest.MoveToRegion(new MapSpan(new Position(testLocationTrigger.Centre.Latitude,testLocationTrigger.Centre.Longitude), testLocationTrigger.BoundingBox.HeightDegrees, testLocationTrigger.BoundingBox.WidthDegrees));
+            double height = 10;
+            if (testLocationTrigger.Centre.Latitude + 10 > 90) height = 90 - testLocationTrigger.Centre.Latitude;
+            if (testLocationTrigger.Centre.Latitude - 10 < -90) height = Math.Abs(-90 - testLocationTrigger.Centre.Latitude);
+            MapTest.MoveToRegion(new MapSpan(new Position(testLocationTrigger.Centre.Latitude,testLocationTrigger.Centre.Longitude), height, 10));
 
 
         }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Waterford.kml</name>
+	<Style id="s_ylw-pushpin">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<Style id="s_ylw-pushpin_hl">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<StyleMap id="m_ylw-pushpin">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#s_ylw-pushpin</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#s_ylw-pushpin_hl</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark>
+		<name>Waterford</name>
+		<styleUrl>#m_ylw-pushpin</styleUrl>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						-7.195197450899943,52.24842435056924,0 -7.172932177546976,52.23051165099351,0 -7.166697731232085,52.21188015667652,0 -7.168665735860216,52.19452523057912,0 -7.149603661422471,52.19208519429602,0 -7.127311609397113,52.19636291011552,0 -7.100438706431074,52.19590398879156,0 -7.081379753158146,52.19345181969161,0 -7.060988476564429,52.19105438276589,0 -7.034393204557093,52.20454395007263,0 -7.026848356011056,52.22049076957213,0 -7.023965894674749,52.24198776503568,0 -7.027003835199491,52.25665122594344,0 -7.028612391462739,52.27055372481802,0 -7.063351527149288,52.28055139518575,0 -7.123392975521286,52.27709731626933,0 -7.155676937919191,52.28881941557491,0 -7.187532094187362,52.27424986507568,0 -7.195197450899943,52.24842435056924,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+</Document>
+</kml>

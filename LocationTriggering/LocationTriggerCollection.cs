@@ -87,7 +87,7 @@ namespace LocationTriggering
             {
                 if (maxDistance==0||LT.DistanceTo(position) <= maxDistance)
                 {
-                    if (bearing.ContainsBearing(LT.BearingFrom(position))) locations.Add(LT);
+                    if (bearing.OverlapsWith(LT.BearingRangeFrom(position))) locations.Add(LT);
                 }
             }
             locations.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); });

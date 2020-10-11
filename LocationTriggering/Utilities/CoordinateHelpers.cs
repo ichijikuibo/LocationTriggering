@@ -204,10 +204,45 @@ namespace LocationTriggering.Utilities
         /// <param name="p2">Ending point of the line</param>
         /// <param name="closest">Output: the closest point determined by the method</param>
         /// <returns></returns>
+        public static double FindDistanceToSegment2(MapCoordinate pt, MapCoordinate p1, MapCoordinate p2, out MapCoordinate closest)
+        {
+            double dx = /*AngleSubtract*/(p2.Longitude - p1.Longitude);
+            double dy = /*AngleSubtract*/(p2.Latitude - p1.Latitude);
+            if ((dx == 0) && (dy == 0))
+            {
+                // It's a point not a line segment.
+                closest = p1;
+                dx = AngleDifference(pt.Longitude , p1.Longitude);
+                dy = AngleDifference(pt.Latitude , p1.Latitude);
+                return Math.Sqrt(AngleAddition(dx * dx , dy * dy));
+            }
+
+            //// Calculate the t that minimizes the distance.
+            //double t = ((pt.Longitude - p1.Longitude) + dx + (pt.Latitude - p1.Latitude) * dy) /
+            //    (dx * dx + dy * dy);
+            double t = ((pt.Latitude - p1.Latitude) * dx + (pt.Longitude - p1.Longitude) * dy) /
+    (dx * dx + dy * dy);
+            // See if this represents one of the segment's
+            // end points or a point in the middle.
+            if (t < 0)
+            {
+                closest = new MapCoordinate(p1.Latitude, p1.Longitude);
+            }
+            else if (t > 1)
+            {
+                closest = new MapCoordinate(p2.Latitude, p2.Longitude);
+            }
+            else
+            {
+                closest = new MapCoordinate(/*AngleAddition*/(p1.Latitude + t * dy), /*AngleAddition*/(p1.Longitude + t * dx));
+            }
+
+            return Haversine(pt.Latitude, pt.Longitude, closest.Latitude, closest.Longitude);
+        }
         public static double FindDistanceToSegment(MapCoordinate pt, MapCoordinate p1, MapCoordinate p2, out MapCoordinate closest)
         {
-            double dx = p2.Longitude - p1.Longitude;
-            double dy = p2.Latitude - p1.Latitude;
+            double dx = AngleSubtract(p2.Longitude , p1.Longitude);
+            double dy = AngleSubtract(p2.Latitude , p1.Latitude);
             if ((dx == 0) && (dy == 0))
             {
                 // It's a point not a line segment.
@@ -218,25 +253,41 @@ namespace LocationTriggering.Utilities
             }
 
             // Calculate the t that minimizes the distance.
-            double t = ((pt.Longitude - p1.Longitude) * dx + (pt.Latitude - p1.Latitude) * dy) /
+            double t = (AngleSubtract(pt.Longitude , p1.Longitude) * dx + AngleSubtract(pt.Latitude , p1.Latitude) * dy) /
                 (dx * dx + dy * dy);
 
             // See if this represents one of the segment's
             // end points or a point in the middle.
             if (t < 0)
             {
-                closest = new MapCoordinate( p1.Latitude, p1.Longitude);
+                closest = new MapCoordinate(p1.Latitude,p1.Longitude);
+                dx = pt.Longitude - p1.Longitude;
+                dy = pt.Latitude - p1.Latitude;
             }
             else if (t > 1)
             {
-                closest = new MapCoordinate(p2.Latitude, p2.Longitude);
+                closest = new MapCoordinate(p2.Latitude,p2.Longitude );
+                dx = pt.Longitude - p2.Longitude;
+                dy = pt.Latitude - p2.Latitude;
             }
             else
             {
                 closest = new MapCoordinate(p1.Latitude + t * dy, p1.Longitude + t * dx);
+                dx = pt.Longitude - closest.Longitude;
+                dy = pt.Latitude - closest.Latitude;
             }
 
             return Haversine(pt.Latitude, pt.Longitude, closest.Latitude, closest.Longitude);
+        }
+        public static double AngleSubtract(double angle1, double angle2)
+        {
+            double diff = (angle1 - angle2 + 180) % 360 - 180;
+            return diff < -180 ? diff + 360 : diff;
+        }
+        public static double AngleAddition(double angle1, double angle2)
+        {
+            double diff = (angle1 + angle2 + 180) % 360 - 180;
+            return diff < -180 ? diff + 360 : diff;
         }
     }
 }

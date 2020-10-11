@@ -18,86 +18,146 @@ namespace LocationTriggering.Utilities
         private double _widthDegrees = -1; //the width of the boundingbox in meters;
         private double _heightDegress = -1; //the heigth of the boundingbox in meters;
         private MapCoordinate _centre;
+        private bool _crossesSouthPole = false;
+        private bool _crossesNorthPole = false;
+        private bool _crossesDateLine = false;
         /// <summary>
         /// Construct a bounding box from the northwest and south east map coordinates
         /// </summary>
         /// <param name="northwest">The northwest point of the bounding box</param>
         /// <param name="southeast">The southeast point of the bounding box</param>
-        public MapBoundingBox(MapCoordinate northwest, MapCoordinate southeast)
+        public MapBoundingBox(MapCoordinate northwest, MapCoordinate southeast, bool dateLine = false,bool southPole=false,bool northPole=false)
         {
-
+            _crossesSouthPole = southPole;
+            _crossesNorthPole = northPole;
+            _crossesDateLine = dateLine;
             _northwest = northwest;
             _southeast = southeast;
-            _centre = new MapCoordinate( (_northwest.Latitude + southeast.Latitude) / 2, CoordinateHelpers.NormaliseLongitude((_northwest.Longitude + _southeast.Longitude) / 2));
-            _widthDegrees = CoordinateHelpers.NormaliseLongitude(_northwest.Longitude - _southeast.Longitude);
-            _heightDegress = _northwest.Latitude - southeast.Latitude;
+            CalculateProperties();
+
         }
         /// <summary>
         /// Construct a bounding box from four double representing the northwest and southeast map coordinates
         /// </summary>
         /// <param name="northwest">The northwest point of the bounding box</param>
         /// <param name="southeast">The southeast point of the bounding box</param>
-        public MapBoundingBox(double lat1, double lng1, double lat2, double lng2)
+        public MapBoundingBox(double lat1, double lng1, double lat2, double lng2, bool dateLine = false, bool southPole = false, bool northPole = false)
         {
-
+            _crossesSouthPole = southPole;
+            _crossesNorthPole = northPole;
+            _crossesDateLine = dateLine;
 
             _northwest = new MapCoordinate(lat1, lng1);
             _southeast = new MapCoordinate(lat2, lng2);
-            _centre = new MapCoordinate(CoordinateHelpers.NormaliseLongitude((_northwest.Longitude + _southeast.Longitude) / 2), (_northwest.Latitude + _southeast.Latitude) / 2);
-            _widthDegrees = CoordinateHelpers.NormaliseBearing(_northwest.Longitude - _southeast.Longitude);
-            _heightDegress = _northwest.Latitude - _southeast.Latitude;
+            CalculateProperties();
 
+        }
+        private void CalculateProperties()
+        {
+
+            if (_crossesSouthPole || _crossesNorthPole)
+                _widthDegrees = 180;
+            else
+                _widthDegrees = CoordinateHelpers.AngleDifference(_northwest.Longitude , _southeast.Longitude);
+            if (_crossesSouthPole)
+            {
+                _centre = new MapCoordinate((_northwest.Latitude + (-180 - _southeast.Latitude)) / 2, (_northwest.Longitude + _southeast.Longitude) / 2);
+                _heightDegress = 90 + _northwest.Latitude + 90 + _southeast.Latitude;
+            }
+            else if (_crossesNorthPole)
+            {
+                _centre = new MapCoordinate((_northwest.Latitude + (180 - _southeast.Latitude)) / 2, (_northwest.Longitude + _southeast.Longitude) / 2);
+                _heightDegress = 90 - _northwest.Latitude + 90 - _southeast.Latitude;
+            }
+            else if (_crossesDateLine)
+            {
+                _centre = new MapCoordinate((_northwest.Latitude + _southeast.Latitude) / 2, _northwest.Longitude + CoordinateHelpers.AngleDifference(_northwest.Longitude, _southeast.Longitude)/2);
+                _heightDegress = _northwest.Latitude - _southeast.Latitude;
+            }
+            else
+            {
+                _centre = new MapCoordinate((_northwest.Latitude + _southeast.Latitude) / 2, (_northwest.Longitude + _southeast.Longitude) / 2);
+                _heightDegress = _northwest.Latitude - _southeast.Latitude;
+            }
         }
         /// <summary>
         /// Determine if the specifed point is within the bounding box
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        //public bool containsPoint(MapCoordinate point)
-        //{
-        //    if (_crossesInternationalDateLine)//If the bounding box crosses from -180 to 180 
-        //    {
-        //        if ((point.Longitude >= _northwest.Longitude ||
-        //            point.Longitude <= _southeast.Longitude) &&
-        //            point.Latitude <= _northwest.Latitude &&
-        //            point.Latitude >= _southeast.Latitude)
-        //            return true;
-        //    }
-        //    else {
-        //        if (point.Longitude >= _northwest.Longitude &&
-        //            point.Longitude <= _southeast.Longitude &&
-        //            point.Latitude <= _northwest.Latitude &&
-        //            point.Latitude >= _southeast.Latitude)
-        //            return true;
-        //    }
-        //    return false;
-        //}
-        public virtual bool ContainsPoint(MapCoordinate point)
+        public bool ContainsPoint(MapCoordinate point)
         {
-            // if (_crossesInternationalDateLine && X < 0) X = 360 + X;
-            // Get the angle between the point and the
-            // first and last vertices.
-            MapCoordinate[] Points = new MapCoordinate[4];
-            Points[0] = new MapCoordinate(_northwest.Latitude, _northwest.Longitude);
-            Points[1] = new MapCoordinate(_northwest.Latitude, _southeast.Longitude);
-            Points[2] = new MapCoordinate(_southeast.Latitude, _southeast.Longitude);
-            Points[3] = new MapCoordinate(_southeast.Latitude, _northwest.Longitude);
-            int max_point = Points.Length - 1;
-            double total_angle = CoordinateHelpers.GetAngle(Points[max_point].Latitude, Points[max_point].Longitude,point.Latitude, point.Longitude,Points[0].Latitude, Points[0].Longitude);
-            // Add the angles from the point
-            // to each other pair of vertices.
-            for (int i = 0; i < max_point; i++)
+            if (_crossesNorthPole || _crossesSouthPole) return ContainsPointPoles(point);
+            if (_crossesDateLine)//If the bounding box crosses from -180 to 180 
             {
-                double angle1 = CoordinateHelpers.GetAngle(Points[i].Latitude, Points[i].Longitude, point.Latitude, point.Longitude, Points[i + 1].Latitude, Points[i + 1].Longitude);
-                total_angle += angle1;
+                if ((point.Longitude >= _northwest.Longitude ||
+                    point.Longitude <= _southeast.Longitude) &&
+                    point.Latitude <= _northwest.Latitude &&
+                    point.Latitude >= _southeast.Latitude)
+                    return true;
             }
-
-            // The total angle should be 2 * PI or -2 * PI if 6.2831853071795862 -6.2831853071795853
-            // the point is in the polygon and close to zero
-            // if the point is outside the polygon.
-            return (total_angle < -0.000001);
-            // return (Math.Abs(total_angle) > 0.000001);
+            else
+            {
+                if (point.Longitude >= _northwest.Longitude &&
+                    point.Longitude <= _southeast.Longitude &&
+                    point.Latitude <= _northwest.Latitude &&
+                    point.Latitude >= _southeast.Latitude)
+                    return true;
+            }
+            return false;
         }
+        private bool ContainsPointPoles(MapCoordinate point)
+        {
+            if (_crossesNorthPole)
+            {
+                if (point.Longitude < 0)
+                {
+                    return point.Latitude >= _northwest.Latitude;
+                }
+                else
+                {
+                    return point.Latitude >= _southeast.Latitude;
+                }
+            }
+            else
+            {
+                if (point.Longitude < 0)
+                {
+                    return point.Latitude <= _northwest.Latitude;
+                }
+                else
+                {
+                    return point.Latitude <= _southeast.Latitude;
+                }
+            }
+        }
+        //public virtual bool ContainsPointPoles(MapCoordinate point)
+        //{
+        //    // if (_crossesInternationalDateLine && X < 0) X = 360 + X;
+        //    // Get the angle between the point and the
+        //    // first and last vertices.
+        //    MapCoordinate[] Points = new MapCoordinate[4];
+        //    Points[0] = new MapCoordinate(_northwest.Latitude, 0);
+        //    Points[1] = new MapCoordinate(_northwest.Latitude,90);
+        //    Points[2] = new MapCoordinate(_southeast.Latitude, 180);
+        //    Points[3] = new MapCoordinate(_southeast.Latitude, -90);
+        //    int max_point = Points.Length - 1;
+        //    double total_angle = CoordinateHelpers.GetAngle(Points[max_point].Latitude, Points[max_point].Longitude,point.Latitude, point.Longitude,Points[0].Latitude, Points[0].Longitude);
+        //    // Add the angles from the point
+        //    // to each other pair of vertices.
+        //    for (int i = 0; i < max_point; i++)
+        //    {
+        //        double angle1 = CoordinateHelpers.GetAngle(Points[i].Latitude, Points[i].Longitude, point.Latitude, point.Longitude, Points[i + 1].Latitude, Points[i + 1].Longitude);
+        //        total_angle += angle1;
+        //    }
+
+        //    // The total angle should be 2 * PI or -2 * PI if 6.2831853071795862 -6.2831853071795853
+        //    // the point is in the polygon and close to zero
+        //    // if the point is outside the polygon.
+        //    if(_crossesNorthPole) return (total_angle < -0.000001);
+        //    else return (total_angle > 0.000001);
+        //    // return (Math.Abs(total_angle) > 0.000001);
+        //}
         /// <summary>
         /// Calculate a bearing range from the bounding box from the specifed point
         /// </summary>
@@ -145,7 +205,9 @@ namespace LocationTriggering.Utilities
             if (_height == -1)//if height hasn't already been calculated: calculate and store;
             {
                 double middle = (_northwest.Longitude + _southeast.Longitude) / 2;//The longitude midpoint
-                _height = CoordinateHelpers.Haversine(_northwest.Latitude,middle, _southeast.Latitude, middle); //calculate the distance between the north and south points of the bounding box in metres
+                if(_crossesSouthPole||_crossesNorthPole)
+                    _height = CoordinateHelpers.Haversine(_northwest.Latitude,middle, _southeast.Latitude, -middle); //calculate the distance between the north and south points of the bounding box in metres
+                else _height = CoordinateHelpers.Haversine(_northwest.Latitude, middle, _southeast.Latitude, middle); //calculate the distance between the north and south points of the bounding box in metres
             }
             return _height;
         }

@@ -11,7 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AutomatedTests\**" />
+    <EmbeddedResource Remove="AutomatedTests\**" />
+    <None Remove="AutomatedTests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="TestLocations\Antartica.kml" />
     <None Remove="TestLocations\AppenticeBoysMemorialHall.kml" />
+    <None Remove="TestLocations\ArticSea.kml" />
     <None Remove="TestLocations\Belfast.kml" />
     <None Remove="TestLocations\Bogside.kml" />
     <None Remove="TestLocations\Bogsidemurals.kml" />
@@ -20,6 +28,7 @@
     <None Remove="TestLocations\Derry.kml" />
     <None Remove="TestLocations\DistrictOfColumbia.kml" />
     <None Remove="TestLocations\Dublin.kml" />
+    <None Remove="TestLocations\Eurasia.kml" />
     <None Remove="TestLocations\Europe.kml" />
     <None Remove="TestLocations\FreeDerryCorner.kml" />
     <None Remove="TestLocations\Galway.kml" />
@@ -33,6 +42,7 @@
     <None Remove="TestLocations\London.kml" />
     <None Remove="TestLocations\Moscow.kml" />
     <None Remove="TestLocations\NewZealand.kml" />
+    <None Remove="TestLocations\PacificOcean.kml" />
     <None Remove="TestLocations\Paris.kml" />
     <None Remove="TestLocations\PeaceBridge.kml" />
     <None Remove="TestLocations\RiverFoyle.kml" />
@@ -48,7 +58,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="TestLocations\Antartica.kml" />
     <EmbeddedResource Include="TestLocations\AppenticeBoysMemorialHall.kml" />
+    <EmbeddedResource Include="TestLocations\ArticSea.kml" />
     <EmbeddedResource Include="TestLocations\Belfast.kml" />
     <EmbeddedResource Include="TestLocations\Bogside.kml" />
     <EmbeddedResource Include="TestLocations\Bogsidemurals.kml" />
@@ -57,6 +69,7 @@
     <EmbeddedResource Include="TestLocations\Derry.kml" />
     <EmbeddedResource Include="TestLocations\DistrictOfColumbia.kml" />
     <EmbeddedResource Include="TestLocations\Dublin.kml" />
+    <EmbeddedResource Include="TestLocations\Eurasia.kml" />
     <EmbeddedResource Include="TestLocations\Europe.kml" />
     <EmbeddedResource Include="TestLocations\FreeDerryCorner.kml" />
     <EmbeddedResource Include="TestLocations\Galway.kml" />
@@ -70,6 +83,7 @@
     <EmbeddedResource Include="TestLocations\London.kml" />
     <EmbeddedResource Include="TestLocations\Moscow.kml" />
     <EmbeddedResource Include="TestLocations\NewZealand.kml" />
+    <EmbeddedResource Include="TestLocations\PacificOcean.kml" />
     <EmbeddedResource Include="TestLocations\Paris.kml" />
     <EmbeddedResource Include="TestLocations\PeaceBridge.kml" />
     <EmbeddedResource Include="TestLocations\RiverFoyle.kml" />
@@ -85,9 +99,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1487-pre1" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1539-pre2" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.0-pre2" />
-    <PackageReference Include="Xamarin.Forms.Maps" Version="5.0.0.1487-pre1" />
+    <PackageReference Include="Xamarin.Forms.Maps" Version="5.0.0.1539-pre2" />
   </ItemGroup>
 
   <ItemGroup>

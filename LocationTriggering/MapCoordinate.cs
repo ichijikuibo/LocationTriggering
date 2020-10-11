@@ -30,7 +30,8 @@ namespace LocationTriggering
             if (double.IsInfinity(newLatitude) || double.IsInfinity(newLogitude)) throw new InvalidCoordinateException("Invalid Coordinate both latitude and longitude must have a value");
             _latitude = newLatitude;
             _longitude = newLogitude;
-            if(newLatitude>90|| newLatitude<-90|| newLogitude<-180|| newLogitude>180)NormaliseCoordinate();
+            if (newLogitude == -180) _longitude = 180;
+            if (newLatitude>90|| newLatitude<-90|| newLogitude<-180|| newLogitude>180)NormaliseCoordinate();
         }
         /// <summary>
         /// Uses a haversine function to get the distance between this point and returns in the specified DistanceUnit

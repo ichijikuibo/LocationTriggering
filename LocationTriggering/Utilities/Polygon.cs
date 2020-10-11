@@ -150,8 +150,8 @@ namespace LocationTriggering.Utilities
             X /= (6 * polygon_area);
             Y /= (6 * polygon_area);
 
-            //// If the values are negative, the polygon is
-            //// oriented counterclockwise so reverse the signs.
+            // If the values are negative, the polygon is
+            // oriented counterclockwise so reverse the signs.
             //if (X < 0)
             //{
             //    X = -X;
