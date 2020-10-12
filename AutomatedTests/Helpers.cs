@@ -14,8 +14,8 @@ namespace AutomatedTests
             bool reading = true;
             while(reading)
             {
-                string? s = file.ReadLine();
-                if (s != null) lines.Add(s);
+                string s = file.ReadLine();
+                if (s != null&& s!="") lines.Add(s);
                 else reading = false;
             }
             return lines.ToArray();

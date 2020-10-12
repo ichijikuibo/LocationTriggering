@@ -121,7 +121,7 @@ namespace LocationTriggering.Utilities
             }
             else
             {
-                if (point.Longitude < 0)
+                if (point.Longitude >= 0)
                 {
                     return point.Latitude <= _northwest.Latitude;
                 }

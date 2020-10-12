@@ -10,10 +10,10 @@ namespace AutomatedTests.Data
 {
     public class TestLocationTriggerData
     {
-        private List<LocationTrigger> _testData;
+        private List<BasicLocationTrigger> _testData;
         public TestLocationTriggerData()
         {
-            _testData = new List<LocationTrigger>();
+            _testData = new List<BasicLocationTrigger>();
 
             BasicLocationTrigger _testLocation = (BasicLocationTrigger)OpenKMLFile("Belfast.kml");
             if (_testLocation != null) _testData.Add(_testLocation);
@@ -157,6 +157,6 @@ namespace AutomatedTests.Data
             }
             return null;
         }
-        public List<LocationTrigger> TestData { get => _testData; }
+        public List<BasicLocationTrigger> TestData { get => _testData; }
     }
 }

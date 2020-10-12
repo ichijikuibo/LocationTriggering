@@ -38,6 +38,13 @@ namespace LocationTriggering
             return null;
 
         }
+        public void AddRange(IEnumerable<T> newItems)
+        {
+            foreach (T LT in newItems)
+            {
+                Add(LT);
+            }
+        }
         //Sorts the collection uses the Comparison specified in _sortOnChangeComparison when the list is changed
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
