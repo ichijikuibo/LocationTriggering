@@ -138,7 +138,7 @@ namespace AutomatedTests.Data
         public LocationTrigger OpenKMLFile(string fileName)
         {
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load("TestLocations\\" + fileName);
+            xmlDoc.Load("TestLocations/" + fileName);
             XmlNodeList coordinatesNode = xmlDoc.GetElementsByTagName("coordinates");
             if (coordinatesNode.Count > 0)
             {

@@ -14,7 +14,7 @@ namespace AutomatedTests
         public void PointInPolygonTest()
         {
             Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
-            string[] tests = Helpers.OpenFile("TestData\\ContainsPointTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/ContainsPointTestData.txt");
             foreach(string s in tests)
             {
                 string[] test = s.Split('\t');
@@ -35,7 +35,7 @@ namespace AutomatedTests
         public void PointInBoundingBoxTest()
         {
             Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
-            string[] tests = Helpers.OpenFile("TestData\\BoundingBoxContainsPointTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/BoundingBoxContainsPointTestData.txt");
             foreach (string s in tests)
             {
                 string[] test = s.Split('\t');
@@ -58,7 +58,7 @@ namespace AutomatedTests
             Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
             LocationTriggerCollection<BasicLocationTrigger> testCollection = new LocationTriggerCollection<BasicLocationTrigger>();
             testCollection.AddRange(testData.TestData);
-            string[] tests = Helpers.OpenFile("TestData\\LocationsAtPointTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/LocationsAtPointTestData.txt");
             foreach (string s in tests)
             {
                 string[] test = s.Split('\t');
@@ -84,7 +84,7 @@ namespace AutomatedTests
         public void BoundingBoxConstructorTest()
         {
             Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
-            string[] tests = Helpers.OpenFile("TestData\\BoundingBoxConstructorTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/BoundingBoxConstructorTestData.txt");
             foreach (string test in tests)
             {
                 string[] split = test.Split('\t');

@@ -13,7 +13,7 @@ namespace AutomatedTests
         [TestMethod]
         public void MapCoordinateConstructorTest()
         {
-            string[] tests = Helpers.OpenFile("TestData\\CoordinateTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/CoordinateTestData.txt");
             foreach (string test in tests)
             {
                 string[] split = test.Split('\t');
@@ -39,7 +39,7 @@ namespace AutomatedTests
         public void LocationTriggerCentre()
         {
             Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
-            string[] tests = Helpers.OpenFile("TestData\\LocationTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/LocationTestData.txt");
             foreach (string test in tests)
             {
                 string[] split = test.Split('\t');
@@ -54,7 +54,7 @@ namespace AutomatedTests
         public void LocationTriggerBoundingBox()
         {
             Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
-            string[] tests = Helpers.OpenFile("TestData\\LocationTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/LocationTestData.txt");
             foreach (string test in tests)
             {
                 string[] split = test.Split('\t');
@@ -71,7 +71,7 @@ namespace AutomatedTests
         public void LocationTriggerAddPoints()
         {
             Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
-            string[] tests = Helpers.OpenFile("TestData\\AddPointTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/AddPointTestData.txt");
             foreach (string test in tests)
             {
                 string[] split = test.Split('\t');
@@ -97,7 +97,7 @@ namespace AutomatedTests
         public void LocationTriggerRemovePoints()
         {
             Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
-            string[] tests = Helpers.OpenFile("TestData\\RemovePointTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/RemovePointTestData.txt");
             foreach (string test in tests)
             {
                 string[] split = test.Split('\t');
@@ -122,7 +122,7 @@ namespace AutomatedTests
         public void LocationTriggerDerived()
         {
 
-            string[] tests = Helpers.OpenFile("TestData\\DerivedClassTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/DerivedClassTestData.txt");
             foreach (string test in tests)
             {
                 string[] split = test.Split('\t');

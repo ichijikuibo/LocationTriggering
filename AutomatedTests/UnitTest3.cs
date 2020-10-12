@@ -14,7 +14,7 @@ namespace AutomatedTests
         public void DistanceTo()
         {
             Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
-            string[] tests = Helpers.OpenFile("TestData\\2PointTestData.txt");
+            string[] tests = Helpers.OpenFile("TestData/2PointTestData.txt");
             foreach(string s in tests)
             {
                 string[] test = s.Split('\t');
