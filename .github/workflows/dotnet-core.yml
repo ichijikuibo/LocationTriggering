@@ -20,8 +20,8 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build LocationTriggering\LocationTriggering.csproj --configuration Release --no-restore
+      run: dotnet build LocationTriggering/LocationTriggering.csproj --configuration Release --no-restore
     - name: Build2
-      run: dotnet build AutomatedTests\AutomatedTests.csproj --configuration Release --no-restore
+      run: dotnet build AutomatedTests/AutomatedTests.csproj --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
