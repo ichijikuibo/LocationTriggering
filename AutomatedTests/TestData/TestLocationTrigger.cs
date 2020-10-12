@@ -13,7 +13,7 @@ namespace AutomatedTests.TestData
         {
             Result = expectedResult;
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load("TestLocations\\" + kmlFile);
+            xmlDoc.Load("TestLocations/" + kmlFile);
             XmlNodeList coordinatesNode = xmlDoc.GetElementsByTagName("coordinates");
             string coordinates = coordinatesNode.Item(0).InnerText;
 
