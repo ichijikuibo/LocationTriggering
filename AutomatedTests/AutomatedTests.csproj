@@ -21,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestData\2PointTestData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\AddPointTestData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
