@@ -21,8 +21,8 @@ jobs:
       run: dotnet restore      
     - run: |
         dotnet build LocationTriggering/LocationTriggering.csproj --configuration Release --no-restore
-        dotnet build LocationTriggeringXamarinExtentions/LocationTriggeringXamarinExtentions.csproj --configuration Release --no-restore
+        dotnet build LocationListenerExtention/LocationTriggeringXamarinExtentions.csproj --configuration Release --no-restore
         dotnet test AutomatedTests/AutomatedTests.csproj --no-restore --verbosity normal
         mkdir ${{ github.workspace }}/package
         dotnet pack LocationTriggering/LocationTriggering.csproj  --no-build -c Release --output "${{ github.workspace }}/package"
-        dotnet pack LocationTriggeringXamarinExtentions/LocationTriggeringXamarinExtentions.csproj  --no-build -c Release --output "${{ github.workspace }}/package"
+        dotnet pack LocationListenerExtention/LocationTriggeringXamarinExtentions.csproj  --no-build -c Release --output "${{ github.workspace }}/package"
