@@ -10,10 +10,10 @@ namespace AutomatedTests
     [TestClass]
     public class Requirement2Tests
     {
+        Data.TestLocationTriggerData testData;
         [TestMethod]
         public void PointInPolygonTest()
         {
-            Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
             string[] tests = Helpers.OpenFile("TestData/ContainsPointTestData.txt");
             foreach(string s in tests)
             {
@@ -34,7 +34,6 @@ namespace AutomatedTests
         [TestMethod]
         public void PointInBoundingBoxTest()
         {
-            Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
             string[] tests = Helpers.OpenFile("TestData/BoundingBoxContainsPointTestData.txt");
             foreach (string s in tests)
             {
@@ -55,7 +54,6 @@ namespace AutomatedTests
         [TestMethod]
         public void LocationsAtPoint()
         {
-            Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
             LocationTriggerCollection<BasicLocationTrigger> testCollection = new LocationTriggerCollection<BasicLocationTrigger>();
             testCollection.AddRange(testData.TestData);
             string[] tests = Helpers.OpenFile("TestData/LocationsAtPointTestData.txt");
@@ -83,7 +81,7 @@ namespace AutomatedTests
         [TestMethod]
         public void BoundingBoxConstructorTest()
         {
-            Data.TestLocationTriggerData testData = new Data.TestLocationTriggerData();
+            
             string[] tests = Helpers.OpenFile("TestData/BoundingBoxConstructorTestData.txt");
             foreach (string test in tests)
             {
@@ -96,6 +94,11 @@ namespace AutomatedTests
                 Assert.AreEqual(Math.Round(double.Parse(result[2]), 2), Math.Round(TestTrigger.BoundingBox.Width, 2), TestTrigger.LocationID);
                 Assert.AreEqual(Math.Round(double.Parse(result[3]), 2), Math.Round(TestTrigger.BoundingBox.Height, 2), TestTrigger.LocationID);
             }
+        }
+        [TestInitialize]
+        public void IntializeTests()
+        {
+            testData = new Data.TestLocationTriggerData();
         }
     }
 }

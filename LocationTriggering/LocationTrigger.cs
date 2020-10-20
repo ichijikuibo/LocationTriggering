@@ -298,10 +298,12 @@ namespace LocationTriggering
         /// </summary>
         /// <param name="point">The point being checked</param>
         /// <returns></returns>
-        public virtual bool ContainsPoint(MapCoordinate point)
+        public virtual bool ContainsPoint(MapCoordinate point,bool absolute = false)
         {
-            if (_boundingBox==null||_boundingBox.ContainsPoint(point))
+            if (_boundingBox == null || _boundingBox.ContainsPoint(point))
             {
+                if(absolute)
+                    return (Math.Abs(AngleSum(point)) > 0.000001);
                 if (_clockwise)
                     return (AngleSum(point) < -0.000001);
                 else
@@ -378,7 +380,7 @@ namespace LocationTriggering
         /// <returns>Distance in kilometres</returns>
         public virtual double DistanceTo(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres)
         {
-            if (_distanceCalcualtedFrom==null||!point.Equals(_distanceCalcualtedFrom))
+            if (_distanceCalcualtedFrom == null || !point.Equals(_distanceCalcualtedFrom))
             {
                 LastDistance = _centre.DistanceTo(point, unit);
                 _distanceCalcualtedFrom = point;
@@ -491,7 +493,24 @@ namespace LocationTriggering
         private void CalculateProperties()
         {
             if (_points.Count < 3) return; //At least 3 points are required to calculate the properties
+            if (_points[0].Equals(_points[_points.Count - 1])) _points.RemoveAt(_points.Count - 1);
             _centre = CentralPoint();
+            if (!ContainsPoint(_centre, true))
+            {
+                MapCoordinate newCentre = ClosestPointTo(_centre);
+                double newLat = newCentre.Latitude;
+                double newLng = newCentre.Longitude;
+                if (newCentre.Longitude - _centre.Longitude > 0) 
+                    newLng += 0.00001;
+                else 
+                    newLng -= 0.00001;
+                if (newCentre.Latitude - _centre.Latitude > 0) 
+                    newLat += 0.00001;
+                else 
+                    newLat -= 0.00001;
+
+                _centre = new MapCoordinate(newLat,newLng);
+            }
             _clockwise = AngleSum(_centre) < 0;
             _crossesNorthPole = ContainsPoint(new MapCoordinate(90, 0));
             _crossesSouthPole = ContainsPoint(new MapCoordinate(-90, 0));
@@ -574,7 +593,22 @@ namespace LocationTriggering
             _boundingBox = new MapBoundingBox(new MapCoordinate(MaxLat, MinLon), new MapCoordinate(MinLat, MaxLon), _crossesDateLine,_crossesSouthPole,_crossesNorthPole);//create a bounding box from the northeast point and the southwest point
             if (!_crossesNorthPole&&!_crossesSouthPole&&ContainsPoint(_boundingBox.Centre))
                 _centre = BoundingBox.Centre;
-            if (!ContainsPoint(_centre)) _centre = ClosestPointTo(_centre);
+            if (!ContainsPoint(_centre, true))
+            {
+                MapCoordinate newCentre = ClosestPointTo(_centre);
+                double newLat = newCentre.Latitude;
+                double newLng = newCentre.Longitude;
+                if (newCentre.Longitude - _centre.Longitude > 0)
+                    newLng += 0.00001;
+                else
+                    newLng -= 0.00001;
+                if (newCentre.Latitude - _centre.Latitude > 0)
+                    newLat += 0.00001;
+                else
+                    newLat -= 0.00001;
+
+                _centre = new MapCoordinate(newLat, newLng);
+            }
             OnPropertyChanged("Centre");
         }
         private MapCoordinate CentralPoint()
@@ -620,3 +654,35 @@ namespace LocationTriggering
         }
     }
 }
+
+//-38.22088578757306,137.0966687221523	
+//-41.14699039869232,140.7612796790796	
+//-45.04385654271243,148.3872680855425	
+//-42.24179445780681,150.6105643998689	
+//-38.32190852403915,152.1014846698897	
+//-33.89799364036446,155.3469909177914	
+//-28.2874936691238,155.0570339726316	
+//-23.7704830553687,153.7832215087749	
+//-21.77847625328914,151.5481740679563	
+//-19.55314919190631,150.0743420356932	
+//-16.4719197121896,148.0976078680809	
+//-12.84354524549978,145.9945297340139	
+//-10.33326425528148,143.8111869597975	
+//-10.72205525360104,141.3334382076673	
+//-13.30767885192975,140.4202503581765	
+//-15.56152160293079,138.8003168012125	
+//-14.73240204142622,137.2715710235034	
+//-10.8708950199417,137.8909261323328	
+//-9.829804478915685,135.5704295562607	
+//-10.38699118944958,129.9702616119519	
+//-12.52722083690712,125.3678818352159	
+//-14.37105493488749,121.9743265059042	
+//-16.87571478485158,117.0330684275972	
+//-19.2497279871944,113.0512470589866	
+//-24.0717763197421,111.0930608341264	
+//-27.67669163023321,111.4384453281121	
+//-31.79289631001624,112.2517232308155	
+//-35.78486437095834,113.2697362694079	
+//-35.28754504637568,121.005790388567	
+//-33.52778111634026,124.687129311849	
+//-34.00024705162931,134.4421596618281	

@@ -1,0 +1,14 @@
+53.143002,-8.122611,3	Ireland.kml,Limerick.kml,Galway.kml
+53.143002,-8.122611,5	Ireland.kml,Limerick.kml,Galway.kml,Waterford.kml,Dublin.kml
+53.143002,-8.122611,6	Ireland.kml,Limerick.kml,Galway.kml,Waterford.kml,Dublin.kml,Cork.kml
+0.0000000,0.0000000,50	Everything
+10.618752,159.757860,2	Centre180,Tokyo.kml
+10.618752,159.757860,3	Centre180,Tokyo.kml,Hawaii.kml
+10.618752,159.757860,6	Centre180,Tokyo.kml,Hawaii.kml,PacificOcean.kml,NewZealand.kml,Wellington.kml
+49.011572,1.888751,1	Paris.kml
+49.011572,1.888751,2	Paris.kml,London.kml
+-26.477504,78.522305,1	Johannesburg.kml
+21.597755,-72.043575,1	DistrictOfColumbia.kml
+21.597755,-72.043575,2	DistrictOfColumbia.kml,SouthAmerica.kml
+21.597755,-72.043575,3	DistrictOfColumbia.kml,SouthAmerica.kml,SaoPaulo.kml
+54.997471,-7.331645,10	Bogsidemurals.kml,Bogside.kml,FreeDerryCorner.kml,St Augustines.kml,AppenticeBoysMemorialHall.kml,seigemuseum.kml,StColumbsCathedral.kml,TowerMuseum.kml,Guildhall.kml,HandsAcrossDivde.kml
