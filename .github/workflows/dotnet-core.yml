@@ -18,8 +18,11 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build LocationTriggering/LocationTriggering.csproj --configuration Release --no-restore
-    - name: Test
-      run: dotnet test AutomatedTests/AutomatedTests.csproj --no-restore --verbosity normal
+      run: dotnet restore      
+    - run: |
+        dotnet build LocationTriggering/LocationTriggering.csproj --configuration Release --no-restore
+        dotnet build LocationListenerExtention/LocationTriggeringXamarinExtentions.csproj --configuration Release --no-restore
+        dotnet test AutomatedTests/AutomatedTests.csproj --no-restore --verbosity normal
+        mkdir ${{ github.workspace }}/package
+        dotnet pack LocationTriggering/LocationTriggering.csproj  --no-build -c Release --output "${{ github.workspace }}/package"
+        dotnet pack LocationListenerExtention/LocationTriggeringXamarinExtentions.csproj  --no-build -c Release --output "${{ github.workspace }}/package"

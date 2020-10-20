@@ -81,7 +81,6 @@ namespace AutomatedTests
         [TestMethod]
         public void BoundingBoxConstructorTest()
         {
-            
             string[] tests = Helpers.OpenFile("TestData/BoundingBoxConstructorTestData.txt");
             foreach (string test in tests)
             {
