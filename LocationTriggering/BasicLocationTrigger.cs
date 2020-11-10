@@ -20,6 +20,16 @@ namespace LocationTriggering
             _title = title;
             _description = description;
         }
+        public BasicLocationTrigger(string id, IEnumerable<MapCoordinate> points, string title, string description,double size) : base(id, points,size)
+        {
+            _title = title;
+            _description = description;
+        }
+        public BasicLocationTrigger(string id, MapCoordinate point, string title, string description, double radius) : base(id, point, radius)
+        {
+            _title = title;
+            _description = description;
+        }
         public BasicLocationTrigger(string id, string points , char latLngSplit=',',char pointSplit=' ',bool longitudeFirst=false) : base(id, points, latLngSplit, pointSplit, longitudeFirst)
         {
 

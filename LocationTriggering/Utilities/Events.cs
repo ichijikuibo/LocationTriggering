@@ -12,8 +12,8 @@ namespace LocationTriggering.Utilities
     {
         public DateTime TimeTriggered { get; set; }
         public MapCoordinate GPSPosition { get; set; }
-        public IReadOnlyList<T> LocationsEntered { get; set; }
-        public IReadOnlyList<T> LocationsExited { get; set; }
+        public IReadOnlyList<T> LocationsAdded { get; set; }
+        public IReadOnlyList<T> LocationsRemoved { get; set; }
         public IReadOnlyList<T> CurrentLocations { get; set; }
     }
     /// <summary>

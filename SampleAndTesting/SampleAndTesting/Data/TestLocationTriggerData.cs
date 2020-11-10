@@ -145,7 +145,8 @@ namespace SampleAndTesting.Data
 
             _testLocation = new BasicLocationTrigger("Centre180", new List<MapCoordinate> { new MapCoordinate(1, 179), new MapCoordinate(1, -179), new MapCoordinate(-1, -179), new MapCoordinate(-1, 179) });
             if (_testLocation != null) _testData.Add(_testLocation);
-
+            _testLocation = new BasicLocationTrigger("Diamond", new MapCoordinate(54.995564, -7.321970), "Diamond War Memorial","Statue with names on it", 0.05);
+            if (_testLocation != null) _testData.Add(_testLocation);
 
         }
         public LocationTrigger OpenKMLFile(string fileName)

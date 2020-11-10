@@ -66,6 +66,7 @@ namespace LocationTriggering.Utilities
         /// <returns>True of false depending on result of the method </returns>
         public bool OverlapsWith(BearingRange bearingRange)
         {
+            if (bearingRange.Start == bearingRange.End || Start == End) return true;
             //if there is an overlap then either the start or the end of the either range must be within the range of the other
             if (bearingRange.ContainsBearing(Start)) return true;
             if (bearingRange.ContainsBearing(Centre)) return true;

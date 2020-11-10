@@ -23,6 +23,8 @@ namespace SampleAndTesting.Tests
         BasicLocationTrigger testLocationTrigger;
         TestLocationTriggerData _testData;
         Polygon polygon;
+        List<Circle> radialLocation;
+        Polyline polylineLocation;
         Polygon boundingBox;
         Polygon pointsInBoundingBox;
         Polygon overlapsWithPolygon;
@@ -35,6 +37,7 @@ namespace SampleAndTesting.Tests
         {
             _testData = new TestLocationTriggerData();
             InitializeComponent();
+            radialLocation = new List<Circle>();
             CoordinateEntry.Text = "54.99730916770572,-7.317796210086995\n" +
                                    "54.99792881899353,-7.312922201157899\n" +
                                    "54.999177765053254,-7.313714660964874\n" +
@@ -43,6 +46,7 @@ namespace SampleAndTesting.Tests
             ConstructButton_Clicked(this, null);
             FillLocationPicker();
             MapTest.MapClicked += MapTest_MapClicked;
+
         }
 
         private void MapTest_MapClicked(object sender, MapClickedEventArgs e)
@@ -113,12 +117,43 @@ namespace SampleAndTesting.Tests
         private void UpdateMap()
         {
             if (MapTest.MapElements.Contains(polygon)) MapTest.MapElements.Remove(polygon);
-            polygon = new Polygon();
-            foreach (MapCoordinate MC in testLocationTrigger.Points)
+            foreach(Circle c in radialLocation)
             {
-                polygon.Geopath.Add(new Position(MC.Latitude, MC.Longitude));
+                if (MapTest.MapElements.Contains(c)) MapTest.MapElements.Remove(c);
             }
-            MapTest.MapElements.Add(polygon);
+            if (MapTest.MapElements.Contains(polylineLocation)) MapTest.MapElements.Remove(polylineLocation);
+            if (testLocationTrigger.LocationType == TriggerType.Polygon)
+            {
+                polygon = new Polygon();
+                foreach (MapCoordinate MC in testLocationTrigger.Points)
+                {
+                    polygon.Geopath.Add(new Position(MC.Latitude, MC.Longitude));
+                }
+                MapTest.MapElements.Add(polygon);
+            }
+            else if (testLocationTrigger.LocationType == TriggerType.Radial)
+            {
+                radialLocation.Clear();
+                foreach (MapCoordinate MC in testLocationTrigger.Points)
+                {
+                    Circle circle = new Circle();
+
+                    circle.Center = new Position(MC.Latitude, MC.Longitude);
+                    circle.Radius = new Distance(testLocationTrigger.Radius * 1000);
+                    radialLocation.Add(circle);
+                    MapTest.MapElements.Add(circle);
+                }
+            }
+            else
+            {
+                polylineLocation = new Polyline();
+                foreach (MapCoordinate MC in testLocationTrigger.Points)
+                {
+                    polylineLocation.Geopath.Add(new Position(MC.Latitude, MC.Longitude));
+                }
+                MapTest.MapElements.Add(polylineLocation);
+            }
+
             if (MapTest.Pins.Contains(locationCentre)) MapTest.Pins.Remove(locationCentre);
             locationCentre = new Pin();
             locationCentre.Type = PinType.Place;
