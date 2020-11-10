@@ -113,7 +113,9 @@ namespace LocationTriggering.Utilities
         /// <returns>A bearing value between 0 and 360</returns>
         public static double NormaliseBearing(double bearing)
         {
-            return (bearing + 360) % 360;
+            double result = (bearing + 360) % 360;
+            if (result < 0) result = 360 + result;
+            return result;
         }
         /// <summary>
         /// Get a point on the perimeter at a specifed entrance angle of a rectangle based on the width and height

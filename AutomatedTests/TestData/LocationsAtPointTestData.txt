@@ -1,7 +1,7 @@
 54.995190,-7.323866	Eurasia.kml,Europe.kml,Ireland.kml,Derry.kml,seigemuseum.kml,AppenticeBoysMemorialHall.kml
 54.996646808718,-7.3264615570723	Eurasia.kml,Europe.kml,Ireland.kml,Derry.kml,Bogside.kml,FreeDerryCorner.kml,Bogsidemurals.kml
-51.501206,0.000001	Eurasia.kml,Europe.kml,London.kml
-51.501206,-0.000001	Eurasia.kml,Europe.kml,London.kml
+51.501206,0.0001	Eurasia.kml,Europe.kml,London.kml
+51.501206,-0.0001	Eurasia.kml,Europe.kml,London.kml
 -26.289137,27.974400	Johannesburg.kml
 -23.451663,-46.077965	SouthAmerica.kml,SaoPaulo.kml
 -41.298722,174.781620	NewZealand.kml,Wellington.kml
