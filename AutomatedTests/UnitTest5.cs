@@ -33,7 +33,7 @@ namespace AutomatedTests
                 {
                     waits++;
                     Thread.Sleep(10);
-                    if (waits == 20)
+                    if (waits == 5)
                     {
                         break;
                     }
@@ -77,8 +77,8 @@ namespace AutomatedTests
                 while (wait)
                 {
                     waits++;
-                    Thread.Sleep(40);
-                    if (waits == 20)
+                    Thread.Sleep(10);
+                    if (waits == 5)
                     {
                         break;
                     }
@@ -126,8 +126,8 @@ namespace AutomatedTests
                 while (wait)
                 {
                     waits++;
-                    Thread.Sleep(40);
-                    if (waits == 20)
+                    Thread.Sleep(10);
+                    if (waits == 5)
                     {
                         break;
                     }

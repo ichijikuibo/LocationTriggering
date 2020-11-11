@@ -53,6 +53,7 @@
     <None Remove="TestLocations\StColumbsCathedral.kml" />
     <None Remove="TestLocations\Tokyo.kml" />
     <None Remove="TestLocations\TowerMuseum.kml" />
+    <None Remove="TestLocations\Walls.kml" />
     <None Remove="TestLocations\Waterford.kml" />
     <None Remove="TestLocations\Wellington.kml" />
   </ItemGroup>
@@ -94,14 +95,17 @@
     <EmbeddedResource Include="TestLocations\StColumbsCathedral.kml" />
     <EmbeddedResource Include="TestLocations\Tokyo.kml" />
     <EmbeddedResource Include="TestLocations\TowerMuseum.kml" />
+    <EmbeddedResource Include="TestLocations\Walls.kml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="TestLocations\Waterford.kml" />
     <EmbeddedResource Include="TestLocations\Wellington.kml" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1539-pre2" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.6.0-pre2" />
-    <PackageReference Include="Xamarin.Forms.Maps" Version="5.0.0.1539-pre2" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1558-pre3" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.0-pre3" />
+    <PackageReference Include="Xamarin.Forms.Maps" Version="5.0.0.1558-pre3" />
   </ItemGroup>
 
   <ItemGroup>

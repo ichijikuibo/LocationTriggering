@@ -13,6 +13,7 @@ using Xamarin.Forms.Maps;
 using LocationTriggering.Utilities;
 using Polygon = Xamarin.Forms.Maps.Polygon;
 using Xamarin.Essentials;
+using LocationTriggering.Extentions;
 
 namespace SampleAndTesting.Tests
 {
@@ -26,11 +27,15 @@ namespace SampleAndTesting.Tests
         TestLocationTriggerData _testData;
         List<Polygon> locationPolygons;
         List<Circle> locationCentres;
+        List<Circle> radialLocations;
+        List<Polyline> polylineLocations;
         Pin currentMapCoordinate;
         public LocationTriggerCollectionTest()
         {
             locationPolygons = new List<Polygon>();
             locationCentres = new List<Circle>();
+            polylineLocations = new List<Polyline>();
+            radialLocations = new List<Circle>();
             _testData = new TestLocationTriggerData();
             InitializeComponent();
             locationTriggerCollectionTest = new LocationTriggerCollection<BasicLocationTrigger>();
@@ -44,10 +49,12 @@ namespace SampleAndTesting.Tests
                                    "54.99847891799941,-7.318895451500169";
             UpdateMap();
             FillLocationPicker();
-            SortOnChangeList.ItemsSource = locationTriggerCollectionTest;
-            SortOnChangePicker.SelectedIndex = 0;
+           
+            
             locationTriggerCollectionTest.UpdateDistances(GetTestMapCoordinate());
-            SortOnChangePicker_SelectedIndexChanged(this, null);
+            SortOnChangePicker.SelectedIndex = 0;
+
+            //SortOnChangePicker_SelectedIndexChanged(this, null);
             MapTest.MapClicked += MapTest_MapClicked;
 
         }
@@ -55,6 +62,7 @@ namespace SampleAndTesting.Tests
         {
             base.OnAppearing();
             MapTest.MoveToRegion(new MapSpan(new Position(53.576741, -7.753773), 3, 3));
+            SortOnChangeList.ItemsSource = locationTriggerCollectionTest;
         }
         private void MapTest_MapClicked(object sender, MapClickedEventArgs e)
         {
@@ -102,32 +110,73 @@ namespace SampleAndTesting.Tests
             {
                 if (MapTest.MapElements.Contains(polygon)) MapTest.MapElements.Remove(polygon);
             }
+            foreach (Circle circle in radialLocations)
+            {
+                if (MapTest.MapElements.Contains(circle)) MapTest.MapElements.Remove(circle);
+            }
+            foreach (Polyline polyline in polylineLocations)
+            {
+                if (MapTest.MapElements.Contains(polyline)) MapTest.MapElements.Remove(polyline);
+            }
             foreach (Circle centre in locationCentres)
             {
                 if (MapTest.MapElements.Contains(centre)) MapTest.MapElements.Remove(centre);
             }
-
+            polylineLocations.Clear();
             locationPolygons.Clear();
-
+            radialLocations.Clear();
             locationCentres.Clear();
             foreach (LocationTrigger LT in locationTriggerCollectionTest)
             {
-                Polygon polygon = new Polygon();
+                if (LT.LocationType == TriggerType.Polygon)
+                {
+                    Polygon polygon = new Polygon();
+                    if (locationsAtPoint != null && locationsAtPoint.Contains(LT)) polygon.StrokeColor = Color.Green;
+                    if (locationsInDirection != null && locationsInDirection.Contains(LT)) polygon.StrokeColor = Color.Blue;
+                    if (locationsNear != null && locationsNear.Contains(LT)) polygon.StrokeColor = Color.Red;
+                    foreach (MapCoordinate MC in LT.Points)
+                    {
+                        polygon.Geopath.Add(new Position(MC.Latitude, MC.Longitude));
+                    }
+                    MapTest.MapElements.Add(polygon);
+                    locationPolygons.Add(polygon);
+                }
+                if (LT.LocationType == TriggerType.Polyline)
+                {
+                    Polyline polyline = new Polyline();
+                    if (locationsAtPoint != null && locationsAtPoint.Contains(LT)) polyline.StrokeColor = Color.Green;
+                    if (locationsInDirection != null && locationsInDirection.Contains(LT)) polyline.StrokeColor = Color.Blue;
+                    if (locationsNear != null && locationsNear.Contains(LT)) polyline.StrokeColor = Color.Red;
+                    foreach (MapCoordinate MC in LT.Points)
+                    {
+                        polyline.Geopath.Add(new Position(MC.Latitude, MC.Longitude));
+                    }
+                    MapTest.MapElements.Add(polyline);
+                    polylineLocations.Add(polyline);
+                }
+                if (LT.LocationType == TriggerType.Radial)
+                {
+                    foreach (MapCoordinate MC in LT.Points)
+                    {
+                        Circle circle = new Circle();
+                    if (locationsAtPoint != null && locationsAtPoint.Contains(LT)) circle.StrokeColor = Color.Green;
+                    if (locationsInDirection != null && locationsInDirection.Contains(LT)) circle.StrokeColor = Color.Blue;
+                    if (locationsNear != null && locationsNear.Contains(LT)) circle.StrokeColor = Color.Red;
+
+                        circle.Center = new Position(MC.Latitude,MC.Longitude);
+                        circle.Radius = new Distance(LT.Radius*1000);
+                        MapTest.MapElements.Add(circle);
+                        radialLocations.Add(circle);
+                    }
+
+                }
                 Circle CentreCentoid = new Circle();
                 CentreCentoid.FillColor = Color.Blue;
                 CentreCentoid.StrokeColor = Color.Blue;
                 CentreCentoid.Center = new Position(LT.Centre.Latitude, LT.Centre.Longitude);
                 double radius = LT.BoundingBox.Width * 0.02;
                 CentreCentoid.Radius = Distance.FromKilometers(radius);
-                if (locationsAtPoint!=null&&locationsAtPoint.Contains(LT)) polygon.StrokeColor = Color.Green;
-                if (locationsInDirection != null && locationsInDirection.Contains(LT)) polygon.StrokeColor = Color.Blue;
-                if (locationsNear != null && locationsNear.Contains(LT)) polygon.StrokeColor = Color.Red;
-                foreach (MapCoordinate MC in LT.Points)
-                {
-                    polygon.Geopath.Add(new Position(MC.Latitude, MC.Longitude));
-                }
-                MapTest.MapElements.Add(polygon);
-                locationPolygons.Add(polygon);
+
                 MapTest.MapElements.Add(CentreCentoid);
                 locationCentres.Add(CentreCentoid);
             }         

@@ -33,7 +33,9 @@ namespace LocationTriggering
         protected string _locationID;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        /// The Id of the location
+        /// </summary>
         public string LocationID { get => _locationID;}
         /// <summary>
         /// A MapCoordinate that contains the centre point of the location 
@@ -49,16 +51,29 @@ namespace LocationTriggering
         /// <returns></returns>
         public int NumberOfPoints { get=> _points.Count;  }
 
-
+        /// <summary>
+        /// The points that make up the trigger
+        /// </summary>
         public IReadOnlyList<MapCoordinate> Points { get => _points.AsReadOnly(); }
+        /// <summary>
+        /// The Last distance calcualted for the trigger
+        /// </summary>
         public double LastDistance { get=>_distance; private set { _distance = value; OnPropertyChanged(); } }
-
-        public double LastBearing { get => _bearingFrom; private set => _bearingFrom = value; }
+        /// <summary>
+        /// The last bearing calcualted for the trigger
+        /// </summary>
+        public double LastBearing { get => _bearingFrom; private set { _bearingFrom = value; OnPropertyChanged(); } }
+        /// <summary>
+        /// the type of the location
+        /// </summary>
         public TriggerType LocationType { get => _locationType;
             set {
                 _locationType = value;
                 CalculateProperties();
             } }
+        /// <summary>
+        /// The radius of the circle or thickness of the polyline
+        /// </summary>
         public double Radius
         {
             get => _radius; 
@@ -77,10 +92,20 @@ namespace LocationTriggering
         {
             _locationID = id;
         }
-
-        protected LocationTrigger(string id,string coordinates,char latLngSplit=',', char pointSplit=' ',bool longitudeFirst = false)
+        /// <summary>
+        /// Construct a new trigger from a string containing the coordinates
+        /// </summary>
+        /// <param name="id">ID of the trigger</param>
+        /// <param name="coordinates">String of Coordinates</param>
+        /// <param name="latLngSplit">The character that splits the latitude and longitude</param>
+        /// <param name="pointSplit">The character that splits the coordinates</param>
+        /// <param name="longitudeFirst">True if coordinate is Longitude,Latitude false if it is Latitude,Longitude</param>
+        /// <param name="newType">The type of the trigger</param>
+        /// <param name="newRadius">In a radial coordinate this is the radius of the circle, for a polyline its the thickness of the line, its not used for a polygon</param>
+        protected LocationTrigger(string id,string coordinates,char latLngSplit=',', char pointSplit=' ',bool longitudeFirst = false, TriggerType newType=TriggerType.Polygon,double newRadius=0)
         {
-            _locationType = TriggerType.Polygon;
+            _locationType = newType;
+            _radius = newRadius;
             _locationID = id;
             if (pointSplit == '\n')
             {
@@ -105,58 +130,16 @@ namespace LocationTriggering
             }
             CalculateProperties();
         }
-        protected LocationTrigger(string id, string coordinates, TriggerType newType, char latLngSplit = ',', char pointSplit = ' ', bool longitudeFirst = false, double NewRadius = 0)
-        {
-            _locationType = newType;
-            _radius = NewRadius;
-            _locationID = id;
-            if (pointSplit == '\n')
-            {
-                coordinates = coordinates.TrimEnd(pointSplit).TrimEnd('\r').TrimEnd(pointSplit).Replace("\r", "\n").Replace("\n\n", "\n");
-            }
-            else
-            {
-                coordinates = coordinates.TrimEnd(pointSplit);
-            }
-            string[] splitCoordinates = coordinates.Split(pointSplit);
-            foreach (string s in splitCoordinates)
-            {
-                string latLng = s;
-                if (latLngSplit != ' ') latLng = s.Replace(" ", "");
-                string[] splitCoordinate = latLng.Split(latLngSplit);
-
-                MapCoordinate newCoordinate;
-                if (longitudeFirst)
-                    newCoordinate = new MapCoordinate(double.Parse(splitCoordinate[1]), double.Parse(splitCoordinate[0]));
-                else newCoordinate = new MapCoordinate(double.Parse(splitCoordinate[0]), double.Parse(splitCoordinate[1]));
-                if (!Contains(newCoordinate)) _points.Add(newCoordinate);
-            }
-            CalculateProperties();
-        }
 
         /// <summary>
         /// Creates a new location with an id and a list of MapCoordinates
         /// </summary>
         /// <param name="id">The id of the new location</param>
         /// <param name="points">A list of MapCoordinates to add to the new location</param>
-        protected LocationTrigger(string id, IEnumerable<MapCoordinate> points)
+        protected LocationTrigger(string id, IEnumerable<MapCoordinate> points, TriggerType newType = TriggerType.Polygon, double newRadius = 0)
         {
-            _locationType = TriggerType.Polygon;
-            _locationID = id;
-            _points.AddRange(points);
-            CalculateProperties();
-        }
-
-        /// <summary>
-        /// Creates a new location with an id and a list of MapCoordinates to create a Polyline type location
-        /// </summary>
-        /// <param name="id">The id of the new location</param>
-        /// <param name="points">A list of MapCoordinates to add to the new location</param>
-        /// <param name="distance">The distance in km from the line that is part of the trigger</param>
-        protected LocationTrigger(string id, IEnumerable<MapCoordinate> points,double distance)
-        {
-            _radius = distance;
-            _locationType = TriggerType.Polyline;
+            _locationType = newType;
+            _radius = newRadius;
             _locationID = id;
             _points.AddRange(points);
             CalculateProperties();
@@ -187,6 +170,11 @@ namespace LocationTriggering
                 return _points[index];
             else return null;
         }
+        /// <summary>
+        /// Returns true if one of the points of the trigger matches the specified point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         protected bool Contains(MapCoordinate point)
         {
             foreach (MapCoordinate MC in _points)
@@ -212,22 +200,6 @@ namespace LocationTriggering
             return null;
         }
         /// <summary>
-        /// Return an array of MapCoordinates from this location that are contained in the Polygon
-        /// </summary>
-        /// <param name="polygon">The polygo to check for points in</param>
-        /// <returns></returns>
-        //public MapCoordinate[] GetPointsInPolygon(Polygon polygon)
-        //{
-        //    List<MapCoordinate> result = new List<MapCoordinate>();
-        //    foreach (MapCoordinate MC in _points)
-        //    {
-        //        if (polygon.PointInPolygon(MC.Longitude, MC.Latitude)) result.Add(MC);
-        //    }
-        //    if (result.Count > 0)
-        //        return result.ToArray();
-        //    return null;
-        //}
-        /// <summary>
         /// Returns true if any of the poitns of the 2 locations are within the polygon for the other
         /// </summary>
         /// <param name="location">Location to check for overlaps with</param>
@@ -236,10 +208,15 @@ namespace LocationTriggering
         {
             if (HasAPointIn(location.Points)) return true;
             if (location.HasAPointIn(Points)) return true;
-            MapCoordinate MC = this.ClosestPointTo(new MapCoordinate(Centre.Latitude,Centre.Longitude));
+            MapCoordinate MC = this.ClosestPointTo(location.Centre);
             if (ContainsPoint(MC)) return true;
             return false;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
         public bool HasAPointIn(IEnumerable<MapCoordinate> polygon)
         {
             foreach (MapCoordinate point in Points)
@@ -474,9 +451,19 @@ namespace LocationTriggering
                     }
                 }
             }
+            if (_locationType == TriggerType.Polyline)
+            {
+                ClosestPoint = CoordinateHelpers.DestinationPointFromBearingAndDistance(ClosestPoint, _radius, point.BearingFrom(ClosestPoint));
+            }
             return ClosestPoint;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="mode"></param>
+        /// <returns></returns>
         public virtual BearingRange BearingRangeFrom(MapCoordinate point,BearingRangeType mode = BearingRangeType.Default)
         {
             if(mode==BearingRangeType.BoundingBox)
@@ -521,6 +508,11 @@ namespace LocationTriggering
             //if(BR.Range> BoundingBoxRange.Range) BR = new BearingRange(end, start);
             return BR;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         protected virtual BearingRange BearingRangeFromPoints(MapCoordinate point)
         {
             double centreBearing = point.BearingTo(_centre);
@@ -538,6 +530,11 @@ namespace LocationTriggering
             end += centreBearing;
             return new BearingRange(start, end);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         protected virtual BearingRange BearingRangeRadial(MapCoordinate point)
         {
             double centreBearing = point.BearingTo(_centre);
@@ -566,6 +563,11 @@ namespace LocationTriggering
             end += point.BearingTo(endMC); 
             return new BearingRange(start, end);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         public virtual double BearingFrom(MapCoordinate point)
         {
             if (_bearingCalculatedFrom==null||!point.Equals(_bearingCalculatedFrom))
@@ -576,6 +578,9 @@ namespace LocationTriggering
 
             return LastBearing;
         }
+        /// <summary>
+        /// 
+        /// </summary>
         private void CalculateProperties()
         {
             if(_locationType == TriggerType.Polygon)
@@ -598,11 +603,6 @@ namespace LocationTriggering
         private void CalculatePropertiesRadial()
         {
             if (_points.Count == 0) return; //At least 3 points are required to calculate the properties
-
-
-
-
-
             _centre = _points[0];
             if (_points.Count > 1)
             {

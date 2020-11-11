@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LocationTriggering.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -15,12 +16,12 @@ namespace LocationTriggering
             _title = "";
             _description = "";
         }
-        public BasicLocationTrigger(string id, IEnumerable<MapCoordinate> points,string title,string description) :base(id,points)
+        public BasicLocationTrigger(string id, IEnumerable<MapCoordinate> points,string title,string description,TriggerType type=TriggerType.Polygon, double radius=0) :base(id,points, type,radius)
         {
             _title = title;
             _description = description;
         }
-        public BasicLocationTrigger(string id, IEnumerable<MapCoordinate> points, string title, string description,double size) : base(id, points,size)
+        public BasicLocationTrigger(string id, IEnumerable<MapCoordinate> points, string title, string description,double size) : base(id, points,TriggerType.Polyline, size)
         {
             _title = title;
             _description = description;
@@ -30,7 +31,7 @@ namespace LocationTriggering
             _title = title;
             _description = description;
         }
-        public BasicLocationTrigger(string id, string points , char latLngSplit=',',char pointSplit=' ',bool longitudeFirst=false) : base(id, points, latLngSplit, pointSplit, longitudeFirst)
+        public BasicLocationTrigger(string id, string points , char latLngSplit=',',char pointSplit=' ',bool longitudeFirst=false,TriggerType type=TriggerType.Polygon,double radius =0) : base(id, points, latLngSplit, pointSplit, longitudeFirst,type,radius)
         {
 
             _title = id;

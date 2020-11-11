@@ -49,10 +49,11 @@ namespace LocationTriggering
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             base.OnCollectionChanged(e);
-            if (e.Action != System.Collections.Specialized.NotifyCollectionChangedAction.Move && e.Action != System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+            if (e.Action != NotifyCollectionChangedAction.Move && e.Action != NotifyCollectionChangedAction.Reset)
                 if (_sortOnChange) Sort(_sortOnChangeComparison);
 
         }
+
         //private void LocationTriggerCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         //{
         //    base.OnCollectionChanged(e);
@@ -138,10 +139,14 @@ namespace LocationTriggering
         /// </summary>
         /// <param name="position">The position to measure from</param>
         public void UpdateDistances(MapCoordinate position)
-        {
+        {            
             foreach (T LT in Items)
             {
                 LT.DistanceTo(position);
+            }
+            if (_sortOnChange)
+            {
+                Sort(_sortOnChangeComparison);
             }
         }
 
@@ -154,6 +159,10 @@ namespace LocationTriggering
             foreach (LocationTrigger LT in Items)
             {
                 LT.BearingFrom(position);
+            }
+            if (_sortOnChange)
+            {
+                Sort(_sortOnChangeComparison);
             }
         }
 
