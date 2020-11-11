@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Xam.Plugin.Geolocator" Version="4.6.2-beta" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.6.0-pre2" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.0-pre3" />
   </ItemGroup>
 
   <ItemGroup>

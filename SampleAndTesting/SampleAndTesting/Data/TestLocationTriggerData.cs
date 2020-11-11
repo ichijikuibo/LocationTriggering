@@ -1,4 +1,5 @@
 ﻿using LocationTriggering;
+using LocationTriggering.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -148,8 +149,22 @@ namespace SampleAndTesting.Data
             _testLocation = new BasicLocationTrigger("Diamond", new MapCoordinate(54.995564, -7.321970), "Diamond War Memorial","Statue with names on it", 0.05);
             if (_testLocation != null) _testData.Add(_testLocation);
 
+            _testLocation = (BasicLocationTrigger)OpenKMLFile("Walls.kml",TriggerType.Polyline,0.01);
+            if (_testLocation != null) _testData.Add(_testLocation);
+
+            _testLocation = new BasicLocationTrigger("SouthPole", new MapCoordinate(-90, 0), "North Pole", "The bottom of the world", 100);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("NorthPole", new MapCoordinate(90, 0), "South Pole", "the top of the world", 100);
+            if (_testLocation != null) _testData.Add(_testLocation);
+
+
+            _testLocation = new BasicLocationTrigger("Equater", "0,-179.99999 0,-90 0,0 0,90 0,180",',',' ',false,TriggerType.Polyline, 100);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("GMT-Dateline", "90,0,0,0 -90,0 0,180 89.9999,180", ',', ' ', false, TriggerType.Polyline, 100);
+            if (_testLocation != null) _testData.Add(_testLocation);
+
         }
-        public LocationTrigger OpenKMLFile(string fileName)
+        public LocationTrigger OpenKMLFile(string fileName, TriggerType type = TriggerType.Polygon, double thickness = 0)
         {
             XmlDocument xmlDoc = new XmlDocument();
             Stream stream = resources.GetManifestResourceStream(resourcePrefix + "TestLocations." + fileName);
@@ -157,7 +172,7 @@ namespace SampleAndTesting.Data
             XmlNodeList coordinatesNode = xmlDoc.GetElementsByTagName("coordinates");
             if (coordinatesNode.Count > 0)
             {
-                return new BasicLocationTrigger(fileName, coordinatesNode.Item(0).InnerText.Replace("\n","").Replace("\r", "").Replace("\t",""), ',', ' ',true);
+                return new BasicLocationTrigger(fileName, coordinatesNode.Item(0).InnerText.Replace("\n", "").Replace("\r", "").Replace("\t", ""), ',', ' ', true, type, thickness);
             }
             else
             {
