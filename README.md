@@ -61,14 +61,7 @@ LocationTriggering is a class library for Xamarin.Forms that is designed to make
         listener.StopListening();
     }
 ```
-## Limitations
-- Triggers can not cross the north or south pole
-- Triggers can not have a width greater than 180 degrees
-
 ## Plans
-1. Add radial and polyline based locations
-2. Add support for locations greater than 180 degrees logitude
-3. Add latitude normalisation and support locations containing poles
 4. Implement Vincenty solutions of geodesics on the ellipsoid for more accurate distance calculations https://www.movable-type.co.uk/scripts/latlong-vincenty.html
 5. Add monitoring of orientation sensor and send events when phone is facing a LocationTrigger
 6. Add navigation feature for directions to a location
