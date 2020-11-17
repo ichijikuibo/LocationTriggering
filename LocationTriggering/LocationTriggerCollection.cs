@@ -20,6 +20,12 @@ namespace LocationTriggering
     {
         private bool _sortOnChange = false;
         private Comparison<T> _sortOnChangeComparison;
+        private bool _useClosestDistance = true;
+        private DistanceUnit _units = DistanceUnit.Kilometres;
+
+        public bool UseClosestDistance { get => _useClosestDistance; set => _useClosestDistance = value; }
+        public DistanceUnit Units { get => _units; set => _units = value; }
+
         public LocationTriggerCollection()
         {
             //CollectionChanged += LocationTriggerCollection_CollectionChanged;
@@ -80,7 +86,7 @@ namespace LocationTriggering
             List<T> locations = new List<T>();
             foreach (T LT in Items)
             {
-                if (maxDistance==0||LT.DistanceTo(position) <= maxDistance)
+                if (maxDistance==0||LT.DistanceTo(position,Units,UseClosestDistance) <= maxDistance)
                 {
                     if (LT.BearingRangeFrom(position).ContainsBearing(bearing)) locations.Add(LT);
                 }
@@ -93,7 +99,7 @@ namespace LocationTriggering
             List<T> locations = new List<T>();
             foreach (T LT in Items)
             {
-                if (maxDistance==0||LT.DistanceTo(position) <= maxDistance)
+                if (maxDistance==0||LT.DistanceTo(position, Units, UseClosestDistance) <= maxDistance)
                 {
                     if (bearing.OverlapsWith(LT.BearingRangeFrom(position))) locations.Add(LT);
                 }
@@ -112,7 +118,7 @@ namespace LocationTriggering
             List<T> locationsNear = new List<T>();
             foreach (T LT in Items)
             {
-                if (LT.DistanceTo(position) <= distance)
+                if (LT.DistanceTo(position, Units, UseClosestDistance) <= distance)
                     locationsNear.Add(LT);
             }
             locationsNear.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); });
@@ -142,7 +148,11 @@ namespace LocationTriggering
         {            
             foreach (T LT in Items)
             {
-                LT.DistanceTo(position);
+                    LT.DistanceTo(position, Units, UseClosestDistance);
+            }
+            if (_sortOnChange)
+            {
+                Sort(_sortOnChangeComparison);
             }
             if (_sortOnChange)
             {

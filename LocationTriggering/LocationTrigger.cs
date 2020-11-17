@@ -364,7 +364,25 @@ namespace LocationTriggering
         /// </summary>
         /// <param name="point">Point to measure distance from</param>
         /// <returns>Distance in kilometres</returns>
-        public virtual double DistanceTo(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres)
+        public virtual double DistanceTo(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres,bool ClosestDistance=false)
+        {
+            if (_distanceCalcualtedFrom == null || !point.Equals(_distanceCalcualtedFrom))
+            {
+                if(ClosestDistance)
+                    LastDistance = point.DistanceTo(ClosestPointTo(point), unit);
+                else
+                    LastDistance = _centre.DistanceTo(point, unit);
+                _distanceCalcualtedFrom = point;
+            }
+            return LastDistance;
+        }
+        /// <summary>
+        /// Returns the distance from the centre of this location to the specified point
+        /// override if you want to chang this to ClosestDistanceTo
+        /// </summary>
+        /// <param name="point">Point to measure distance from</param>
+        /// <returns>Distance in kilometres</returns>
+        public virtual double DistanceToCentre(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres)
         {
             if (_distanceCalcualtedFrom == null || !point.Equals(_distanceCalcualtedFrom))
             {
@@ -389,7 +407,12 @@ namespace LocationTriggering
         /// <returns>Distance in kilometres</returns>
         public double ClosestDistanceTo(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres)
         {
-            return (point.DistanceTo(ClosestPointTo(point), unit));
+            if (_distanceCalcualtedFrom == null || !point.Equals(_distanceCalcualtedFrom))
+            {
+                LastDistance = point.DistanceTo(ClosestPointTo(point), unit);
+                _distanceCalcualtedFrom = point;
+            }
+            return LastDistance;
         }
         /// <summary>
         /// Returns the closest distance to the boundary of this location to the boundary of the specified location
@@ -398,6 +421,7 @@ namespace LocationTriggering
         /// <returns>Distance in kilometres</returns>
         public double ClosestDistanceTo(LocationTrigger location, DistanceUnit unit = DistanceUnit.Kilometres)
         {
+
             MapCoordinate ClosestPoint1 = ClosestPointTo(location.Centre);
             MapCoordinate ClosestPoint2 = location.ClosestPointTo(ClosestPoint1);
             return ClosestPoint1.DistanceTo(ClosestPoint2, unit);
@@ -407,11 +431,6 @@ namespace LocationTriggering
         /// </summary>
         /// <param name="point">Point to measure distance from</param>
         /// <returns>Position of the closest point in decimal degrees</returns>
-        //public MapCoordinate ClosestPointTo(MapCoordinate point)
-        //{
-        //    PointD closestPoint = Polygon.ClosestPointTo(new PointD(point.Longitude, point.Latitude));
-        //    return new MapCoordinate(closestPoint.Y, closestPoint.X);
-        //}
         public MapCoordinate ClosestPointTo(MapCoordinate point)
         {
             MapCoordinate ClosestPoint = new MapCoordinate(0,0);
@@ -427,7 +446,15 @@ namespace LocationTriggering
                         ClosestPoint = mc;
                     }
                 }
-                ClosestPoint = CoordinateHelpers.DestinationPointFromBearingAndDistance(ClosestPoint, _radius, point.BearingFrom(ClosestPoint));
+                if (ClosestPoint.Latitude == 90 || ClosestPoint.Latitude == -90)
+                {
+                    MapCoordinate returnPoint = CoordinateHelpers.DestinationPointFromBearingAndDistance(ClosestPoint, _radius, ClosestPoint.Longitude == 90 ? 180 : 0);
+                    ClosestPoint = new MapCoordinate(returnPoint.Latitude, point.Longitude);
+                }
+                else
+                {
+                    ClosestPoint = CoordinateHelpers.DestinationPointFromBearingAndDistance(ClosestPoint, _radius, ClosestPoint.BearingTo(point));
+                }
             }
             else
             {
@@ -451,10 +478,12 @@ namespace LocationTriggering
                     }
                 }
             }
-            if (_locationType == TriggerType.Polyline)
-            {
-                ClosestPoint = CoordinateHelpers.DestinationPointFromBearingAndDistance(ClosestPoint, _radius, point.BearingFrom(ClosestPoint));
-            }
+
+            //if (_locationType == TriggerType.Polyline)
+            //{
+            //    ClosestPoint = CoordinateHelpers.DestinationPointFromBearingAndDistance(ClosestPoint, _radius, point.BearingFrom(ClosestPoint));
+            //}
+
             return ClosestPoint;
         }
 
@@ -466,21 +495,119 @@ namespace LocationTriggering
         /// <returns></returns>
         public virtual BearingRange BearingRangeFrom(MapCoordinate point,BearingRangeType mode = BearingRangeType.Default)
         {
-            if(mode==BearingRangeType.BoundingBox)
-            {
-                return _boundingBox.BearingRangeFrom(point);
-            }
-            if (_locationType == TriggerType.Radial)
-            {
-                return BearingRangeRadial(point);
-            }
-            if(mode==BearingRangeType.Points||_locationType==TriggerType.Polyline)
-            {
-                return BearingRangeFromPoints(point);
-            }
-            return BearingRangeFromDefault(point);
-        }
+            double centreBearing = point.BearingTo(Centre);
+            MapCoordinate[] points = BearingRangePoints(point, mode);
+            double start = point.BearingTo(points[1]);
+            double end = point.BearingTo(points[0]);
+            //BearingRange BoundingBoxRange = BoundingBox.BearingRangeFrom(point);
+            BearingRange BR = new BearingRange(start, end);
+            double differenceFromCentre = CoordinateHelpers.AngleDifference(BR.Centre, centreBearing);
+            if (differenceFromCentre > 60 || differenceFromCentre < -60)
+                BR = new BearingRange(end, start);
 
+            return BR;
+            //if (mode==BearingRangeType.BoundingBox)
+            //{
+            //    return _boundingBox.BearingRangeFrom(point);
+            //}
+            //if (_locationType == TriggerType.Radial)
+            //{
+            //    return BearingRangeRadial(point);
+            //}
+            //if(mode==BearingRangeType.Points||_locationType==TriggerType.Polyline)
+            //{
+            //    return BearingRangeFromPoints(point);
+            //}
+            //return BearingRangeFromDefault(point);
+        }
+        public virtual MapCoordinate[] BearingRangePoints(MapCoordinate point, BearingRangeType mode = BearingRangeType.Default)
+        {
+            MapCoordinate[] points = new MapCoordinate[2];
+            double centreBearing = point.BearingTo(_centre);
+            double start = 360;
+            double end = -360;
+            if (mode == BearingRangeType.BoundingBox)
+            {
+                MapCoordinate[] BoundingBoxCorners = new MapCoordinate[4];
+                BoundingBoxCorners[0] = new MapCoordinate(BoundingBox.Northwest.Latitude, BoundingBox.Northwest.Longitude);
+                BoundingBoxCorners[1] = new MapCoordinate(BoundingBox.Southeast.Latitude, BoundingBox.Northwest.Longitude);
+                BoundingBoxCorners[2] = new MapCoordinate(BoundingBox.Southeast.Latitude, BoundingBox.Southeast.Longitude);
+                BoundingBoxCorners[3] = new MapCoordinate(BoundingBox.Northwest.Latitude, BoundingBox.Southeast.Longitude);
+                foreach (MapCoordinate p in Points)
+                {
+                    double angle = point.BearingTo(p);
+                    double difference = CoordinateHelpers.AngleDifference(centreBearing, angle);
+                    if (difference < start)
+                    {
+                        start = difference;
+                        points[1] = p;
+                    }
+                    if (difference > end)
+                    {
+                        points[0] = p;
+                        end = difference;
+                    }
+
+                }
+            }
+            else if (_locationType == TriggerType.Radial)
+            {
+                MapCoordinate startMC = Points[0];
+                MapCoordinate endMC = Points[0];
+                foreach (MapCoordinate p in Points)
+                {
+                    double angle = point.BearingTo(p);
+                    double difference = CoordinateHelpers.AngleDifference(centreBearing, angle);
+                    if (difference < start)
+                    {
+                        start = difference;
+                        startMC = p;
+                    }
+                    if (difference > end)
+                    {
+                        end = difference;
+                        endMC = p;
+                    }
+
+                }
+                double bearing1 = startMC.BearingTo(point) + 90;
+                double bearing2 = startMC.BearingTo(point) - 90;
+                points[1] = startMC.PointAtDistanceAndBearing(_radius, bearing1);
+                points[0] = endMC.PointAtDistanceAndBearing(_radius, bearing2);
+            }
+            else if (mode == BearingRangeType.Points || _locationType == TriggerType.Polyline)
+            {
+
+                foreach (MapCoordinate p in Points)
+                {
+                    double angle = point.BearingTo(p);
+                    double difference = CoordinateHelpers.AngleDifference(centreBearing, angle);
+                    if (difference < start)
+                    {
+                        start = difference;
+                        points[1] = p;
+                    }
+                    if (difference > end)
+                    {
+                        points[0] = p;
+                        end = difference;
+                    }
+
+                }
+            }
+            else
+            {
+                double centreBearingFrom = point.BearingFrom(Centre);
+                double guideDistance = BoundingBox.Width;
+                if (BoundingBox.Height > guideDistance) guideDistance = BoundingBox.Height;
+                if (guideDistance > 10000) guideDistance = 10000;
+                double targetBearing1 = CoordinateHelpers.NormaliseBearing(centreBearingFrom + 90);
+                double targetBearing2 = CoordinateHelpers.NormaliseBearing(centreBearingFrom - 90);
+                points[0] =  ClosestPointTo(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre, guideDistance, targetBearing1));
+                points[1] = ClosestPointTo(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre, guideDistance, targetBearing2));
+            }
+            return points;
+        }
         /// <summary>
         /// Gets a ranges of bearings that the location is visible from a point (cannot exceed 180 degrees)
         /// Uses a formula that may not cover the entire location at close distances, override to change this to Polygon.BearingRangeFrom or MapBoundingBox.BearingRangeFrom if required
@@ -496,8 +623,8 @@ namespace LocationTriggering
             if (guideDistance > 10000) guideDistance = 10000;
             double targetBearing1 = CoordinateHelpers.NormaliseBearing(centreBearingFrom + 90);
             double targetBearing2 = CoordinateHelpers.NormaliseBearing(centreBearingFrom - 90);
-            MapCoordinate Point1 = ClosestPointTo(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre,guideDistance, targetBearing1));//{50.285669812737773, -103.05873332721963}
-            MapCoordinate Point2 = ClosestPointTo(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre, guideDistance, targetBearing2));//{54.9188979176421, -264.68226572650019}
+            MapCoordinate Point1 = ClosestPointTo(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre,guideDistance, targetBearing1));
+            MapCoordinate Point2 = ClosestPointTo(CoordinateHelpers.DestinationPointFromBearingAndDistance(Centre, guideDistance, targetBearing2));
             double start = point.BearingTo(Point2);
             double end = point.BearingTo(Point1);
             //BearingRange BoundingBoxRange = BoundingBox.BearingRangeFrom(point);
@@ -648,7 +775,7 @@ namespace LocationTriggering
             }
             _crossesNorthPole = ContainsPoint(new MapCoordinate(90, 0));
             _crossesSouthPole = ContainsPoint(new MapCoordinate(-90, 0));
-            _boundingBox = new MapBoundingBox(new MapCoordinate(MaxLat, MinLon), new MapCoordinate(MinLat, MaxLon), _crossesDateLine, _crossesNorthPole, _crossesSouthPole);//create a bounding box from the northeast point and the southwest point
+            _boundingBox = new MapBoundingBox(new MapCoordinate(MaxLat, MinLon), new MapCoordinate(MinLat, MaxLon), _crossesDateLine, _crossesSouthPole, _crossesNorthPole);//create a bounding box from the northeast point and the southwest point
             OnPropertyChanged("Centre");
         }
         /// <summary>
@@ -659,11 +786,10 @@ namespace LocationTriggering
             if (_points.Count < 2) return; //At least 3 points are required to calculate the properties
             if (_points[0].Equals(_points[_points.Count - 1])) _points.RemoveAt(_points.Count - 1);
             _centre = CentralPoint();
-            _centre = ClosestPointTo(_centre);
-            _clockwise = AngleSum(_centre) < 0;
             _crossesNorthPole = ContainsPoint(new MapCoordinate(90, 0));
             _crossesSouthPole = ContainsPoint(new MapCoordinate(-90, 0));
             double MinLon = double.MaxValue, MaxLon = -double.MaxValue, MinLat = double.MaxValue, MaxLat = -double.MaxValue;
+            
             if (_crossesNorthPole)
             {
                 MinLat = double.MaxValue;
@@ -702,27 +828,32 @@ namespace LocationTriggering
             }
             else
             {
+                MapCoordinate left = _points[0], top = _points[0], right = _points[0], bottom = _points[0];
                 foreach (MapCoordinate P in _points)
                 {
-
+                    
                     //Iterate through the points and obtain the extremes of the polygon
                     double DistanceFromCentreLon = CoordinateHelpers.AngleSubtract(P.Longitude, _centre.Longitude);
                     double DistanceFromCentreLat = CoordinateHelpers.AngleSubtract(P.Latitude, _centre.Latitude);
                     if (DistanceFromCentreLon < MinLon)
                     {
+                        left = P;
                         MinLon = DistanceFromCentreLon;
                     }
                     if (DistanceFromCentreLon > MaxLon)
                     {
+                        right = P;
                         MaxLon = DistanceFromCentreLon;
                     }
 
                     if (DistanceFromCentreLat < MinLat)
                     {
+                        bottom = P;
                         MinLat = DistanceFromCentreLat;
                     }
                     if (DistanceFromCentreLat > MaxLat)
                     {
+                        top = P;
                         MaxLat = DistanceFromCentreLat;
                     }
                 }
@@ -734,10 +865,10 @@ namespace LocationTriggering
                 {
                     _crossesDateLine = true;
                 }
-                MinLon = CoordinateHelpers.AngleAddition(_centre.Longitude, MinLon);
-                MaxLon = CoordinateHelpers.AngleAddition(_centre.Longitude, MaxLon);
-                MinLat = CoordinateHelpers.AngleAddition(_centre.Latitude, MinLat);
-                MaxLat = CoordinateHelpers.AngleAddition(_centre.Latitude, MaxLat);
+                MinLon = left.PointAtDistanceAndBearing(_radius, 270).Longitude;
+                MaxLon = right.PointAtDistanceAndBearing(_radius, 90).Longitude;
+                MinLat = bottom.PointAtDistanceAndBearing(_radius, 180).Latitude;
+                MaxLat = top.PointAtDistanceAndBearing(_radius, 0).Latitude;
             }
             _boundingBox = new MapBoundingBox(new MapCoordinate(MaxLat, MinLon), new MapCoordinate(MinLat, MaxLon), _crossesDateLine, _crossesSouthPole, _crossesNorthPole);//create a bounding box from the northeast point and the southwest point
             if (!_crossesNorthPole && !_crossesSouthPole && ContainsPoint(_boundingBox.Centre))

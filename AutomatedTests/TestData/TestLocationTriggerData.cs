@@ -1,4 +1,5 @@
 ﻿using LocationTriggering;
+using LocationTriggering.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -135,14 +136,57 @@ namespace AutomatedTests.Data
             if (_testLocation != null) _testData.Add(_testLocation);
 
         }
-        public LocationTrigger OpenKMLFile(string fileName)
+        public void AdditionalTestData()
+        {
+            BasicLocationTrigger _testLocation;
+            //Circles
+            _testLocation = new BasicLocationTrigger("Diamond", new MapCoordinate(54.995564, -7.321970), "Diamond War Memorial", "Statue with names on it", 0.05);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("SouthPole", new MapCoordinate(-90, 0), "North Pole", "The bottom of the world", 100);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("NorthPole", new MapCoordinate(90, 0), "South Pole", "the top of the world", 100);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("Fiji", new MapCoordinate(-17.97, 180), "Fiji", "islands around the date line", 350);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("NorthAtlantic", new MapCoordinate(28.127509, -40.423254), "NorthAtlantic", "Big circle in the noth atlantic", 2800);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("NorthernHemisphere", new MapCoordinate(90, 0), "Northern Hemisphere", "The whole northern hemisphere", 10007.5433980103);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("SouthernHemisphere", new MapCoordinate(-90, 0), "Southern Hemisphere", "The whole southern hemisphere", 10007.5433980103);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("WesternHemisphere", new MapCoordinate(0, -90), "Western Hemisphere", "The whole western hemisphere", 10007.5433980103);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("EasternHemisphere", new MapCoordinate(0, 90), "Eastern Hemisphere", "The whole eastern hemisphere", 10007.5433980103);
+            if (_testLocation != null) _testData.Add(_testLocation);
+
+            _testLocation = (BasicLocationTrigger)OpenKMLFile("Walls.kml", TriggerType.Polyline, 0.01);
+            if (_testLocation != null) _testData.Add(_testLocation);
+
+            _testLocation = (BasicLocationTrigger)OpenKMLFile("Nile.kml", TriggerType.Polyline, 10.00);
+            if (_testLocation != null) _testData.Add(_testLocation);
+
+            _testLocation = (BasicLocationTrigger)OpenKMLFile("AmazonRiver.kml", TriggerType.Polyline, 3);
+            if (_testLocation != null) _testData.Add(_testLocation);
+
+            _testLocation = (BasicLocationTrigger)OpenKMLFile("WellingtonToLosAngeles.kml", TriggerType.Polyline, 500.00);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = (BasicLocationTrigger)OpenKMLFile("CycleData.kml", TriggerType.Polyline, 0.01);
+            if (_testLocation != null) _testData.Add(_testLocation);
+
+
+            _testLocation = new BasicLocationTrigger("Equator", "0,-179.99999 0,-90 0,0 0,90 0,180", ',', ' ', false, TriggerType.Polyline, 100);
+            if (_testLocation != null) _testData.Add(_testLocation);
+            _testLocation = new BasicLocationTrigger("GMT-Dateline", "90,0 0,0 -90,0 -89.99999,180 0,180 89.9999,180", ',', ' ', false, TriggerType.Polyline, 100);
+            if (_testLocation != null) _testData.Add(_testLocation);
+        }
+        public LocationTrigger OpenKMLFile(string fileName, TriggerType type = TriggerType.Polygon, double thickness = 0)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load("TestLocations/" + fileName);
             XmlNodeList coordinatesNode = xmlDoc.GetElementsByTagName("coordinates");
             if (coordinatesNode.Count > 0)
             {
-                return new BasicLocationTrigger(fileName, coordinatesNode.Item(0).InnerText.Replace("\n","").Replace("\r", "").Replace("\t",""), ',', ' ',true);
+                return new BasicLocationTrigger(fileName, coordinatesNode.Item(0).InnerText.Replace("\n", "").Replace("\r", "").Replace("\t", ""), ',', ' ', true, type, thickness);
             }
             else
             {

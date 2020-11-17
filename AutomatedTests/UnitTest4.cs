@@ -151,6 +151,7 @@ namespace AutomatedTests
         public void LocationsInDirection()
         {
             LocationTriggerCollection<BasicLocationTrigger> testCollection = new LocationTriggerCollection<BasicLocationTrigger>();
+            testCollection.UseClosestDistance = false;
             testCollection.AddRange(testData.TestData);
             string[] tests = Helpers.OpenFile("TestData/LocationInDirectionTestData.txt");
             foreach (string s in tests)
@@ -179,6 +180,7 @@ namespace AutomatedTests
         public void LocationsInBearingRange()
         {
             LocationTriggerCollection<BasicLocationTrigger> testCollection = new LocationTriggerCollection<BasicLocationTrigger>();
+            testCollection.UseClosestDistance = false;
             testCollection.AddRange(testData.TestData);
             string[] tests = Helpers.OpenFile("TestData/LocationsInBearingRange.txt");
             foreach (string s in tests)
