@@ -172,6 +172,7 @@ namespace SampleAndTesting.Data
             _testLocation = new BasicLocationTrigger("EasthernHemisphere", new MapCoordinate(0, 90), "Easthern Hemisphere", "The whole eastern hemisphere", 10007.5433980103);
             if (_testLocation != null) _testData.Add(_testLocation);
 
+
             _testLocation = (BasicLocationTrigger)OpenKMLFile("Walls.kml", TriggerType.Polyline, 0.01);
             if (_testLocation != null) _testData.Add(_testLocation);
 
@@ -191,6 +192,7 @@ namespace SampleAndTesting.Data
             if (_testLocation != null) _testData.Add(_testLocation);
             _testLocation = new BasicLocationTrigger("GMT-Dateline", "90,0 0,0 -90,0 -89.99999,180 0,180 89.9999,180", ',', ' ', false, TriggerType.Polyline, 100);
             if (_testLocation != null) _testData.Add(_testLocation);
+
         }
         public LocationTrigger OpenKMLFile(string fileName, TriggerType type = TriggerType.Polygon, double thickness = 0)
         {

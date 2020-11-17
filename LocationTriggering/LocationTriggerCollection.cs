@@ -154,6 +154,10 @@ namespace LocationTriggering
             {
                 Sort(_sortOnChangeComparison);
             }
+            if (_sortOnChange)
+            {
+                Sort(_sortOnChangeComparison);
+            }
         }
 
         /// <summary>

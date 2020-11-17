@@ -478,10 +478,12 @@ namespace LocationTriggering
                     }
                 }
             }
+
             //if (_locationType == TriggerType.Polyline)
             //{
             //    ClosestPoint = CoordinateHelpers.DestinationPointFromBearingAndDistance(ClosestPoint, _radius, point.BearingFrom(ClosestPoint));
             //}
+
             return ClosestPoint;
         }
 
