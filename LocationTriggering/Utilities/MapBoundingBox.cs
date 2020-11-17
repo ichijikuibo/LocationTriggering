@@ -62,12 +62,12 @@ namespace LocationTriggering.Utilities
             if (_crossesSouthPole)
             {
                 _centre = new MapCoordinate((_northwest.Latitude + (-180 - _southeast.Latitude)) / 2, (_northwest.Longitude + _southeast.Longitude) / 2);
-                _heightDegress = 90 + _northwest.Latitude + 90 + _southeast.Latitude;
+                _heightDegress = Math.Abs((-90 - _northwest.Latitude) + (-90 - _southeast.Latitude));
             }
             else if (_crossesNorthPole)
             {
                 _centre = new MapCoordinate((_northwest.Latitude + (180 - _southeast.Latitude)) / 2, (_northwest.Longitude + _southeast.Longitude) / 2);
-                _heightDegress = 90 - _northwest.Latitude + 90 - _southeast.Latitude;
+                _heightDegress = Math.Abs((90 - _northwest.Latitude) + (90 - _southeast.Latitude));
             }
             else if (_crossesDateLine)
             {
@@ -79,6 +79,19 @@ namespace LocationTriggering.Utilities
                 _centre = new MapCoordinate((_northwest.Latitude + _southeast.Latitude) / 2, (_northwest.Longitude + _southeast.Longitude) / 2);
                 _heightDegress = _northwest.Latitude - _southeast.Latitude;
             }
+
+            double middle = (_northwest.Latitude + _southeast.Latitude) / 2;//The latitude midpoint
+            _width = CoordinateHelpers.Haversine(middle, _northwest.Longitude, middle, _southeast.Longitude); //calculate the distance between the west and east points of the bounding box in kilometers
+
+
+            middle = (_northwest.Longitude + _southeast.Longitude) / 2;//The longitude midpoint
+            if (_crossesSouthPole || _crossesNorthPole)
+            {
+                //calculate the distance between the north and south points of the bounding box in kilometers
+                    _height = CoordinateHelpers.Haversine(_northwest.Latitude, middle, _southeast.Latitude, CoordinateHelpers.NormaliseLongitude(180-middle));
+
+            }
+            else _height = CoordinateHelpers.Haversine(_northwest.Latitude, middle, _southeast.Latitude, middle); //calculate the distance between the north and south points of the bounding box in kilometers
         }
         /// <summary>
         /// Determine if the specifed point is within the bounding box
@@ -184,34 +197,6 @@ namespace LocationTriggering.Utilities
             return new BearingRange(start, end);
         }
         /// <summary>
-        /// Determine the width of the bounding box
-        /// </summary>
-        /// <returns>The width in kilometers</returns>
-        private double calculateWidth()
-        {
-            if (_width == -1)//if width hasn't already been calculated: calculate and store;
-            {
-                double middle = (_northwest.Latitude + _southeast.Latitude) / 2;//The latitude midpoint
-                _width = CoordinateHelpers.Haversine(middle, _northwest.Longitude, middle,_southeast.Longitude); //calculate the diistance between the west and east points of the bounding box in kilometers
-            }
-            return _width;
-        }
-        /// <summary>
-        /// Determine the heigth of the bounding box
-        /// </summary>
-        /// <returns>The heigth in kilometers</returns>
-        private double calculateHeight()
-        {
-            if (_height == -1)//if height hasn't already been calculated: calculate and store;
-            {
-                double middle = (_northwest.Longitude + _southeast.Longitude) / 2;//The longitude midpoint
-                if(_crossesSouthPole||_crossesNorthPole)
-                    _height = CoordinateHelpers.Haversine(_northwest.Latitude,middle, _southeast.Latitude, -middle); //calculate the distance between the north and south points of the bounding box in metres
-                else _height = CoordinateHelpers.Haversine(_northwest.Latitude, middle, _southeast.Latitude, middle); //calculate the distance between the north and south points of the bounding box in metres
-            }
-            return _height;
-        }
-        /// <summary>
         /// converts the bounding box to a string "###.###, ###.### - ###.###, ###.###"
         /// </summary>
         /// <returns>String that represnts the bounding box</returns>
@@ -245,11 +230,11 @@ namespace LocationTriggering.Utilities
         /// <summary>
         /// The width of the box in kilometers
         /// </summary>
-        public double Width { get => calculateWidth();  }
+        public double Width { get => _width;  }
         /// <summary>
         /// The height of the box in kilometers
         /// </summary>
-        public double Height { get => calculateHeight(); }
+        public double Height { get => _height; }
         /// <summary>
         /// The width of the box in deegrees
         /// </summary>

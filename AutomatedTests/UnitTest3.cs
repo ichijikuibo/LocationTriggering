@@ -49,6 +49,7 @@ namespace AutomatedTests
         {
             string[] tests = Helpers.OpenFile("TestData/NearbyLocationsTestData.txt");
             LocationTriggerCollection<BasicLocationTrigger> testCollection = new LocationTriggerCollection<BasicLocationTrigger>();
+            testCollection.UseClosestDistance = false;
             testCollection.AddRange(testData.TestData);
             foreach (string s in tests)
             {
@@ -79,6 +80,7 @@ namespace AutomatedTests
         {
             string[] tests = Helpers.OpenFile("TestData/ClosestLocationsTestData.txt");
             LocationTriggerCollection<BasicLocationTrigger> testCollection = new LocationTriggerCollection<BasicLocationTrigger>();
+            testCollection.UseClosestDistance = false;
             testCollection.AddRange(testData.TestData);
             foreach (string s in tests)
             {
@@ -105,6 +107,7 @@ namespace AutomatedTests
         {
             string[] tests = Helpers.OpenFile("TestData/ClosestLocationsTestData.txt");
             LocationTriggerCollection<BasicLocationTrigger> testCollection = new LocationTriggerCollection<BasicLocationTrigger>();
+            testCollection.UseClosestDistance = false;
             testCollection.AddRange(testData.TestData);
             int count = 0;
             foreach (string s in tests)

@@ -43,6 +43,7 @@ namespace SampleAndTesting.Tests
                                    "54.999177765053254,-7.313714660964874\n" +
                                    "54.99847891799941,-7.318895451500169";
             OverlapsWithEntry.Text = CoordinateEntry.Text;
+            TypePicker.SelectedIndex = 0;
             ConstructButton_Clicked(this, null);
             FillLocationPicker();
             MapTest.MapClicked += MapTest_MapClicked;
@@ -98,9 +99,12 @@ namespace SampleAndTesting.Tests
             ConstructorResults.Text = "Centre: " + testLocationTrigger.Centre.ToString() +
                 "\nBoundingBox: " + testLocationTrigger.BoundingBox;
             CoordinateEntry.Text = "";
-            for(int i=0;i<testLocationTrigger.NumberOfPoints;i++)
+            if (testLocationTrigger.NumberOfPoints < 100)
             {
-                CoordinateEntry.Text += testLocationTrigger.GetPoint(i) + "\n";
+                for (int i = 0; i < testLocationTrigger.NumberOfPoints; i++)
+                {
+                    CoordinateEntry.Text += testLocationTrigger.GetPoint(i) + "\n";
+                }
             }
             CoordinateEntry.Text.TrimEnd('\n').TrimEnd('\r');
             RemovePointPicker.Items.Clear();
@@ -117,7 +121,7 @@ namespace SampleAndTesting.Tests
         private void UpdateMap()
         {
             if (MapTest.MapElements.Contains(polygon)) MapTest.MapElements.Remove(polygon);
-            foreach(Circle c in radialLocation)
+            foreach (Circle c in radialLocation)
             {
                 if (MapTest.MapElements.Contains(c)) MapTest.MapElements.Remove(c);
             }
@@ -168,10 +172,31 @@ namespace SampleAndTesting.Tests
             boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.Southeast.Latitude, testLocationTrigger.BoundingBox.Southeast.Longitude));
             boundingBox.Geopath.Add(new Position(testLocationTrigger.BoundingBox.Southeast.Latitude, testLocationTrigger.BoundingBox.Northwest.Longitude));
             MapTest.MapElements.Add(boundingBox);
-            double height = 10;
-            if (testLocationTrigger.Centre.Latitude + 10 > 90) height = 90 - testLocationTrigger.Centre.Latitude;
-            if (testLocationTrigger.Centre.Latitude - 10 < -90) height = Math.Abs(-90 - testLocationTrigger.Centre.Latitude);
-            MapTest.MoveToRegion(new MapSpan(new Position(testLocationTrigger.Centre.Latitude,testLocationTrigger.Centre.Longitude), height, 10));
+            double height = testLocationTrigger.BoundingBox.HeightDegrees;
+            double width = testLocationTrigger.BoundingBox.WidthDegrees;
+            double centreLat = testLocationTrigger.Centre.Latitude;
+            MapSpan span;
+            if (height >= 180)
+            {
+                 span = new MapSpan(new Position(0, testLocationTrigger.Centre.Longitude), 180, 180);
+            }
+            else
+            {
+                if (testLocationTrigger.Centre.Latitude + height > 90)
+                {
+                    centreLat = 90 - height - 0.5;
+                    //width = height;
+                }
+                if (testLocationTrigger.Centre.Latitude - height < -90)
+                {
+                    centreLat = -90 + height + 0.5;
+                    //width = height;
+                }
+                span = new MapSpan(new Position(centreLat, testLocationTrigger.Centre.Longitude), height, width);
+            }
+
+            //MapSpan span = MapSpan.FromCenterAndRadius(new Position(testLocationTrigger.Centre.Latitude, testLocationTrigger.Centre.Longitude), new Distance(testLocationTrigger.BoundingBox.Height * 1000));
+            MapTest.MoveToRegion(span);
 
 
         }
@@ -188,8 +213,17 @@ namespace SampleAndTesting.Tests
                     string[] splitCoordinate = s.Split(',');
                     points.Add(new MapCoordinate(double.Parse(splitCoordinate[0]), double.Parse(splitCoordinate[1])));
                 }
-
                 testLocationTrigger = new BasicLocationTrigger(id, points);
+                if (TypePicker.SelectedItem.ToString() == "Radial")
+                {
+                    testLocationTrigger.LocationType = TriggerType.Radial;
+                    testLocationTrigger.Radius = double.Parse(SizeEntryM.Text);
+                }
+                if (TypePicker.SelectedItem.ToString() == "Polyline")
+                {
+                    testLocationTrigger.LocationType = TriggerType.Polyline;
+                    testLocationTrigger.Radius = double.Parse(SizeEntryM.Text);
+                }
                 UpdateProperties();
             }
             catch(Exception exception)
@@ -202,7 +236,7 @@ namespace SampleAndTesting.Tests
             try
             {
                 double distance = testLocationTrigger.DistanceTo(GetTestMapCoordinate());
-                DistanceToResult.Text = distance + "m";
+                DistanceToResult.Text = distance + "km";
             }
             catch(Exception exception)
             {
@@ -264,13 +298,7 @@ namespace SampleAndTesting.Tests
                 var result = testLocationTrigger.BearingRangeFrom(testCoordinate);
                 BearingRangeFromResult.Text = result.ToString() + "\nRange: " + result.Range + ", Centre: " + testCoordinate.BearingTo(testLocationTrigger.Centre);
 
-                double centreBearing = testCoordinate.BearingTo(testLocationTrigger.Centre);
-                double guideDistance = testLocationTrigger.BoundingBox.Width;
-                if (testLocationTrigger.BoundingBox.Height > guideDistance) guideDistance = testLocationTrigger.BoundingBox.Height;
-                double targetBearing1 = CoordinateHelpers.NormaliseBearing(centreBearing + 90);
-                double targetBearing2 = CoordinateHelpers.NormaliseBearing(centreBearing - 90);
-                MapCoordinate Point1 = testLocationTrigger.ClosestPointTo(testLocationTrigger.Centre.PointAtDistanceAndBearing(guideDistance, targetBearing1));
-                MapCoordinate Point2 = testLocationTrigger.ClosestPointTo(testLocationTrigger.Centre.PointAtDistanceAndBearing(guideDistance, targetBearing2));
+                MapCoordinate[] points = testLocationTrigger.BearingRangePoints(testCoordinate);
 
                 //PointD Rotated = testLocationTrigger.GetPointOnPermiterFrom(testCoordinate).ToPointD();
                 //PointD CentrePointD = testLocationTrigger.Centre.ToPointD();
@@ -280,13 +308,13 @@ namespace SampleAndTesting.Tests
                 bearingRangeLine = new Polyline();
                 bearingRangeLine.StrokeColor = Color.Red;
                 bearingRangeLine.Geopath.Add(new Position(testCoordinate.Latitude, testCoordinate.Longitude));
-                bearingRangeLine.Geopath.Add(new Position(Point2.Latitude, Point2.Longitude));
+                bearingRangeLine.Geopath.Add(new Position(points[1].Latitude, points[1].Longitude));
                 MapTest.MapElements.Add(bearingRangeLine);
                 if (MapTest.MapElements.Contains(bearingRangeLine2)) MapTest.MapElements.Remove(bearingRangeLine2);
                 bearingRangeLine2 = new Polyline();
                 bearingRangeLine2.StrokeColor = Color.Red;
                 bearingRangeLine2.Geopath.Add(new Position(testCoordinate.Latitude, testCoordinate.Longitude));
-                bearingRangeLine2.Geopath.Add(new Position(Point1.Latitude, Point1.Longitude));
+                bearingRangeLine2.Geopath.Add(new Position(points[0].Latitude, points[0].Longitude));
                 MapTest.MapElements.Add(bearingRangeLine2);
 
             }
@@ -425,6 +453,22 @@ namespace SampleAndTesting.Tests
                     CoordinatesLabel.IsVisible = true;
                     CoordinateEntry.IsVisible = true;
                     ConstructButton.IsVisible = true;
+                    TypeRow.Height = 35;
+
+                    TypeLabel.IsVisible = true;
+                    TypePicker.IsVisible = true;
+                    if (TypePicker.SelectedItem.ToString() != "Polygon")
+                    {
+                        SizeRow.Height = 35;
+                        SizeLabel.IsVisible = true;
+                        SizeEntryM.IsVisible = true;
+                    }
+                    else
+                    {
+                        SizeRow.Height = 0;
+                        SizeLabel.IsVisible = false;
+                        SizeEntryM.IsVisible = false;
+                    }
                 }
                 else
                 {
@@ -443,7 +487,14 @@ namespace SampleAndTesting.Tests
                     CoordinatesLabel.IsVisible = false;
                     CoordinateEntry.IsVisible = false;
                     ConstructButton.IsVisible = false;
+                    TypeRow.Height = 0;
 
+                    TypeLabel.IsVisible = false;
+                    TypePicker.IsVisible = false;
+
+                    SizeRow.Height = 0;
+                    SizeLabel.IsVisible = false;
+                    SizeEntryM.IsVisible = false;
 
                 }
             }
@@ -511,6 +562,20 @@ namespace SampleAndTesting.Tests
             }
         }
 
-
+        private void TypePicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (TypePicker.SelectedItem.ToString() != "Polygon")
+            {
+                SizeRow.Height = 35;
+                SizeLabel.IsVisible = true;
+                SizeEntryM.IsVisible = true;
+            }
+            else
+            {
+                SizeRow.Height = 0;
+                SizeLabel.IsVisible = false;
+                SizeEntryM.IsVisible = false;
+            }
+        }
     }
 }

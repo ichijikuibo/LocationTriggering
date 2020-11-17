@@ -21,8 +21,9 @@ namespace LocationTriggering.Utilities
         /// <returns>Distance in Kilometres</returns>
         public static double Haversine(double lat1, double lon1, double lat2, double lon2)
         {
-
-             var R = RADIUS_EARTH; 
+            //if (lat1 == 90 || lat1 == -90) lon1 = lon2;
+            //if (lat2 == 90 || lat2 == -90) lon2 = lon1;
+            var R = RADIUS_EARTH; 
             var dLat = toRadians(lat2 - lat1);
             var dLon = toRadians(lon2 - lon1);
             lat1 = toRadians(lat1);
@@ -96,10 +97,6 @@ namespace LocationTriggering.Utilities
         /// </summary>
         /// <param name="longitude">Longitude value to normalise</param>
         /// <returns>Longitude in deciaml degree between -180 and 180</returns>
-        /// 
-
-
-
         public static double NormaliseLongitude(double longitude)
         {
             double result = (longitude + 540) % 360 - 180;
@@ -117,53 +114,6 @@ namespace LocationTriggering.Utilities
             if (result < 0) result = 360 + result;
             return result;
         }
-        /// <summary>
-        /// Get a point on the perimeter at a specifed entrance angle of a rectangle based on the width and height
-        /// </summary>
-        /// <param name="angle">The entrance angle </param>
-        /// <param name="w">The width of the rectangle</param>
-        /// <param name="h">The height of the rectangle</param>
-        /// <returns>a point on the perimeter of the rectangle</returns>
-        //public static PointD getPointOnRect(double angle, double w, double h)
-        //{
-        //    double TargetAngle = angle;
-        //    double Adj = 0;
-        //    double Opp = 0;
-        //    double WidthAngle = (Math.Atan((w / 2) / (h / 2)) / Math.PI * 180) * 2;
-        //    double HeigthAngle = (360 - WidthAngle * 2) / 2;
-        //    if (TargetAngle > WidthAngle / 2 && TargetAngle <= WidthAngle / 2 + HeigthAngle)//right
-        //    {
-        //        Adj = w / 2;
-        //        TargetAngle = 90 - TargetAngle;
-        //        Opp = Math.Tan(TargetAngle / 180 * Math.PI) * Adj;
-        //        return new PointD(Adj, Opp);
-
-        //    }
-        //    else if (TargetAngle <= WidthAngle / 2 + WidthAngle + HeigthAngle)//bottom
-        //    {
-        //        Adj = h / -2;
-        //        TargetAngle = 180 - TargetAngle;
-        //        Opp = Math.Tan(TargetAngle / 180 * Math.PI) * -Adj;
-
-        //        return new PointD(Opp, Adj);
-        //    }
-        //    else if (TargetAngle <= WidthAngle / 2 + HeigthAngle * 2 + WidthAngle)//left
-        //    {
-        //        Adj = w / -2;
-        //        TargetAngle = 270 - TargetAngle;
-        //        Opp = Math.Tan(TargetAngle / 180 * Math.PI) * Adj;
-        //        return new PointD(Adj, Opp);
-
-        //    }
-        //    else//top
-        //    {
-        //        Adj = h / 2;
-        //        if (TargetAngle > 45) TargetAngle = -360 + TargetAngle;
-        //        Opp = Math.Tan(TargetAngle / 180 * Math.PI) * Adj;
-        //        return new PointD(Opp, Adj);
-        //    }
-
-        //}
         /// <summary>
         /// Perfforma a 2d vector rotations
         /// </summary>
@@ -188,10 +138,11 @@ namespace LocationTriggering.Utilities
         /// <returns>The latitude and logitude of the new point PointD.Y = latitude PointD.X = longitude</returns>
         public static MapCoordinate DestinationPointFromBearingAndDistance(MapCoordinate initialPoint,double kilometres, double bearing )
         {
+          
             double R = RADIUS_EARTH;
             double d = kilometres;
             double lat1 = toRadians(initialPoint.Latitude);
-            double lon1 = toRadians(initialPoint.Longitude);
+            double lon1 = toRadians(initialPoint.Longitude);           
             double brng = toRadians(bearing);
             double lat2 = Math.Asin(Math.Sin(lat1) * Math.Cos(d / R) + Math.Cos(lat1) * Math.Sin(d / R) * Math.Cos(brng));
             double lon2 = lon1 + Math.Atan2( Math.Sin(brng) * Math.Sin(d / R) * Math.Cos(lat1), Math.Cos(d / R) - Math.Sin(lat1) * Math.Sin(lat2));

@@ -1,0 +1,6 @@
+-18.032235,-179.876841	Fiji,WellingtonToLosAngeles.kml,PacificOcean.kml,WesternHemisphere,SouthernHemisphere,GMT-Dateline
+-2.670801,-67.161875	AmazonRiver.kml,SouthAmerica.kml,WesternHemisphere,SouthernHemisphere
+54.995564,-7.321970	Derry.kml,Ireland.kml,Europe.kml,Eurasia.kml,Diamond,WesternHemisphere,NorthernHemisphere
+18.091561,30.934025	Nile.kml,NorthernHemisphere,EasternHemisphere
+89.9,1	ArticSea.kml,NorthPole,NorthernHemisphere,EasternHemisphere,GMT-Dateline
+-89.9,-1	Antartica.kml,SouthPole,SouthernHemisphere,WesternHemisphere,GMT-Dateline

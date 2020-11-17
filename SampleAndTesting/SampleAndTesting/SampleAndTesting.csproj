@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="TestLocations\AmazonRiver.kml" />
     <None Remove="TestLocations\Antartica.kml" />
     <None Remove="TestLocations\AppenticeBoysMemorialHall.kml" />
     <None Remove="TestLocations\ArticSea.kml" />
@@ -25,6 +26,7 @@
     <None Remove="TestLocations\Bogsidemurals.kml" />
     <None Remove="TestLocations\Cork.kml" />
     <None Remove="TestLocations\craigavonbridge.kml" />
+    <None Remove="TestLocations\CycleData.kml" />
     <None Remove="TestLocations\Derry.kml" />
     <None Remove="TestLocations\DistrictOfColumbia.kml" />
     <None Remove="TestLocations\Dublin.kml" />
@@ -42,6 +44,7 @@
     <None Remove="TestLocations\London.kml" />
     <None Remove="TestLocations\Moscow.kml" />
     <None Remove="TestLocations\NewZealand.kml" />
+    <None Remove="TestLocations\Nile.kml" />
     <None Remove="TestLocations\PacificOcean.kml" />
     <None Remove="TestLocations\Paris.kml" />
     <None Remove="TestLocations\PeaceBridge.kml" />
@@ -56,6 +59,13 @@
     <None Remove="TestLocations\Walls.kml" />
     <None Remove="TestLocations\Waterford.kml" />
     <None Remove="TestLocations\Wellington.kml" />
+    <None Remove="TestLocations\WellingtonToLosAngeles.kml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestLocations\AmazonRiver.kml" />
+    <EmbeddedResource Include="TestLocations\CycleData.kml" />
+    <EmbeddedResource Include="TestLocations\WellingtonToLosAngeles.kml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -84,6 +94,7 @@
     <EmbeddedResource Include="TestLocations\London.kml" />
     <EmbeddedResource Include="TestLocations\Moscow.kml" />
     <EmbeddedResource Include="TestLocations\NewZealand.kml" />
+    <EmbeddedResource Include="TestLocations\Nile.kml" />
     <EmbeddedResource Include="TestLocations\PacificOcean.kml" />
     <EmbeddedResource Include="TestLocations\Paris.kml" />
     <EmbeddedResource Include="TestLocations\PeaceBridge.kml" />

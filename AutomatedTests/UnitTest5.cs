@@ -164,6 +164,7 @@ namespace AutomatedTests
             listener = new LocationListener<BasicLocationTrigger>();
             listener.ChangeGpsDistance(0.0000001);
             listener.LocationTriggers.AddRange(testData.TestData);
+            listener.LocationTriggers.UseClosestDistance = false;
         }
 
     }

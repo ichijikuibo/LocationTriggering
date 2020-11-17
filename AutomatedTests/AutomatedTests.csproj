@@ -33,6 +33,9 @@
     <None Update="TestData\BearingRangeOverlapsTestData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\RadialPolylineBearingRangeTestData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\BoundingBoxConstructorTestData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -45,10 +48,19 @@
     <None Update="TestData\BearingRangeTestData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\RadialPolylineClosestPoint.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\ClosestPointTestData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\ContainsBearingTestData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\RadialPolylineLocationsAtPointTestData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\RadialPolylineContainsPointTestData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\ContainsPointTestData.txt">
@@ -81,6 +93,9 @@
     <None Update="TestData\RemovePointTestData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestLocations\AmazonRiver.kml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestLocations\Antartica.kml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -99,10 +114,16 @@
     <None Update="TestLocations\Bogsidemurals.kml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestLocations\centre.kml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestLocations\Cork.kml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestLocations\craigavonbridge.kml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestLocations\CycleData.kml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestLocations\Derry.kml">
@@ -156,6 +177,9 @@
     <None Update="TestLocations\NewZealand.kml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestLocations\Nile.kml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestLocations\PacificOcean.kml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -189,10 +213,16 @@
     <None Update="TestLocations\TowerMuseum.kml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestLocations\Walls.kml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestLocations\Waterford.kml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestLocations\Wellington.kml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestLocations\WellingtonToLosAngeles.kml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
