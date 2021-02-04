@@ -14,6 +14,7 @@ using LocationTriggering.Utilities;
 using Polygon = Xamarin.Forms.Maps.Polygon;
 using Xamarin.Essentials;
 using LocationTriggering.Extentions;
+using Location = Xamarin.Essentials.Location;
 
 namespace SampleAndTesting.Tests
 {

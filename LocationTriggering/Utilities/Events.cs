@@ -58,4 +58,8 @@ namespace LocationTriggering.Utilities
     /// <param name="sender">The class that sent the event</param>
     /// <param name="e">The arguments for the event</param>
     public delegate void PositionUpdatedEventHandler(object sender, PositionUpdatedEventArgs e);
+    public delegate void ExceptionEventHandler(object sender, Exception e);
+
+
+
 }

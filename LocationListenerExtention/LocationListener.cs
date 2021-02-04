@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using LocationTriggering;
 using LocationTriggering.Utilities;
 using Plugin.Geolocator.Abstractions;
@@ -14,25 +15,28 @@ namespace LocationTriggering.Extentions
         double _gpsDistance;
         TimeSpan _gpstime;
         Position _lastPosition;
+
         public ListenerClass(LocationListener<T> newbase, double distance,TimeSpan time)
         {
             _gpsDistance = distance;
             _gpstime = time;
             baseListener = newbase;
         }
+
+
         public void Current_PositionChanged(object sender, PositionEventArgs e)
         {
             //Geolocator often calls the event 2 times with the same coordinate so check if the current is the same as the last
-            if (e.Position.Latitude == _lastPosition.Latitude && e.Position.Longitude == _lastPosition.Longitude) return;
+            if (_lastPosition!=null && e.Position.Latitude == _lastPosition.Latitude && e.Position.Longitude == _lastPosition.Longitude) return;
             _lastPosition = e.Position;
             //Get the current GPS Location           
-            MapCoordinate newPosition = new MapCoordinate(e.Position.Latitude, e.Position.Longitude);
+            
 
             //because the list may be bound to a ui component they need to be updated on the main thread
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 //Process the new position
-                baseListener.Update(newPosition);
+                baseListener.Update(e.Position);
 
             });
         }
@@ -41,7 +45,12 @@ namespace LocationTriggering.Extentions
     public static class LocationListenerExtention
     {
         private static TimeSpan pollInterval;
-        private static double gpsDistance;
+       // private static double gpsDistance;
+        private static Position _lastGPSPosition;
+        private static double _accuracyRequired = 100;
+        private static double _desiredAccuracy = 0;
+        private static int inaccuratetLocations = 0;
+        private static Position MostAccurate;
 
 
         /// <summary>
@@ -59,13 +68,22 @@ namespace LocationTriggering.Extentions
                 //it is not posible to bind an event in this static generic extention class so an object of another class is created to handle the event
                 ListenerClass<T> baseListener = new ListenerClass<T>(baselistener, distanceMetres,interval);
                 Plugin.Geolocator.CrossGeolocator.Current.PositionChanged += baseListener.Current_PositionChanged;
-                await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(interval, distanceMetres);
+                await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(interval, 0);
                 baselistener.ChangeGpsDistance(distanceMetres);
-                gpsDistance = distanceMetres;
+                //gpsDistance = distanceMetres;
+                _lastGPSPosition = null;
                 pollInterval = interval;
+                Update(baselistener, await Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync());
             }
         }
-
+        /// <summary>
+        /// Get the last GPS position recieved
+        /// </summary>
+        /// <returns></returns>
+        public static Position getLastPosition<T>(this LocationListener<T> baselistener) where T : LocationTrigger
+        {
+            return _lastGPSPosition;
+        }
         /// <summary>
         /// Stops the GPS Listener
         /// </summary>
@@ -77,6 +95,48 @@ namespace LocationTriggering.Extentions
                 //Plugin.Geolocator.CrossGeolocator.Current.PositionChanged -= Current_PositionChanged;
             }
         }
+        public static void Update<T>(this LocationListener<T> baselistener, Position position) where T : LocationTrigger
+        {
+
+            bool UpdateLocation = false;
+            if (_lastGPSPosition!=null && _lastGPSPosition.Accuracy<position.Accuracy&&position.Accuracy > _accuracyRequired) return;
+            if (_lastGPSPosition == null || position.Accuracy <= _desiredAccuracy|| _lastGPSPosition.Accuracy < position.Accuracy)
+            {
+                UpdateLocation = true;
+                _lastGPSPosition = new Position(position);
+            }
+            else
+            {
+                inaccuratetLocations++;
+                if (MostAccurate == null || position.Accuracy <= MostAccurate.Accuracy) MostAccurate = new Position(position);
+                if (inaccuratetLocations >= 5)
+                {
+                    _lastGPSPosition = MostAccurate;
+                    UpdateLocation = true;
+                }
+            }
+
+
+            if (UpdateLocation)
+            {
+
+                MapCoordinate newPosition = _lastGPSPosition.ToMapCoordinate(); 
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                        //Process the new position
+                        baselistener.Update(newPosition);
+
+
+                });
+                MostAccurate = null;
+                inaccuratetLocations = 0;
+            }
+        }
+        public static async void Update<T>(this LocationListener<T> baselistener) where T : LocationTrigger
+        {
+            Update(baselistener, await Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync());
+        }
+
         /// <summary>
         /// Changes the interval between GPS updates
         /// </summary>
@@ -96,7 +156,20 @@ namespace LocationTriggering.Extentions
             baselistener.ChangeGpsDistance(distanceMetres);
             await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
             await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(pollInterval, distanceMetres);
-            gpsDistance = distanceMetres;
+            //gpsDistance = distanceMetres;
+        }
+
+        /// <summary>
+        /// Change the desired accuracy of the gps listener(If it get nothing but inacurate results it will use the most accurate for every 10 polls)
+        /// </summary>
+        /// <param name="accuracy">The accuracy level in metres</param>
+        public static void changeRequiredAccuracy<T>(this LocationListener<T> baselistener, double accuracy) where T : LocationTrigger
+        {
+            _accuracyRequired = accuracy;
+        }
+        public static void changeDesiredAccuracy<T>(this LocationListener<T> baselistener, double accuracy) where T : LocationTrigger
+        {
+            _desiredAccuracy = accuracy;
         }
 
     }

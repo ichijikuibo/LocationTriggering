@@ -19,16 +19,20 @@ namespace LocationTriggering
     public class LocationTriggerCollection<T> : ObservableCollection<T>  where T : LocationTrigger 
     {
         private bool _sortOnChange = false;
+        //private bool _filterOnChange;
         private Comparison<T> _sortOnChangeComparison;
+        private Func<T,bool> _filterCondition;
         private bool _useClosestDistance = true;
         private DistanceUnit _units = DistanceUnit.Kilometres;
-
+        private LocationTriggerCollection<T> _filteredCollection;
         public bool UseClosestDistance { get => _useClosestDistance; set => _useClosestDistance = value; }
         public DistanceUnit Units { get => _units; set => _units = value; }
+        public LocationTriggerCollection<T> FilteredCollection { get => _filteredCollection; }
+        public Comparison<T> SortOnChangeComparison { get => _sortOnChangeComparison; }
 
         public LocationTriggerCollection()
         {
-            //CollectionChanged += LocationTriggerCollection_CollectionChanged;
+            _filteredCollection = this;
         }
         /// <summary>
         /// Find a location that matches the specified ID returns null if non found
@@ -56,10 +60,41 @@ namespace LocationTriggering
         {
             base.OnCollectionChanged(e);
             if (e.Action != NotifyCollectionChangedAction.Move && e.Action != NotifyCollectionChangedAction.Reset)
+            {
                 if (_sortOnChange) Sort(_sortOnChangeComparison);
+            }
 
         }
-
+        public LocationTriggerCollection<T> filterCollection(Func<T,bool> condition)
+        {
+            if (FilteredCollection == this)
+            {
+                _filteredCollection = new LocationTriggerCollection<T>();
+                if(_sortOnChangeComparison!=null)_filteredCollection.SortOnChange(_sortOnChangeComparison);
+            }
+            _filterCondition = condition;
+            var filtered = this.Where(condition);
+           // _filterOnChange = true;
+            List<T> removedLocations = new List<T>();
+            foreach(T loc in FilteredCollection)
+            {
+                if (!filtered.Contains(loc)) removedLocations.Add(loc);
+            }
+            foreach(T loc in removedLocations)
+            {
+                FilteredCollection.Remove(loc);
+            }
+            foreach(T loc in filtered)
+            {
+                if (!_filteredCollection.Contains(loc)) FilteredCollection.Add(loc);
+            }
+            return FilteredCollection;
+        }
+        public void StopFiltering()
+        {
+           // _filterOnChange = false;
+            _filteredCollection = this;
+        }
         //private void LocationTriggerCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         //{
         //    base.OnCollectionChanged(e);
@@ -91,7 +126,7 @@ namespace LocationTriggering
                     if (LT.BearingRangeFrom(position).ContainsBearing(bearing)) locations.Add(LT);
                 }
             }
-            locations.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); });
+            locations.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt2.LastDistance); });
             return locations.AsReadOnly();
         }
         public IReadOnlyList<T> LocationsInBearingRange(MapCoordinate position, BearingRange bearing, double maxDistance = 0)
@@ -104,7 +139,7 @@ namespace LocationTriggering
                     if (bearing.OverlapsWith(LT.BearingRangeFrom(position))) locations.Add(LT);
                 }
             }
-            locations.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); });
+            locations.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt2.LastDistance); });
             return locations.AsReadOnly();
         }
         /// <summary>
@@ -121,7 +156,7 @@ namespace LocationTriggering
                 if (LT.DistanceTo(position, Units, UseClosestDistance) <= distance)
                     locationsNear.Add(LT);
             }
-            locationsNear.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); });
+            locationsNear.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt2.LastDistance); });
             return locationsNear.AsReadOnly();
         }
         /// <summary>
@@ -130,11 +165,19 @@ namespace LocationTriggering
         /// <param name="position">The position to measure distances from</param>
         /// <param name="distance">The number of locations to return</param>
         /// <returns>List of LocationTriggers</returns>
-        public IReadOnlyList<T> ClosestLocations(MapCoordinate position, int number)
+        public IReadOnlyList<T> ClosestLocations(MapCoordinate position, int number,IEnumerable<T> exceptions = null)
         {
-            UpdateDistances(position);
+            UpdateDistances(position,false);
             List<T> locations = new List<T>();
-            var SortedLocations = new List<T>(Items.OrderBy(LT => LT.LastDistance));
+            var SortedLocations = new List<T>(Items);
+            SortedLocations.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt2.LastDistance); });
+            if(exceptions!= null)
+            {
+                foreach(T LT in exceptions)
+                {
+                    if (SortedLocations.Contains(LT)) SortedLocations.Remove(LT);
+                }
+            }
             if (number > SortedLocations.Count) number = SortedLocations.Count;
             if (number > 0)
                 return SortedLocations.GetRange(0, number).AsReadOnly();
@@ -144,17 +187,13 @@ namespace LocationTriggering
         /// Update the distances from the specified location for all the Locations in the collection
         /// </summary>
         /// <param name="position">The position to measure from</param>
-        public void UpdateDistances(MapCoordinate position)
+        public void UpdateDistances(MapCoordinate position, bool sort = true)
         {            
             foreach (T LT in Items)
             {
                     LT.DistanceTo(position, Units, UseClosestDistance);
             }
-            if (_sortOnChange)
-            {
-                Sort(_sortOnChangeComparison);
-            }
-            if (_sortOnChange)
+            if (_sortOnChange&&sort&& _sortOnChange)
             {
                 Sort(_sortOnChangeComparison);
             }
@@ -164,20 +203,36 @@ namespace LocationTriggering
         /// Update the bearings from the specified location for all the Locations in the collection
         /// </summary>
         /// <param name="position">The position to measure from</param>
-        public void UpdateBearings(MapCoordinate position)
+        public void UpdateBearings(MapCoordinate position, bool sort = true)
         {
             foreach (LocationTrigger LT in Items)
             {
                 LT.BearingFrom(position);
             }
-            if (_sortOnChange)
+            if (_sortOnChange&& sort&& _sortOnChange)
+            {
+                Sort(_sortOnChangeComparison);
+            }
+        }
+        /// <summary>
+        /// Update the bearings and distances from the specified location for all the Locations in the collection
+        /// </summary>
+        /// <param name="position">The position to measure from</param>
+        public void UpdateDistanceAndBearings(MapCoordinate position, bool sort = true)
+        {
+            foreach (LocationTrigger LT in Items)
+            {
+                LT.BearingFrom(position);
+                LT.DistanceTo(position, Units, UseClosestDistance);
+            }
+            if (_sortOnChange&&sort&& _sortOnChange)
             {
                 Sort(_sortOnChangeComparison);
             }
         }
 
         /// <summary>
-        /// Set the collection to auto sort the location using the specifed comparison.  <code>delegate (LocationTrigger lt1, LocationTrigger lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); }</code>
+        /// Set the collection to auto sort the location using the specifed comparison.  <code>delegate (LocationTrigger lt1, LocationTrigger lt2) { return lt1.LastDistance.CompareTo(lt2.LastDistance); }</code>
         /// </summary>
         /// <param name="comparison">The Comparison to use to sort the collection</param>
         public void SortOnChange(Comparison<T> comparison)
@@ -195,7 +250,7 @@ namespace LocationTriggering
 
         }
         /// <summary>
-        /// Set the collection to auto sort the location using the specifed comparison.  <code>delegate (LocationTrigger lt1, LocationTrigger lt2) { return lt1.LastDistance.CompareTo(lt1.LastDistance); }</code>
+        /// Set the collection to auto sort the location using the specifed comparison.  <code>delegate (LocationTrigger lt1, LocationTrigger lt2) { return lt1.LastDistance.CompareTo(lt2.LastDistance); }</code>
         /// </summary>
         /// <param name="comparison">The Comparison to use to sort the collection</param>
         public void Sort(Comparison<T> comparison)
@@ -205,7 +260,8 @@ namespace LocationTriggering
 
             for (int i = 0; i < sortableList.Count; i++)
             {
-                Move(Items.IndexOf(sortableList[i]), i);
+                if(sortableList[i]!=this[i])
+                    Move(Items.IndexOf(sortableList[i]), i);
             }
         }
     }

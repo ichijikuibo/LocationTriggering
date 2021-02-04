@@ -49,6 +49,7 @@ namespace LocationTriggering
         /// <returns>Bearing in degrees</returns>
         public double BearingTo(MapCoordinate destinationPoint)
         {
+            if (destinationPoint == null) return 0;
             return CoordinateHelpers.GetAngle(Latitude, Longitude, destinationPoint.Latitude, destinationPoint.Longitude);
         }
         /// <summary>
