@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SampleAndTesting.Samples.Sample">
+    <ContentPage.Content>
+       
+            <Grid HorizontalOptions="Center" VerticalOptions="FillAndExpand" WidthRequest="500">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0" x:Name="CurrentLocationRow"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <CollectionView x:Name="CurrentLocationList"  ItemSizingStrategy="MeasureAllItems" Margin="5" ItemsSource="{Binding CurrentLocationTriggers}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid x:Name="CurrentLocationGrid" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="150"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label Text="You are at" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                                <Label x:Name="CurrentLocation" HorizontalOptions="Center" Text="{Binding LocationID}"  HorizontalTextAlignment="Center" FontAttributes="Bold"/>
+                            </StackLayout>
+                            <Frame CornerRadius="5" HasShadow="False" Margin="5" Grid.Column="1" IsClippedToBounds="True" Padding="1" BorderColor="Black" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                                <Image Source="{Binding Picture}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFit" />
+                            </Frame>
+                            <Label x:Name="LocationDetails" Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Details}"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <ListView Header="Nearby Locations" x:Name="NeabyLocationsList"  ItemsSource="{Binding ClosestLocations}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" RowHeight="120" Margin="5" Grid.Row="1" SelectionMode="None" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame CornerRadius="5" HasShadow="False" Margin="5" IsClippedToBounds="True" Padding="5" BorderColor="Black">
+                                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="24" />
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Frame CornerRadius="5" HasShadow="False" Margin="5" Grid.RowSpan="2" IsClippedToBounds="True" Padding="1" BorderColor="Black" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                                        <Image Source="{Binding Picture}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFit"/>
+                                    </Frame>
+                                    <Label Text="{Binding LocationID}" HorizontalOptions="Center" FontSize="16" FontAttributes="Bold" Grid.Column="1" HorizontalTextAlignment="Center" Grid.ColumnSpan="2"></Label>
+                                    <Label Text="{Binding Summary}" HorizontalOptions="Center" FontSize="12" Grid.Column="1" Grid.Row="1" MaxLines="4" ></Label>
+                                    <StackLayout Grid.Column="2"  Grid.Row="1"  Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Spacing="2">
+                                        <Label Text="Direction" HorizontalOptions="Center" FontSize="12" HorizontalTextAlignment="Center" ></Label>
+                                        <Label Text="{Binding Direction}" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"  HorizontalTextAlignment="Center"></Label>
+                                        <Label Text="Distance" HorizontalOptions="Center" FontSize="12" Grid.Column="2" Grid.Row="0" HorizontalTextAlignment="Center"></Label>
+                                        <Label x:Name="DistanceLabel" Text="{Binding LastDistance, StringFormat='{0:F3}km'}" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold" HorizontalTextAlignment="Center" ></Label>
+                                    </StackLayout>
+                                </Grid>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView> 
+            </Grid>
+       
+    </ContentPage.Content>
+</ContentPage>

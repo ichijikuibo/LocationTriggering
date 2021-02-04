@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Locations>
+  <Location ID="Guildhall" Image="guildhall.jpg" Thumb="guildhallthumb.jpg" >
+    <Polygon>
+      <point long="-7.319639897566911" Lat="54.9971575645664"  />
+      <point long="-7.318337623989146" Lat="54.99781052554088" />
+      <point long="-7.318797330022546" Lat="54.99823503822223" />
+      <point long="-7.320187792511534" Lat="54.99746591632338" />
+    </Polygon>
+    <Summary>The Guildhall is a building in which the elected members of Derry and Strabane District Council meet. It was built in 1890.</Summary>
+    <Details>The Guildhall houses a large hall where many events of social and political nature have been held. It has been home to the Feis Doire Colmcille – an event which celebrates Irish culture – and the now-discontinued Londonderry Feis. It was also home to the Saville Inquiry into the events of Bloody Sunday 30 January 1972 in Derry.</Details>
+  </Location>
+  <Location ID="Peace Bridge" Image="peacebridge.jpg" Thumb="peacebridgethumb.jpg" >
+    <PolyLine Radius="0.04">
+      <point lng="-7.318000095791854" Lat="54.99787100720589"/>
+      <point lng="-7.317408824283220" Lat="54.99801425511687"/>
+      <point lng="-7.316820497263029" Lat="54.99806469195143"/>
+      <point lng="-7.316499648948003" Lat="54.9980275322415"/>
+      <point lng="-7.315887847471682" Lat="54.99795241722214"/>
+      <point lng="-7.315412436700733" Lat="54.99786378666013"/>
+      <point lng="-7.314908557146671" Lat="54.99791861778683"/>
+      <point lng="-7.314554857968625" Lat="54.99799228985574"/>
+      <point lng="-7.314206495252591" Lat="54.99811656428106"/>
+      <point lng="-7.314091643623274" Lat="54.99817222062016"/>
+    </PolyLine>
+    <Summary>The Peace Bridge is a cycle and foot bridge across the River Foyle. It opened on 25 June 2011, connecting Ebrington Square with the rest of the city centre.</Summary>
+    <Details>The Peace Bridge is the newest of three bridges in the city, the others being the Craigavon Bridge and the Foyle Bridge. The 235 metres (771 ft) bridge was designed by AECOM, who also designed the Sutong Yangtze River Bridge, and Wilkinson Eyre Architects, who also designed the Gateshead Millennium Bridge.</Details>
+  </Location>
+  <Location ID="Tower Museum" Image="towermuseum.jpg" Thumb="towermuseumthumb.jpg">
+    <Polygon>
+      <point lng="-7.321467568737248" Lat="54.99723873389784" />
+      <point lng="-7.320709314587479" Lat="54.99697268822651" />
+      <point lng="-7.320230291249143" Lat="54.99723366647486" />
+      <point lng="-7.320741267667841" Lat="54.9975523000601" />
+      <point lng="-7.321103820925956" Lat="54.99740437641524" />
+    </Polygon>
+    <Summary>The award winning Tower Museum is located within the city's walls at Union Hall Place.</Summary>
+    <Details>The Museum has two main exhibitions ("Story of Derry" and "La Trinidad Valancera- An Armada Shipwreck ") and hosts a wide program programme of touring exhibitions and events throughout the year.</Details>
+  </Location>
+  <Location ID="Peace Flame" Image="peaceflame.jpg" Thumb="peaceflamethumb.jpg" >
+    <Polygon>
+      <point long="-7.318905574493433" Lat="54.99690781539126" />
+      <point long="-7.317727869283479" Lat="54.99722901255003" />
+      <point long="-7.318322091086142" Lat="54.99780711943656" />
+      <point long="-7.319446244306354" Lat="54.99728679171152" />
+    </Polygon>
+    <Summary>The Irish peace process, or peace process, is the term used to describe the series of attempts to achieve an end to the civil conflict and a political settlement for the differences that divide the community in Northern Ireland.</Summary>
+    <Details> There is no general agreement among commentators on the start date of the peace process. The announcement of the Irish Republican Army (IRA) "cessation" of military action on 31 August 1994 was the end of one part of the process and the beginning of another phase. Some people consider that the process dates back to the 11 January 1988. This is the date on which John Hume, then leader of the Social Democratic and Labour Party (SDLP), had a meeting with Gerry Adams, then President of Sinn Féin (SF). This was the first in a series of discussions that were to take place between the two men from 1988 to 1993. However, the first series of talks broke down and were not resumed until 1993. These new talks eventually lead in 1993 to something called the Hume/Adams initiative based on a document (the Hume / Adams Document) which was agreed by the two leaders. Elements of this document were to find their way into the Downing Street Declaration made jointly by the British and Irish governments.</Details>
+
+  </Location>
+  <Location ID="Hands Across the Divide" Image="handsaccrossdivide.jpg" Thumb="handsaccrossdividethumb.jpg">
+    <Circle Radius="0.05">
+      <point long="-7.320317" Lat="54.991741" />
+    </Circle>
+    <Summary>Two men stand with their hands outstretched towards each other. They are close to embracing, but not quite close enough. Still, it’s the gesture here that counts. Because in that gesture, in those outstretched hands, is the recognition of the other’s humanity.</Summary>
+    <Details>Sculptor Maurice Harron was born and educated in Derry, a city severely affected by Northern Ireland’s Troubles. But Hands Across the Divide celebrates reconciliation. It was unveiled in 1992, to mark the twentieth anniversary of Bloody Sunday, 30 January 1972, when a civil rights demonstration on the streets of Derry ended with the shooting dead of thirteen civilians by the British Army. But in that reaching out of hands is hope, and the promise of a new beginning.</Details>
+  </Location>
+  <Location ID="Free Derry Corner" Image="freederrycorner.jpg" Thumb="freederrycornerthumb.jpg">
+    <Polygon>
+      <point lng="-7.32754488343615" Lat="54.99520489002203" />
+      <point lng="-7.326789450494289" Lat="54.99504455305144" />
+      <point lng="-7.32574279029167" Lat="54.9964314712174" />
+      <point lng="-7.32649394758421" Lat="54.9966573827365" />
+    </Polygon>
+    <Summary>Free Derry Corner is a historical landmark in the Bogside neighbourhood of Derry, Northern Ireland, which lies in the intersection of the Lecky Road, Rossville Street and Fahan Street. A free-standing gable wall commemorates Free Derry, a self-declared autonomous nationalist area of Derry that existed between 1969 and 1972. On the corner is a memorial to the 1981 hunger strikers and several murals. There is also a memorial to those who died engaging in paramilitary activity as part of the Provisional IRA's Derry brigade.</Summary>
+    <Details>In January 1969 a local activist, long believed to be John "Caker" Casey, but who might have been Liam Hillen, painted graffiti on a gable wall at the end of a housing terrace stating "You are now entering Free Derry". When the British Home Secretary, Jim Callaghan, visited Derry in August 1969, the "Free Derry" wall was painted white and the "You are now entering Free Derry" sign was professionally re-painted in black lettering by John "Caker" Casey. </Details>
+  </Location>
+  <Location ID="Diamond War Memorial" Image="warmemorial.jpg" Thumb="warmemorialthumb.jpg">
+    <Circle Radius="0.05">
+      <point long="-7.321970" Lat="54.995564" />
+    </Circle>
+    <Summary>Erected in 1927, the Diamond War Memorial is located on The Diamond in the city centre. It is dedicated to the citizens of the city who lost their lives while in military service during World War I.</Summary>
+    <Details>In early 1919, the public leaders of the city of Derry first considered initiating a fund to erect a memorial to the fallen of the Great War. The memorial would be composed of granite or bronze and would have the names of the deceased inscribed upon it. The City War Memorial Fund was established in February 1919. It required several years to obtain the necessary funding from charitable contributions. By the sixth anniversary of the 1918 Armistice, some Derry citizens became disgruntled by the slow progress. However, the following year, in April 1925, the design and location of the memorial were approved by the city's War Memorial Committee. However, they still faced the hurdle of obtaining consent from the Londonderry Corporation, which was obtained after some initial disagreement with regard to the proposed location of the monument.</Details>
+  </Location>
+  <Location ID="Siege Museum" Image="siegemuseum.jpg" Thumb="siegemuseumthumb.jpg">
+    <Polygon>
+      <point long="-7.323679578185418" Lat="54.99500995877184" />
+      <point long="-7.323187520473102" Lat="54.99531357266227" />
+      <point long="-7.323565922397787" Lat="54.99553368581871" />
+      <point long="-7.324056562893828" Lat="54.99520061453998" />
+    </Polygon>
+    <Summary>The new Siege Museum and Exhibition is a permanent display of the history of the Siege of Londonderry and of the Associated Clubs of the Apprentice Boys of Derry, including artefacts, video and interactive media.</Summary>
+    <Details>Visitors on group bookings or guided tours will also have the added attraction of being able to view one of the finest collections of meeting rooms used by the 'Loyal Orders'.</Details>
+  </Location>
+  <Location ID="Apprentice Boys Memorial" Image="appenticeboys.jpg" Thumb="appenticeboysthumb.jpg" >
+    <Polygon>
+      <point lng="-7.3239871676686015" Lat="54.99575715840822" />
+      <point lng="-7.32449362484378" Lat="54.99538325952316" />
+      <point lng="-7.32386121262891" Lat="54.9951625945087" />
+      <point lng="-7.32342281828062" Lat="54.9954671756183" />
+    </Polygon>
+    <Summary>The hall was opened in 1877, dedicated to the memory of the thirteen apprentice boys who closed the city gates in 1688. In 1937 the hall was extended along Society Street. The extension is dedicated to the memory of those who died in the Great War of 1914–1918. The hall is an architecturally important building within the walled city.</Summary>
+    <Details>It now houses the headquarters of the association, with its office and debating chamber. All new members are initiated in the hall. Other organisations such as the Orange Order and Royal Black Preceptory have separate accommodations in the hall. It also houses a social club and a museum. The hall is usually open to the public during the summer months, July to September. It has recently received funding from the EU to create a visitors centre.</Details>
+  </Location>
+  <Location ID="Museum of Free Derry" Image="freederrymuseum.jpg" Thumb="freederrymuseumthumb.jpg" >
+    <Polygon>
+      <point long="-7.325424517660830" Lat="54.99672344104492" />
+      <point long="-7.325035324934733" Lat="54.99703922721295" />
+      <point long="-7.325920500385911" Lat="54.99732066469174" />
+      <point long="-7.326181673291963" Lat="54.99718831044321" />
+    </Polygon>
+    <Summary>The Museum of Free Derry opened in 2007 in order to tell the story of what happened in the city during the period 1968 – 1972, popularly known as ‘Free Derry’, and including the civil rights era, Battle of the Bogside, Internment, Bloody Sunday and Operation Motorman.</Summary>
+    <Details>It puts the Free Derry period into a wider Irish and international context so that visitors see the events depicted not just in relation to the communal conflict in the North or the conflict between Britain and Ireland. They are invited to make comparisons with the civil rights movement in the USA as well as other massacres such as Wounded Knee, Sharpeville and Fallujah. </Details>
+  </Location>
+  <Location ID="The Derry Walls" Image="derrywalls.jpg" thumb ="derrywallsthumb.jpg" >
+    <PolyLine width="0.01">
+      <point lng="-7.325615023370777" Lat="54.99396864854492"/>
+      <point lng="-7.323230673797086" Lat="54.99343472618194"/>
+      <point lng="-7.321181747689508" Lat="54.99402589350009"/>
+      <point lng="-7.320014968721166" Lat="54.99463532824251"/>
+      <point lng="-7.319514146348593" Lat="54.99510867197669"/>
+      <point lng="-7.318683622518384" Lat="54.99630650371295"/>
+      <point lng="-7.320662959612910" Lat="54.99753392959153"/>
+      <point lng="-7.321370384212280" Lat="54.99726701640710"/>
+      <point lng="-7.322003698654559" Lat="54.99676957674625"/>
+      <point lng="-7.323184942504463" Lat="54.99627995618913"/>
+      <point lng="-7.324958156846874" Lat="54.99516490429938"/>
+      <point lng="-7.325687233945796" Lat="54.99393536383885"/>
+    </PolyLine>
+    <Summary>Derry is the only remaining completely intact walled city in Ireland and one of the finest examples of a walled city in Europe. The walls constitute the largest monument in State care in Northern Ireland and, as the last walled city to be built in Europe, stands as the most complete and spectacular.</Summary>
+    <Details>The Walls were built in 1613–1619 by The Honourable The Irish Society as defences for early 17th century settlers from England and Scotland. The Walls, which are approximately 1 mile (1.6 km) in circumference and which vary in height and width between 3.7 and 10.7 metres (12 and 35 feet), are completely intact and form a walkway around the inner city. They provide a unique promenade to view the layout of the original town which still preserves its Renaissance style street plan. The four original gates to the Walled City are Bishop's Gate, Ferryquay Gate, Butcher Gate and Shipquay Gate. Three further gates were added later, Magazine Gate, Castle Gate and New Gate, making seven gates in total. Historic buildings within the walls include the Gothic cathedral of St Columb (1633), the Apprentice Boys Memorial Hall and the courthouse. </Details>
+  </Location>
+  <Location ID="St Columbs Cathedral" Image="stcolumbscatherdral.jpg" Thumb="stcolumbscatherdralthumb.jpg">
+    <Polygon>
+      <point long="-7.323260974725753" Lat="54.99343720683645" />
+      <point long="-7.321514737256319" Lat="54.99404226933486" />
+      <point long="-7.322577432089230" Lat="54.99466660528088" />
+      <point long="-7.323467269738854" Lat="54.99416180997537" />
+      <point long="-7.324202210678271" Lat="54.99361317947570" />
+    </Polygon>
+    <Summary>St Columb's Cathedral in the walled city, is the mother church of the Church of Ireland Diocese of Derry and Raphoe and the parish church of Templemore.</Summary>
+    <Details>It is dedicated to Saint Columba, the Irish monk who established a Christian settlement in the area before being exiled from Ireland and introducing Christianity to Scotland and northern England.</Details>
+  </Location>
+</Locations>

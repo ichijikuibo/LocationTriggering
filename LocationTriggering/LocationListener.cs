@@ -24,6 +24,7 @@ namespace LocationTriggering
         public event LocationEnteredEventHandler<T> LocationEntered;
         public event LocationExitedEventHandler<T> LocationExited;
         public event PositionUpdatedEventHandler PositionUpdated;
+        //public event ExceptionEventHandler ExceptionThrown;
         private LocationTriggerCollection<T> _LocationTriggers;
         private LocationTriggerCollection<T> _locationTriggersInDirection;
         private LocationTriggerCollection<T> _currentLocationTriggers;
@@ -34,6 +35,10 @@ namespace LocationTriggering
         private double _gpsDistance;
         private double _locationsInDirectionDistance=0;
         private int _numberOfClosestLocations = 10;
+        private bool processingLocationUpdate = false;
+        private bool processingClosestUpdate = false;
+        private bool processingBearingUpdate = false;
+        private bool firstUpdate = true;
 
         /// <summary>
         /// List of the location triggers to be checked against the gps location
@@ -94,14 +99,16 @@ namespace LocationTriggering
             _gpsDistance = distanceMetres;
             _lastPosition = null;
         }
+
         /// <summary>
         /// Checks the for triggers at the specifed Location and invokes events 
         /// </summary>
         /// <param name="gpsLocation">The gps location to be checked</param>
         public virtual async void ProcessLocation(MapCoordinate gpsLocation)
         {
-            //Get the locations at the current point
-           
+            if (processingLocationUpdate) return;
+            processingLocationUpdate = true;
+
             //Lists to store the changes
             List<T> locationsEntered = new List<T>();
             List<T> locationsExited = new List<T>();
@@ -109,6 +116,7 @@ namespace LocationTriggering
             //If there are alot of locations added this code could be slow so run on a background thread
             await Task.Run(() =>
             {
+
                 locationsAtPoint = _LocationTriggers.LocationsAtPoint(gpsLocation);
                 //check for locations that were in the previous updated but not in the current update and add to a list
                 foreach (T LT in CurrentLocationTriggers)
@@ -125,23 +133,21 @@ namespace LocationTriggering
                             locationsEntered.Add(LT);
                     }
                 }
+
             });
 
             //The CurrentLocationTriggers List has been changed send a LocationsChanged change event
-            if (locationsEntered.Count > 0 || locationsExited.Count > 0)
+
+            if (locationsEntered.Count > 0 || locationsExited.Count > 0 || firstUpdate)
             {
 
 
-                //Send a LocationEntered entered event for each of the newly entered locations
-                foreach (T enteredLocation in locationsEntered)
+                //disable sorting till items are updated
+                Comparison<T> sortComparison = null;
+                if (_currentLocationTriggers.SortOnChangeComparison != null)
                 {
-                    if (!_currentLocationTriggers.Contains(enteredLocation))
-                    {
-                        _currentLocationTriggers.Add(enteredLocation);
-
-
-                    }
-                    LocationEntered?.Invoke(this, new LocationUpdatedEventArgs<T>() { TimeTriggered = System.DateTime.Now, GPSPosition = gpsLocation, Location = enteredLocation });
+                    sortComparison = _currentLocationTriggers.SortOnChangeComparison;
+                    _currentLocationTriggers.StopSortingOnChange();
                 }
                 //Send a LocationExited entered event for each of the newly exited locations
                 foreach (T exitedLocation in locationsExited)
@@ -149,8 +155,23 @@ namespace LocationTriggering
                     if (_currentLocationTriggers.Contains(exitedLocation)) _currentLocationTriggers.Remove(exitedLocation);
                     LocationExited?.Invoke(this, new LocationUpdatedEventArgs<T>() { TimeTriggered = System.DateTime.Now, GPSPosition = gpsLocation, Location = exitedLocation });
                 }
+
+                //Send a LocationEntered entered event for each of the newly entered locations
+                foreach (T enteredLocation in locationsEntered)
+                {
+                    if (!_currentLocationTriggers.Contains(enteredLocation))
+                    {
+                        _currentLocationTriggers.Add(enteredLocation);
+                    }
+                    LocationEntered?.Invoke(this, new LocationUpdatedEventArgs<T>() { TimeTriggered = System.DateTime.Now, GPSPosition = gpsLocation, Location = enteredLocation });
+                }
+
+                if (sortComparison != null)
+                {
+                    _currentLocationTriggers.SortOnChange(sortComparison);
+                }
                 LocationTriggeredEventArgs<T> e = new LocationTriggeredEventArgs<T>();
-                e.CurrentLocations = locationsAtPoint;
+                e.CurrentLocations = new List<T>(_currentLocationTriggers);
                 e.LocationsAdded = locationsEntered.AsReadOnly();
                 e.LocationsRemoved = locationsExited.AsReadOnly();
                 e.TimeTriggered = System.DateTime.Now;
@@ -158,14 +179,17 @@ namespace LocationTriggering
                 _lastlocationTriggers = locationsAtPoint;
                 LocationsChanged?.Invoke(this, e);
             }
+            processingLocationUpdate = false;
         }
         /// <summary>
         /// Checks the for triggers in the specified direction from the specifed Location and invokes events 
         /// </summary>
         /// <param name="bearing">The direction 0-360 to check for locations</param>
         /// <param name="gpsLocation">The gps location to be checked. null= LastPosition</param>
-        public virtual async void UpdateBearing(double bearing,MapCoordinate gpsLocation)
+        public virtual async void UpdateBearing(double bearing, MapCoordinate gpsLocation)
         {
+            if (processingBearingUpdate) return;
+            processingBearingUpdate = true;
             if (gpsLocation == null)
                 gpsLocation = _lastPosition;
 
@@ -176,7 +200,8 @@ namespace LocationTriggering
             //If there are alot of locations added this code could be slow so run on a background thread
             await Task.Run(() =>
             {
-                locationsAtDirection = _LocationTriggers.LocationsInDirection(gpsLocation,bearing, LocationsInDirectionDistance);
+
+                locationsAtDirection = _LocationTriggers.LocationsInDirection(gpsLocation, bearing, LocationsInDirectionDistance);
                 //check for locations that were in the previous updated but not in the current update and add to a list
                 foreach (T LT in _locationTriggersInDirection)
                 {
@@ -192,14 +217,17 @@ namespace LocationTriggering
                             locationsAdded.Add(LT);
                     }
                 }
+
             });
 
             //The CurrentLocationTriggers List has been changed send a LocationsChanged change event
-            if (locationsAdded.Count > 0 || locationsRemoved.Count > 0)
+            if (locationsAdded.Count > 0 || locationsRemoved.Count > 0|| firstUpdate)
             {
+                foreach (T exitedLocation in locationsRemoved)
+                {
+                    if (_locationTriggersInDirection.Contains(exitedLocation)) _locationTriggersInDirection.Remove(exitedLocation);
+                }
 
-
-                //Send a LocationEntered entered event for each of the newly entered locations
                 foreach (T enteredLocation in locationsAdded)
                 {
                     if (!_locationTriggersInDirection.Contains(enteredLocation))
@@ -209,11 +237,7 @@ namespace LocationTriggering
 
                     }
                 }
-                //Send a LocationExited entered event for each of the newly exited locations
-                foreach (T exitedLocation in locationsRemoved)
-                {
-                    if (_locationTriggersInDirection.Contains(exitedLocation)) _locationTriggersInDirection.Remove(exitedLocation);
-                }
+
                 LocationTriggeredEventArgs<T> e = new LocationTriggeredEventArgs<T>();
                 e.CurrentLocations = locationsAtDirection;
                 e.LocationsAdded = locationsAdded.AsReadOnly();
@@ -223,6 +247,8 @@ namespace LocationTriggering
                 _lastlocationTriggers = locationsAtDirection;
                 LocationsInDirectionChanged?.Invoke(this, e);
             }
+
+            processingBearingUpdate = false;
         }
 
         /// <summary>
@@ -231,15 +257,20 @@ namespace LocationTriggering
         /// <param name="gpsLocation">The position to calculate distances from</param>
         public virtual async void ProcessClosestLocations(MapCoordinate gpsLocation)
         {
+            if (processingClosestUpdate) return;
+            processingClosestUpdate = true;
             if (_numberOfClosestLocations == 0) return;
             List<T> locationsAdded = new List<T>();
             List<T> locationsRemoved = new List<T>();
-          //  IReadOnlyList<T> ClosestLocations = LocationTriggers.ClosestLocations(gpsLocation, _numberOfClosestLocations);
+            //  IReadOnlyList<T> ClosestLocations = LocationTriggers.ClosestLocations(gpsLocation, _numberOfClosestLocations);
+
 
             //If there are alot of locations added this code could be slow so run on a background thread
             await Task.Run(() =>
             {
+
                 IReadOnlyList<T> ClosestLocations = LocationTriggers.ClosestLocations(gpsLocation, _numberOfClosestLocations);
+                LocationTriggers.UpdateBearings(gpsLocation, false);
                 //check for locations that were in the previous updated but not in the current update and add to a list
                 foreach (T LT in _closestLocations)
                 {
@@ -255,11 +286,16 @@ namespace LocationTriggering
                             locationsAdded.Add(LT);
                     }
                 }
+
+
             });
 
-            if (locationsAdded.Count > 0 || locationsRemoved.Count > 0)
+            if (locationsAdded.Count > 0 || locationsRemoved.Count > 0|| firstUpdate)
             {
-
+                foreach (T exitedLocation in locationsRemoved)
+                {
+                    if (_closestLocations.Contains(exitedLocation)) _closestLocations.Remove(exitedLocation);
+                }
                 foreach (T enteredLocation in locationsAdded)
                 {
                     if (!_closestLocations.Contains(enteredLocation))
@@ -267,10 +303,7 @@ namespace LocationTriggering
                         _closestLocations.Add(enteredLocation);
                     }
                 }
-                foreach (T exitedLocation in locationsRemoved)
-                {
-                    if (_closestLocations.Contains(exitedLocation)) _closestLocations.Remove(exitedLocation);
-                }
+
                 LocationTriggeredEventArgs<T> e = new LocationTriggeredEventArgs<T>();
                 e.CurrentLocations = ClosestLocations;
                 e.LocationsAdded = locationsAdded.AsReadOnly();
@@ -280,27 +313,46 @@ namespace LocationTriggering
                 ClosestLocationChanged?.Invoke(this, e);
             }
             _closestLocations.Sort(delegate (T lt1, T lt2) { return lt1.LastDistance.CompareTo(lt2.LastDistance); });
+            processingClosestUpdate = false;
+
         }
-        public virtual void Update(MapCoordinate gpsLocation)
+        bool updating = false;
+        public virtual async void Update(MapCoordinate gpsLocation)
         {
+            if (updating)
+                return;
+            updating = true;
             if (_lastPosition != null)
             {
                 if (gpsLocation.Equals(_lastPosition))
                 {
+                    updating = false;
                     return;
                 }
                 double distance = gpsLocation.DistanceTo(_lastPosition) * 1000;
                 //If distance is too close to previous end the method
-                if (distance <= _gpsDistance) return;
+                if (distance <= _gpsDistance)
+                {
+                    updating = false;
+                    return;
+                }
             }
             //Process the new position
             ProcessLocation(gpsLocation);
 
             ProcessClosestLocations(gpsLocation);
+            await Task.Run(() =>
+            {
+                while (processingBearingUpdate || processingClosestUpdate || processingLocationUpdate)
+                    Thread.Sleep(10);
+            }
+            );
             //send a PositionUpdated event
             PositionUpdated?.Invoke(this, new PositionUpdatedEventArgs() { GPSPosition = gpsLocation, TimeTriggered = System.DateTime.Now });
 
             _lastPosition = gpsLocation;//Store the current position
+            firstUpdate = false;
+            updating = false;
         }
     }
 

@@ -23,5 +23,9 @@ namespace SampleAndTesting.Samples
             Navigation.PushAsync(new BasicUsage());
         }
 
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new Sample());
+        }
     }
 }

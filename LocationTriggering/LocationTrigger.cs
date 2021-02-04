@@ -85,6 +85,12 @@ namespace LocationTriggering
         }
 
         /// <summary>
+        /// Empty constructor 
+        /// </summary>
+        protected LocationTrigger()
+        {
+        }
+        /// <summary>
         /// Default constructor 
         /// </summary>
         /// <param name="id">a unique identifier for the location</param>
@@ -306,10 +312,15 @@ namespace LocationTriggering
         /// </summary>
         /// <param name="point">The point being checked</param>
         /// <returns></returns>
-        public virtual bool ContainsPoint(MapCoordinate point,bool absolute = false)
+        public virtual bool ContainsPoint(MapCoordinate point)
+        {
+            return PointInLocation(point);
+        }
+        private bool PointInLocation(MapCoordinate point, bool absolute = false)
         {
             if (_locationType == TriggerType.Polygon)
             {
+                if (Points.Count < 3) return false;
                 if (_boundingBox == null || _boundingBox.ContainsPoint(point))
                 {
                     if (absolute)
@@ -320,16 +331,18 @@ namespace LocationTriggering
                         return (AngleSum(point) > 0.000001);
                 }
             }
-            if(_locationType==TriggerType.Radial)
+            if (_locationType == TriggerType.Radial)
             {
+                if (Points.Count < 1) return false;
                 foreach (MapCoordinate mc in _points)
                 {
                     double distance = point.DistanceTo(mc);
-                    if (distance<=_radius) return true;
+                    if (distance <= _radius) return true;
                 }
             }
             if (_locationType == TriggerType.Polyline)
             {
+                if (Points.Count < 2) return false;
                 if (ClosestDistanceTo(point) <= _radius) return true;
             }
             return false;
@@ -884,7 +897,7 @@ namespace LocationTriggering
             if (_points.Count < 3) return; //At least 3 points are required to calculate the properties
             if (_points[0].Equals(_points[_points.Count - 1])) _points.RemoveAt(_points.Count - 1);
             _centre = CentralPoint();
-            if (!ContainsPoint(_centre, true))
+            if (!PointInLocation(_centre, true))
             {
                 MapCoordinate newCentre = ClosestPointTo(_centre);
                 double newLat = newCentre.Latitude;
@@ -901,8 +914,8 @@ namespace LocationTriggering
                 _centre = new MapCoordinate(newLat,newLng);
             }
             _clockwise = AngleSum(_centre) < 0;
-            _crossesNorthPole = ContainsPoint(new MapCoordinate(90, 0));
-            _crossesSouthPole = ContainsPoint(new MapCoordinate(-90, 0));
+            _crossesNorthPole = PointInLocation(new MapCoordinate(90, 0));
+            _crossesSouthPole = PointInLocation(new MapCoordinate(-90, 0));
             double MinLon = double.MaxValue, MaxLon = -double.MaxValue, MinLat = double.MaxValue, MaxLat = -double.MaxValue;
             if (_crossesNorthPole)
             {
@@ -980,9 +993,9 @@ namespace LocationTriggering
                 MaxLat = CoordinateHelpers.AngleAddition(_centre.Latitude, MaxLat);
             }
             _boundingBox = new MapBoundingBox(new MapCoordinate(MaxLat, MinLon), new MapCoordinate(MinLat, MaxLon), _crossesDateLine,_crossesSouthPole,_crossesNorthPole);//create a bounding box from the northeast point and the southwest point
-            if (!_crossesNorthPole&&!_crossesSouthPole&&ContainsPoint(_boundingBox.Centre))
+            if (!_crossesNorthPole&&!_crossesSouthPole&& PointInLocation(_boundingBox.Centre))
                 _centre = BoundingBox.Centre;
-            if (!ContainsPoint(_centre, true))
+            if (!PointInLocation(_centre, true))
             {
                 MapCoordinate newCentre = ClosestPointTo(_centre);
                 double newLat = newCentre.Latitude;
