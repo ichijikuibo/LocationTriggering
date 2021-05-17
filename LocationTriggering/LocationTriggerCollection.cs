@@ -21,7 +21,9 @@ namespace LocationTriggering
         private bool _sortOnChange = false;
         //private bool _filterOnChange;
         private Comparison<T> _sortOnChangeComparison;
-        private Func<T,bool> _filterCondition;
+
+        private Func<T, bool> _filterCondition;
+
         private bool _useClosestDistance = true;
         private DistanceUnit _units = DistanceUnit.Kilometres;
         private LocationTriggerCollection<T> _filteredCollection;
@@ -29,6 +31,9 @@ namespace LocationTriggering
         public DistanceUnit Units { get => _units; set => _units = value; }
         public LocationTriggerCollection<T> FilteredCollection { get => _filteredCollection; }
         public Comparison<T> SortOnChangeComparison { get => _sortOnChangeComparison; }
+
+        public Func<T, bool> FilterCondition { get => _filterCondition; }
+
 
         public LocationTriggerCollection()
         {
@@ -92,15 +97,11 @@ namespace LocationTriggering
         }
         public void StopFiltering()
         {
-           // _filterOnChange = false;
+
             _filteredCollection = this;
         }
-        //private void LocationTriggerCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        //{
-        //    base.OnCollectionChanged(e);
 
 
-        //}
 
         /// <summary>
         /// Gets a list of the LocationTriggers that contain the specified point
@@ -148,7 +149,7 @@ namespace LocationTriggering
         /// <param name="position">The position to measure distances from</param>
         /// <param name="distance">The highest distance to check</param>
         /// <returns>List of LocationTriggers</returns>
-        public IReadOnlyList<T> LocationsNear(MapCoordinate position, double distance)
+        public IReadOnlyList<T> LocationsWithinDistance(MapCoordinate position, double distance)
         {
             List<T> locationsNear = new List<T>();
             foreach (T LT in Items)
