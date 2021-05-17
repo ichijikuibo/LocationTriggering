@@ -17,8 +17,8 @@ namespace LocationTriggering
         
         private MapBoundingBox _boundingBox;
         private List<MapCoordinate> _points = new List<MapCoordinate>();
-        private MapCoordinate _centre;  //Calculated centre property that is assigned a value when _points is updated
-        private MapCoordinate _distanceCalcualtedFrom;
+        private MapCoordinate _centre;  
+        private MapCoordinate _distanceCalculatedFrom;
         private double _distance;
         private double _bearingFrom;
         private MapCoordinate _bearingCalculatedFrom;
@@ -56,11 +56,11 @@ namespace LocationTriggering
         /// </summary>
         public IReadOnlyList<MapCoordinate> Points { get => _points.AsReadOnly(); }
         /// <summary>
-        /// The Last distance calcualted for the trigger
+        /// The Last distance calculated for the trigger
         /// </summary>
         public double LastDistance { get=>_distance; private set { _distance = value; OnPropertyChanged(); } }
         /// <summary>
-        /// The last bearing calcualted for the trigger
+        /// The last bearing calculated for the trigger
         /// </summary>
         public double LastBearing { get => _bearingFrom; private set { _bearingFrom = value; OnPropertyChanged(); } }
         /// <summary>
@@ -373,19 +373,18 @@ namespace LocationTriggering
         }
         /// <summary>
         /// Returns the distance from the centre of this location to the specified point
-        /// override if you want to chang this to ClosestDistanceTo
         /// </summary>
         /// <param name="point">Point to measure distance from</param>
         /// <returns>Distance in kilometres</returns>
         public virtual double DistanceTo(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres,bool ClosestDistance=false)
         {
-            if (_distanceCalcualtedFrom == null || !point.Equals(_distanceCalcualtedFrom))
+            if (_distanceCalculatedFrom == null || !point.Equals(_distanceCalculatedFrom))
             {
                 if(ClosestDistance)
                     LastDistance = point.DistanceTo(ClosestPointTo(point), unit);
                 else
                     LastDistance = _centre.DistanceTo(point, unit);
-                _distanceCalcualtedFrom = point;
+                _distanceCalculatedFrom = point;
             }
             return LastDistance;
         }
@@ -397,10 +396,10 @@ namespace LocationTriggering
         /// <returns>Distance in kilometres</returns>
         public virtual double DistanceToCentre(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres)
         {
-            if (_distanceCalcualtedFrom == null || !point.Equals(_distanceCalcualtedFrom))
+            if (_distanceCalculatedFrom == null || !point.Equals(_distanceCalculatedFrom))
             {
                 LastDistance = _centre.DistanceTo(point, unit);
-                _distanceCalcualtedFrom = point;
+                _distanceCalculatedFrom = point;
             }
             return LastDistance;
         }
@@ -420,10 +419,10 @@ namespace LocationTriggering
         /// <returns>Distance in kilometres</returns>
         public double ClosestDistanceTo(MapCoordinate point, DistanceUnit unit = DistanceUnit.Kilometres)
         {
-            if (_distanceCalcualtedFrom == null || !point.Equals(_distanceCalcualtedFrom))
+            if (_distanceCalculatedFrom == null || !point.Equals(_distanceCalculatedFrom))
             {
                 LastDistance = point.DistanceTo(ClosestPointTo(point), unit);
-                _distanceCalcualtedFrom = point;
+                _distanceCalculatedFrom = point;
             }
             return LastDistance;
         }
@@ -512,26 +511,12 @@ namespace LocationTriggering
             MapCoordinate[] points = BearingRangePoints(point, mode);
             double start = point.BearingTo(points[1]);
             double end = point.BearingTo(points[0]);
-            //BearingRange BoundingBoxRange = BoundingBox.BearingRangeFrom(point);
             BearingRange BR = new BearingRange(start, end);
             double differenceFromCentre = CoordinateHelpers.AngleDifference(BR.Centre, centreBearing);
             if (differenceFromCentre > 60 || differenceFromCentre < -60)
                 BR = new BearingRange(end, start);
 
             return BR;
-            //if (mode==BearingRangeType.BoundingBox)
-            //{
-            //    return _boundingBox.BearingRangeFrom(point);
-            //}
-            //if (_locationType == TriggerType.Radial)
-            //{
-            //    return BearingRangeRadial(point);
-            //}
-            //if(mode==BearingRangeType.Points||_locationType==TriggerType.Polyline)
-            //{
-            //    return BearingRangeFromPoints(point);
-            //}
-            //return BearingRangeFromDefault(point);
         }
         public virtual MapCoordinate[] BearingRangePoints(MapCoordinate point, BearingRangeType mode = BearingRangeType.Default)
         {
@@ -1056,35 +1041,3 @@ namespace LocationTriggering
         }
     }
 }
-
-//-38.22088578757306,137.0966687221523	
-//-41.14699039869232,140.7612796790796	
-//-45.04385654271243,148.3872680855425	
-//-42.24179445780681,150.6105643998689	
-//-38.32190852403915,152.1014846698897	
-//-33.89799364036446,155.3469909177914	
-//-28.2874936691238,155.0570339726316	
-//-23.7704830553687,153.7832215087749	
-//-21.77847625328914,151.5481740679563	
-//-19.55314919190631,150.0743420356932	
-//-16.4719197121896,148.0976078680809	
-//-12.84354524549978,145.9945297340139	
-//-10.33326425528148,143.8111869597975	
-//-10.72205525360104,141.3334382076673	
-//-13.30767885192975,140.4202503581765	
-//-15.56152160293079,138.8003168012125	
-//-14.73240204142622,137.2715710235034	
-//-10.8708950199417,137.8909261323328	
-//-9.829804478915685,135.5704295562607	
-//-10.38699118944958,129.9702616119519	
-//-12.52722083690712,125.3678818352159	
-//-14.37105493488749,121.9743265059042	
-//-16.87571478485158,117.0330684275972	
-//-19.2497279871944,113.0512470589866	
-//-24.0717763197421,111.0930608341264	
-//-27.67669163023321,111.4384453281121	
-//-31.79289631001624,112.2517232308155	
-//-35.78486437095834,113.2697362694079	
-//-35.28754504637568,121.005790388567	
-//-33.52778111634026,124.687129311849	
-//-34.00024705162931,134.4421596618281	
