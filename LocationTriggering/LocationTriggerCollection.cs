@@ -19,8 +19,11 @@ namespace LocationTriggering
     public class LocationTriggerCollection<T> : ObservableCollection<T>  where T : LocationTrigger 
     {
         private bool _sortOnChange = false;
+        //private bool _filterOnChange;
         private Comparison<T> _sortOnChangeComparison;
+
         private Func<T, bool> _filterCondition;
+
         private bool _useClosestDistance = true;
         private DistanceUnit _units = DistanceUnit.Kilometres;
         private LocationTriggerCollection<T> _filteredCollection;
@@ -28,7 +31,9 @@ namespace LocationTriggering
         public DistanceUnit Units { get => _units; set => _units = value; }
         public LocationTriggerCollection<T> FilteredCollection { get => _filteredCollection; }
         public Comparison<T> SortOnChangeComparison { get => _sortOnChangeComparison; }
+
         public Func<T, bool> FilterCondition { get => _filterCondition; }
+
 
         public LocationTriggerCollection()
         {
@@ -92,8 +97,11 @@ namespace LocationTriggering
         }
         public void StopFiltering()
         {
+
             _filteredCollection = this;
         }
+
+
 
         /// <summary>
         /// Gets a list of the LocationTriggers that contain the specified point
