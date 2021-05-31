@@ -13,22 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleAndTesting", "SampleA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationTriggering", "LocationTriggering\LocationTriggering.csproj", "{28DB435A-63B1-4723-A16E-65D953B8B4D4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{53B0AB0B-12C8-4DDF-A0E1-6CA02D1B1040}"
-	ProjectSection(SolutionItems) = preProject
-		Documents\Iteration 1 Test Plan.xlsx = Documents\Iteration 1 Test Plan.xlsx
-		Documents\Iteration 1.docx = Documents\Iteration 1.docx
-		Documents\Iteration 2 Test Plan.xlsx = Documents\Iteration 2 Test Plan.xlsx
-		Documents\Iteration 2.docx = Documents\Iteration 2.docx
-		Documents\Iteration 3 Test Plan.xlsx = Documents\Iteration 3 Test Plan.xlsx
-		Documents\Iteration 3.docx = Documents\Iteration 3.docx
-		Documents\Iteration 4 Test Plan.xlsx = Documents\Iteration 4 Test Plan.xlsx
-		Documents\Iteration 4.docx = Documents\Iteration 4.docx
-		LICENSE = LICENSE
-		README.md = README.md
-		Documents\Requirement Specification-V2.docx = Documents\Requirement Specification-V2.docx
-		Documents\Requirement Specification.docx = Documents\Requirement Specification.docx
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationTriggeringXamarinExtentions", "LocationListenerExtention\LocationTriggeringXamarinExtentions.csproj", "{740B3D48-949E-4149-9920-1AF6F84FA07D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomatedTests", "AutomatedTests\AutomatedTests.csproj", "{69F65BEF-1743-40A2-AB1F-BC5EFA833EF0}"
