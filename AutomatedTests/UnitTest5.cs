@@ -61,15 +61,16 @@ namespace AutomatedTests
         [TestMethod]
         public void UpdateDistances()
         {
-            listener.ClosestLocationChanged += Listener_ClosestLocationChanged;
+            listener.PositionUpdated += Listener_PositionUpdated; ;
             string[] tests = Helpers.OpenFile("TestData/ClosestLocationsTestData.txt");
             foreach (string s in tests)
             {
-                wait = true;
+               
                 string[] test = s.Split('\t');
                 string[] input = test[0].Split(',');
                 string[] result = test[1].Split(',');
                 listener.NumberOfClosestLocations = int.Parse(input[2]);
+                wait = true;
                 listener.Update(new MapCoordinate(double.Parse(input[0]), double.Parse(input[1])));
 
 
@@ -78,23 +79,24 @@ namespace AutomatedTests
                 {
                     waits++;
                     Thread.Sleep(10);
-                    if (waits == 5)
+                    if (waits == 10)
                     {
                         break;
                     }
                 }
-                var results = listener.ClosestLocations;
+
+                var results = listener.ClosestLocations.ToArray();
                 if (result[0].ToUpper() == "NT")
                 {
-                    Assert.AreEqual(0, results.Count, String.Format("Expected for '{0}': 0; Actual: {1}", Helpers.StringFromArray(input), results.Count));
+                    Assert.AreEqual(0, results.Length, String.Format("Expected for '{0}': 0; Actual: {1}", Helpers.StringFromArray(input), results.Length));
                 }
                 else if (result[0].ToUpper() == "EVERYTHING")
                 {
-                    Assert.AreEqual(listener.ClosestLocations.Count, results.Count, String.Format("Expected for '{0}': 0; Actual: {1}", Helpers.StringFromArray(input), results.Count));
+                    Assert.AreEqual(listener.ClosestLocations.Count, results.Length, String.Format("Expected for '{0}': 0; Actual: {1}", Helpers.StringFromArray(input), results.Length));
                 }
                 else
                 {
-                    Assert.AreEqual(result.Length, results.Count, String.Format("Expected for '{0}': {1}; Actual: {2}", Helpers.StringFromArray(input), result.Length, results.Count));
+                    Assert.AreEqual(result.Length, results.Length, String.Format("Expected for '{0}': {1}; Actual: {2}", Helpers.StringFromArray(input), result.Length, results.Length));
                     foreach (var r in results)
                     {
                         Assert.IsTrue(result.Contains(r.LocationID), String.Format("Expected for '{0}': {1}; Actual: Not Found", Helpers.StringFromArray(input), r.LocationID));
@@ -103,8 +105,15 @@ namespace AutomatedTests
             }
         }
 
+        private void Listener_PositionUpdated(object sender, PositionUpdatedEventArgs e)
+        {
+            wait = false;
+        }
+
+        // LocationTriggeredEventArgs<BasicLocationTrigger> lastE;
         private void Listener_ClosestLocationChanged(object sender, LocationTriggeredEventArgs<BasicLocationTrigger> e)
         {
+            //lastE = e;
             wait = false;
         }
         [TestMethod]

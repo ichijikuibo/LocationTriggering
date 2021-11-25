@@ -56,7 +56,7 @@ namespace AutomatedTests
                 string[] test = s.Split('\t');
                 string[] input = test[0].Split(',');
                 string[] result = test[1].Split(',');
-                var ActualResult = testCollection.LocationsNear(new MapCoordinate(double.Parse(input[0]), double.Parse(input[1])), double.Parse(input[2]));
+                var ActualResult = testCollection.LocationsWithinDistance(new MapCoordinate(double.Parse(input[0]), double.Parse(input[1])), double.Parse(input[2]));
                 if(result[0].ToLower() == "nt")
                 {
                     Assert.AreEqual(0,ActualResult.Count);

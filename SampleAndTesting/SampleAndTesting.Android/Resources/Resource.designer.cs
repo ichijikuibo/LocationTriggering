@@ -284,6 +284,7 @@ namespace SampleAndTesting.Droid
 			global::Xamarin.Essentials.Resource.Id.text2 = global::SampleAndTesting.Droid.Resource.Id.text2;
 			global::Xamarin.Essentials.Resource.Id.time = global::SampleAndTesting.Droid.Resource.Id.time;
 			global::Xamarin.Essentials.Resource.Id.title = global::SampleAndTesting.Droid.Resource.Id.title;
+			global::Xamarin.Essentials.Resource.Id.view_tree_lifecycle_owner = global::SampleAndTesting.Droid.Resource.Id.view_tree_lifecycle_owner;
 			global::Xamarin.Essentials.Resource.Integer.status_bar_notification_info_maxnum = global::SampleAndTesting.Droid.Resource.Integer.status_bar_notification_info_maxnum;
 			global::Xamarin.Essentials.Resource.Layout.browser_actions_context_menu_page = global::SampleAndTesting.Droid.Resource.Layout.browser_actions_context_menu_page;
 			global::Xamarin.Essentials.Resource.Layout.browser_actions_context_menu_row = global::SampleAndTesting.Droid.Resource.Layout.browser_actions_context_menu_row;
@@ -16062,22 +16063,25 @@ namespace SampleAndTesting.Droid
 			public const int view_offset_helper = 2131231027;
 			
 			// aapt resource value: 0x7F080134
-			public const int view_tree_saved_state_registry_owner = 2131231028;
+			public const int view_tree_lifecycle_owner = 2131231028;
 			
 			// aapt resource value: 0x7F080135
-			public const int visible = 2131231029;
+			public const int view_tree_saved_state_registry_owner = 2131231029;
 			
 			// aapt resource value: 0x7F080136
-			public const int visible_removing_fragment_view_tag = 2131231030;
+			public const int visible = 2131231030;
 			
 			// aapt resource value: 0x7F080137
-			public const int wide = 2131231031;
+			public const int visible_removing_fragment_view_tag = 2131231031;
 			
 			// aapt resource value: 0x7F080138
-			public const int withText = 2131231032;
+			public const int wide = 2131231032;
 			
 			// aapt resource value: 0x7F080139
-			public const int wrap_content = 2131231033;
+			public const int withText = 2131231033;
+			
+			// aapt resource value: 0x7F08013A
+			public const int wrap_content = 2131231034;
 			
 			static Id()
 			{
