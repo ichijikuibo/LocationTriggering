@@ -60,8 +60,9 @@ namespace LocationTriggering
         /// The number of location to store in ClosestLocations at once. 0 to disable -1 for all locations default:10
         /// </summary>
         public int NumberOfClosestLocations { get => _numberOfClosestLocations; set {
+
                 _numberOfClosestLocations = value;
-                     _lastPosition = null;
+                _lastPosition = null;
             } }
         /// <summary>
         /// The maximum ddistance for checking fo locations in a direction default unlimited
@@ -337,6 +338,7 @@ namespace LocationTriggering
                     return;
                 }
             }
+            _lastPosition = gpsLocation;
             //Process the new position
             ProcessLocation(gpsLocation);
 
@@ -350,7 +352,7 @@ namespace LocationTriggering
             //send a PositionUpdated event
             PositionUpdated?.Invoke(this, new PositionUpdatedEventArgs() { GPSPosition = gpsLocation, TimeTriggered = System.DateTime.Now });
 
-            _lastPosition = gpsLocation;//Store the current position
+            //Store the current position
             firstUpdate = false;
             updating = false;
         }

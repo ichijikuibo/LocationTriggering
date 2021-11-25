@@ -317,7 +317,7 @@ namespace SampleAndTesting.Tests
             try
             {
                 MapCoordinate MC = GetTestMapCoordinate();
-                locationsNear = locationTriggerCollectionTest.LocationsNear(MC, double.Parse(LocationsNearEntry.Text));
+                locationsNear = locationTriggerCollectionTest.LocationsWithinDistance(MC, double.Parse(LocationsNearEntry.Text));
                 LocationsNearResult.Text = "";
                 if (locationsNear.Count > 0)
                 {
