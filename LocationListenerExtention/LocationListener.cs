@@ -9,14 +9,16 @@ using Xamarin.Essentials;
 
 namespace LocationTriggering.Extentions
 {
-    public class ListenerClass<T> where T:LocationTrigger
+    public class ListenerClass<T> where T : LocationTrigger
     {
         LocationListener<T> baseListener;
         double _gpsDistance;
         TimeSpan _gpstime;
         Position _lastPosition;
+        Position _mostAccurate;
+        private int locations = 0;
 
-        public ListenerClass(LocationListener<T> newbase, double distance,TimeSpan time)
+        public ListenerClass(LocationListener<T> newbase, double distance, TimeSpan time)
         {
             _gpsDistance = distance;
             _gpstime = time;
@@ -27,25 +29,33 @@ namespace LocationTriggering.Extentions
         public void Current_PositionChanged(object sender, PositionEventArgs e)
         {
             //Geolocator often calls the event 2 times with the same coordinate so check if the current is the same as the last
-            if (_lastPosition!=null && e.Position.Latitude == _lastPosition.Latitude && e.Position.Longitude == _lastPosition.Longitude) return;
-            _lastPosition = e.Position;
-            //Get the current GPS Location           
-            
+            //if (_lastPosition != null && e.Position.Latitude == _lastPosition.Latitude && e.Position.Longitude == _lastPosition.Longitude) return;
 
-            //because the list may be bound to a ui component they need to be updated on the main thread
-            MainThread.BeginInvokeOnMainThread(() =>
+            if (_mostAccurate == null || e.Position.Accuracy <= _mostAccurate.Accuracy) _mostAccurate = e.Position;
+            locations++;
+            if (locations >= 10)
             {
-                //Process the new position
-                baseListener.Update(e.Position);
+                locations = 0;
+                _lastPosition = _mostAccurate;
+                //Get the current GPS Location           
 
-            });
+
+
+                //because the list may be bound to a ui component they need to be updated on the main thread
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    //Process the new position
+                    baseListener.Update(_mostAccurate);
+
+                });
+            }
         }
 
     }
     public static class LocationListenerExtention
     {
         private static TimeSpan pollInterval;
-       // private static double gpsDistance;
+        // private static double gpsDistance;
         private static Position _lastGPSPosition;
         private static double _accuracyRequired = 100;
         private static double _desiredAccuracy = 0;
@@ -59,16 +69,18 @@ namespace LocationTriggering.Extentions
         /// </summary>
         /// <param name="interval">A System.TimeSpan that determines how ofter to check for changes</param>
         /// <param name="distanceMetres">The minimum distance between that needs to be moved for the location to be updated</param>
-        public static async void StartListening<T>(this LocationListener<T> baselistener, TimeSpan interval, double distanceMetres) where T:LocationTrigger
+        public static async void StartListening<T>(this LocationListener<T> baselistener, TimeSpan interval, double distanceMetres) where T : LocationTrigger
         {
+            interval = new TimeSpan(interval.Ticks / 10);
             //check if GPS Location permission has been granted
             //if (await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>() != PermissionStatus.Granted) throw new PermissionException("Location permission not granted, Location permission is required for this feature");
-            if (Plugin.Geolocator.CrossGeolocator.IsSupported && Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable&& !Plugin.Geolocator.CrossGeolocator.Current.IsListening)
+            if (Plugin.Geolocator.CrossGeolocator.IsSupported && Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable && !Plugin.Geolocator.CrossGeolocator.Current.IsListening)
             {
                 //it is not posible to bind an event in this static generic extention class so an object of another class is created to handle the event
-                ListenerClass<T> baseListener = new ListenerClass<T>(baselistener, distanceMetres,interval);
+                ListenerClass<T> baseListener = new ListenerClass<T>(baselistener, distanceMetres, interval);
                 Plugin.Geolocator.CrossGeolocator.Current.PositionChanged += baseListener.Current_PositionChanged;
-                await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(interval, 0);
+        
+                await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(interval, 0,true);
                 baselistener.ChangeGpsDistance(distanceMetres);
                 //gpsDistance = distanceMetres;
                 _lastGPSPosition = null;
@@ -92,15 +104,17 @@ namespace LocationTriggering.Extentions
             if (Plugin.Geolocator.CrossGeolocator.Current.IsListening)
             {
                 await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
-                //Plugin.Geolocator.CrossGeolocator.Current.PositionChanged -= Current_PositionChanged;
             }
         }
         public static void Update<T>(this LocationListener<T> baselistener, Position position) where T : LocationTrigger
         {
 
             bool UpdateLocation = false;
-            if (_lastGPSPosition!=null && _lastGPSPosition.Accuracy<position.Accuracy&&position.Accuracy > _accuracyRequired) return;
-            if (_lastGPSPosition == null || position.Accuracy <= _desiredAccuracy|| _lastGPSPosition.Accuracy < position.Accuracy)
+            if (_lastGPSPosition != null && _lastGPSPosition.Accuracy < position.Accuracy && position.Accuracy > _accuracyRequired) return;
+            //double distance = 0;
+            //if (_lastGPSPosition != null)
+            //    distance = position.CalculateDistance(_lastGPSPosition, GeolocatorUtils.DistanceUnits.Kilometers) * 1000;
+            if ((_lastGPSPosition == null || position.Accuracy <= _desiredAccuracy || _lastGPSPosition.Accuracy < position.Accuracy))
             {
                 UpdateLocation = true;
                 _lastGPSPosition = new Position(position);
@@ -120,11 +134,11 @@ namespace LocationTriggering.Extentions
             if (UpdateLocation)
             {
 
-                MapCoordinate newPosition = _lastGPSPosition.ToMapCoordinate(); 
+                MapCoordinate newPosition = _lastGPSPosition.ToMapCoordinate();
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                        //Process the new position
-                        baselistener.Update(newPosition);
+                    //Process the new position
+                    baselistener.Update(newPosition);
 
 
                 });
@@ -141,7 +155,7 @@ namespace LocationTriggering.Extentions
         /// Changes the interval between GPS updates
         /// </summary>
         /// <param name="interval">A System.TimeSpan that determines how ofter to check for changes</param>
-        public static async void ChangeGpsPollInterval<T>(this LocationListener<T> baselistener,TimeSpan interval) where T : LocationTrigger
+        public static async void ChangeGpsPollInterval<T>(this LocationListener<T> baselistener, TimeSpan interval) where T : LocationTrigger
         {
             await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
             await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(interval, baselistener.GpsDistance);
